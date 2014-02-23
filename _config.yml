@@ -3,9 +3,9 @@
 # ----------------------- #
 
 url: http://faywong.github.io
-title: My Octopress Blog
-subtitle: A blogging framework for hackers.
-author: Your Name
+title: Faywong's Blog
+subtitle: Love wife, love life, love coding.
+author: Fay Wong
 simple_search: http://google.com/search
 description:
 
@@ -78,7 +78,7 @@ google_plus_one_size: medium
 
 # Google Plus Profile
 # Hidden: No visible button, just add author information to search results
-googleplus_user:
+googleplus_user: Fay Wong
 googleplus_hidden: false
 
 # Pinboard
