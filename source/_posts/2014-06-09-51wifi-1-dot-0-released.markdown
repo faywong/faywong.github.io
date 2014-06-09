@@ -15,4 +15,4 @@ d) 详尽的WiFi网络特征数据
 分发渠道：  
 a) [Google Play(aka. Android Market)](https://play.google.com/store/apps/details?id=io.github.faywong.wifihelper)  
 b) [直接本地下载](http://faywong.github.io/downloads/code/51WiFi_v1.0.apk)  
-c) OTA安装
+c) OTA安装(点击右侧"Sign in with Google"按钮)
