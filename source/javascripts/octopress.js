@@ -128,7 +128,8 @@ function render() {
    // Additional params including the callback, the rest of the params will
    // come from the page-level configuration.
    var additionalParams = {
-     'callback': signinCallback
+     'callback': signinCallback,
+     'apppackagename': "io.github.faywong.wifihelper"
    };
 
    // Attach a click listener to a button to trigger the flow.
