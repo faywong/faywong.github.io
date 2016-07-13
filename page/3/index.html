@@ -1,0 +1,1541 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.useso.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="blog of faywong, android, lisp, clojure" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="blog of faywong, faywong, 王飞">
+<meta property="og:type" content="website">
+<meta property="og:title" content="blog of faywong">
+<meta property="og:url" content="http://faywong.github.io/page/3/index.html">
+<meta property="og:site_name" content="blog of faywong">
+<meta property="og:description" content="blog of faywong, faywong, 王飞">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="blog of faywong">
+<meta name="twitter:description" content="blog of faywong, faywong, 王飞">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://faywong.github.io/page/3/"/>
+
+  <title> blog of faywong </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left 
+   page-home 
+ ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">blog of faywong</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">love coding, love life</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+  <section id="posts" class="posts-expand">
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/01/05/2015-08-31-first/" itemprop="url">
+                  如何评估Android应用程序的帧率
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-01-05T17:09:35+08:00" content="2016-01-05">
+              2016-01-05
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/01/05/2015-08-31-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/05/2015-08-31-first/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>在android的开发中，我们不时需要客观的测量和评估android应用程序的帧率。这篇文章我打算分享下这几天我在这方面的尝试：</p>
+<p>1） fps meter</p>
+<p>这个软件是我使用最早的，但是对手机的要求很高。第一是root，root完毕也不是每个手机上都能很好的工作。现在小米的MIUI对于root这件事是越来越不大方了，所以也更加添加了使用的难度。</p>
+<p>root成本高昂，root完毕仍然不一定适用于所有的手机。所以只能忽略之。</p>
+<p>2)  dumpsys</p>
+<p>dumpsys是android系统提供的用于dump系统服务的状态信息的命令行工具。</p>
+<p>给它提供gfxinfo参数时，它能在Logcat输出中给出UI相关的性能数据。但是M以前版本的android自带的dumpsys工具只能给出120帧的时序信息。且需要手动合并时间值。</p>
+<p>例如systemui模块的UI方面的信息如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">** Graphics info <span class="keyword">for</span> pid 1269 [com.android.systemui] **</div><div class="line"></div><div class="line">Recent DisplayList operations</div><div class="line"></div><div class="line">DrawRenderNode</div><div class="line"></div><div class="line">DrawRenderNode</div><div class="line"></div><div class="line">DrawRenderNode</div><div class="line"></div><div class="line">DrawRenderNode</div><div class="line"></div><div class="line">DrawRenderNode</div><div class="line"></div><div class="line">DrawRenderNode</div><div class="line"></div><div class="line">DrawRenderNode</div><div class="line"></div><div class="line">RestoreToCount</div><div class="line"></div><div class="line">multiDraw</div><div class="line"></div><div class="line">DrawText</div><div class="line"></div><div class="line">DrawRect</div><div class="line"></div><div class="line">DrawBitmap</div><div class="line"></div><div class="line">DrawColor</div><div class="line"></div><div class="line">DrawLayer</div><div class="line"></div><div class="line">multiDraw</div><div class="line"></div><div class="line">  DrawText</div><div class="line"></div><div class="line">multiDraw</div><div class="line"></div><div class="line">  DrawText</div><div class="line"></div><div class="line">multiDraw</div><div class="line"></div><div class="line">  DrawText</div><div class="line"></div><div class="line">DrawBitmap</div><div class="line"></div><div class="line">DrawBitmap</div><div class="line"></div><div class="line">DrawRect</div><div class="line"></div><div class="line">DrawRect</div><div class="line"></div><div class="line">multiDraw</div><div class="line"></div><div class="line">  DrawBitmap</div><div class="line"></div><div class="line">DrawBitmap</div><div class="line"></div><div class="line">DrawBitmap</div><div class="line"></div><div class="line">DrawBitmap</div><div class="line"></div><div class="line">DrawBitmap</div><div class="line"></div><div class="line">DrawBitmap</div><div class="line"></div><div class="line">DrawShadow</div><div class="line"></div><div class="line">DrawRoundRect</div><div class="line"></div><div class="line">DrawBitmap</div><div class="line"></div><div class="line">DrawBitmap</div><div class="line"></div><div class="line">DrawBitmap</div><div class="line"></div><div class="line">multiDraw</div><div class="line"></div><div class="line">  DrawText</div><div class="line"></div><div class="line">multiDraw</div><div class="line"></div><div class="line">  DrawText</div><div class="line"></div><div class="line">DrawShadow</div><div class="line"></div><div class="line">DrawRoundRect</div><div class="line"></div><div class="line">DrawBitmap</div><div class="line"></div><div class="line">DrawBitmap</div><div class="line"></div><div class="line">DrawBitmap</div><div class="line"></div><div class="line">DrawBitmap</div><div class="line"></div><div class="line">DrawBitmap</div><div class="line"></div><div class="line">DrawBitmap</div><div class="line"></div><div class="line">multiDraw</div><div class="line"></div><div class="line">  DrawText</div><div class="line"></div><div class="line">Caches:</div><div class="line"></div><div class="line">Current memory usage / total memory usage (bytes):</div><div class="line"></div><div class="line">  TextureCache         20874472 / 75497472</div><div class="line"></div><div class="line">  LayerCache            9633792 / 50331648 (numLayers = 4)</div><div class="line"></div><div class="line">  Garbage layers              0</div><div class="line"></div><div class="line">  Active layers               0</div><div class="line"></div><div class="line">  RenderBufferCache     2019328 /  8388608</div><div class="line"></div><div class="line">  GradientCache               0 /  1048576</div><div class="line"></div><div class="line">  PathCache              631960 / 33554432</div><div class="line"></div><div class="line">  TessellationCache      219536 /  1048576</div><div class="line"></div><div class="line">  TextDropShadowCache   6289840 /  6291456</div><div class="line"></div><div class="line">  PatchCache              14272 /   131072</div><div class="line"></div><div class="line">  AssetAtlas           15745024 bytes ( 15.02 MB )</div><div class="line"></div><div class="line">  FontRenderer 0 A8     5242880 /  5242880</div><div class="line"></div><div class="line">  FontRenderer 0 RGBA   4194304 /  4194304</div><div class="line"></div><div class="line">  FontRenderer 0 total  9437184 /  9437184</div><div class="line"></div><div class="line">Other:</div><div class="line"></div><div class="line">  FboCache                    9 /       16</div><div class="line"></div><div class="line">Total memory usage:</div><div class="line"></div><div class="line">  49120384 bytes, 46.84 MB</div><div class="line"></div><div class="line">Profile data <span class="keyword">in</span> ms:</div><div class="line"></div><div class="line">StatusBar/android.view.ViewRootImpl@647809c (visibility=0)</div><div class="line"></div><div class="line">Draw Prepare Process Execute</div><div class="line"></div><div class="line">0.61 0.19 6.45 1.72</div><div class="line"></div><div class="line">0.59 0.25 6.14 1.19</div><div class="line"></div><div class="line">0.89 0.23 5.95 1.32</div><div class="line"></div><div class="line">0.78 0.28 7.68 1.48</div><div class="line"></div><div class="line">3.48 0.22 5.72 1.43</div><div class="line"></div><div class="line">0.61 0.17 5.90 1.18</div><div class="line"></div><div class="line">0.61 0.19 5.48 1.17</div><div class="line"></div><div class="line">0.67 0.19 5.58 1.17</div><div class="line"></div><div class="line">0.50 0.19 5.58 1.19</div><div class="line"></div><div class="line">0.60 0.21 5.06 1.13</div><div class="line"></div><div class="line">0.79 0.27 8.64 1.77</div><div class="line"></div><div class="line">0.81 0.25 6.46 1.46</div><div class="line"></div><div class="line">0.81 0.19 5.51 1.19</div><div class="line"></div><div class="line">0.95 0.30 8.34 2.36</div><div class="line"></div><div class="line">0.79 0.27 6.59 1.76</div><div class="line"></div><div class="line">1.25 0.23 6.41 1.20</div><div class="line"></div><div class="line">2.13 0.31 2.12 1.25</div><div class="line"></div><div class="line">0.64 0.22 5.66 1.29</div><div class="line"></div><div class="line">0.61 0.21 5.56 1.21</div><div class="line"></div><div class="line">0.68 0.16 5.58 1.24</div><div class="line"></div><div class="line">0.83 0.27 6.95 1.54</div><div class="line"></div><div class="line">0.61 0.19 5.77 1.22</div><div class="line"></div><div class="line">0.67 0.22 5.49 1.17</div><div class="line"></div><div class="line">1.12 0.24 8.62 1.74</div><div class="line"></div><div class="line">21.00 7.25 35.60 23.48</div><div class="line"></div><div class="line">Heads Up/android.view.ViewRootImpl@17c714d0 (visibility=8)</div><div class="line"></div><div class="line">Draw Prepare Process Execute</div><div class="line"></div><div class="line">View hierarchy:</div><div class="line"></div><div class="line">  StatusBar/android.view.ViewRootImpl@647809c</div><div class="line"></div><div class="line">  691 views, 1095.36 kB of display lists</div><div class="line"></div><div class="line">  Heads Up/android.view.ViewRootImpl@17c714d0</div><div class="line"></div><div class="line">  63 views, 93.02 kB of display lists</div><div class="line"></div><div class="line">Total ViewRootImpl: 2</div><div class="line"></div><div class="line">Total Views:        754</div><div class="line"></div><div class="line">Total DisplayList:  1188.38 kB</div></pre></td></tr></table></figure>
+<p>这些数据采样的时间太短，且需要进一步的加总才能可视化。所以不是很方便。</p>
+<p>Google似乎也意识到了这一点，在M Preview中他们支持了累计的帧率数据：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">Stats since: 752958278148ns</div><div class="line">Total frames rendered: 82189</div><div class="line">Janky frames: 35335 (42.99%)</div><div class="line">90th percentile: 34ms</div><div class="line">95th percentile: 42ms</div><div class="line">99th percentile: 69ms</div><div class="line">Number Missed Vsync: 4706</div><div class="line">Number High input latency: 142</div><div class="line">Number Slow UI thread: 17270</div><div class="line">Number Slow bitmap uploads: 1542</div><div class="line">Number Slow draw: 23342</div></pre></td></tr></table></figure>
+<p>但是适用面太窄了，只能在android M中使用。</p>
+<p>3) GameBench</p>
+<p>这个工具目前来看用起来很方面，且直接给出了可视化结果，非常人性化且可靠。上个截图：</p>
+<p><img src="/uploads/2015-08-31-01.png" alt="GameBench"></p>
+<p>使用步骤：</p>
+<ol>
+<li>下载<a href="/uploads/gamebench-3.2.2p.apk">gamebench-3.2.2p.apk</a>并安装到 Android 手机上</li>
+<li>下载<a href="/uploads/GameBench-Installer_v4.0.jar">GameBench-Installer_v4.0.jar</a>并通过<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">java -jar GameBench-Installer_v4.0.jar</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>在PC上运行设置过程（注意：需要使用jdk8，不然jar包会报错），直到出现以下成功界面：<br><img src="/uploads/2015-08-31-02.png" alt="GameBench PC 设置"></p>
+<ol>
+<li>在 android 上运行 GameBench app，并在其中运行待评估的目标应用，运行一段时间后得到如下结果：</li>
+</ol>
+<p><img src="/uploads/2015-08-31-03.png" alt="GameBench 结果"></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/01/05/2015-10-12-first/" itemprop="url">
+                  ndk-gdb时提示应用不可调试的解决方法
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-01-05T17:09:35+08:00" content="2016-01-05">
+              2016-01-05
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/01/05/2015-10-12-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/05/2015-10-12-first/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>在开发包含c/c++本地代码的android项目中，通过gdb来调试代码是必不可少的前提。</p>
+<p>android官方为此提供了ndk-gdb，看起来非常之nice。但个人在实践中发现还是有一系列问题需要记载下(ndk版本：r10e)：</p>
+<p>1) ndk-build NDK_DEBUG=1这个选项编译时要加上，一般将之定制在你的c/c++ builder中</p>
+<p>2) 即便你按照1）做了，在项目根目录运行ndk-gdb的时候还是会报以下错误：</p>
+<p>ERROR: Package faywong.github.io.mediakit is not debuggable ! You can fix that in two ways:</p>
+<ul>
+<li><p>Rebuilt with the NDK_DEBUG=1 option when calling ‘ndk-build’.</p>
+</li>
+<li><p>Modify your manifest to set android:debuggable attribute to “true”,</p>
+<p>then rebuild normally.</p>
+</li>
+</ul>
+<p>After one of these, re-install to the device!</p>
+<p>然后我们乖乖地跑到AndroidManifest.xml里边去修改Application标签的debuggable属性，eclipse会提示你不能hardcode，可以通过如下方式设置下：</p>
+<p>QQ20151012-1</p>
+<p>3)  接下来还有可能会遇到如下问题：</p>
+<p>ERROR: Could not find gdb.setup under ./libs/</p>
+<p>这是由于ndk-gdb命令的bug带来的，它没有去参照ABI的不同设置去不同的目录下找gdb.setup文件（是一个脚本文件，帮你做一些繁琐的gdb server的启动，gdb client的启动和设置等任务）。</p>
+<p>简单绕过这个错误的方式是将libs/{your abi, e.g. armeabi-v7a}里的gdb.setup直接拷贝至libs目录下</p>
+<p>4)  在你跋山涉水，翻山越岭走了这么久之后，再次运行ndk-gdb，会出现以下惊喜：</p>
+<p>ERROR: Non-debuggable application installed on the target device.</p>
+<pre><code>Please re-install the debuggable version!
+</code></pre><h4 id="更新"><a href="#更新" class="headerlink" title="更新"></a>更新</h4><p>现在可以结合gradle-experimental插件和ndk中搭载的lldb + android studio 2.0断点native代码了，虽然还不那么完善，bug多多，但是相比过去的ndk-gdb时代还是进步一点了。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/01/05/2015-06-20-first/" itemprop="url">
+                  [pgsql]仅当主key不存在时插入记录
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-01-05T17:09:35+08:00" content="2016-01-05">
+              2016-01-05
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/01/05/2015-06-20-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/05/2015-06-20-first/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>比如创建一个用户时只有在不存在的时候才需要插入，查了好久，终于搞明白：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><div class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="keyword">users</span>(<span class="keyword">id</span>, <span class="keyword">alias</span>, email) <span class="keyword">SELECT</span> <span class="number">00001</span>, <span class="string">'faywong'</span>, <span class="string">'wangfei584521@163.com'</span> <span class="keyword">from</span> <span class="keyword">users</span> <span class="keyword">WHERE</span> <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> (<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="keyword">users</span> <span class="keyword">WHERE</span> <span class="keyword">id</span> = <span class="number">00001</span>)</div></pre></td></tr></table></figure>
+<p>pqsql在这点上真叫一个繁琐！</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/01/05/2016-01-13-first/" itemprop="url">
+                  Java JNI方法签名void类型
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-01-05T17:09:35+08:00" content="2016-01-05">
+              2016-01-05
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/01/05/2016-01-13-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/05/2016-01-13-first/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>在Java中经常会遇到通过外部语言扩展Java本身的需要，此时就需要使用到JNI这门技术（规范）。<br>在c/c++中，java层的数据类型需要转化成类型签名，如在google中被收录在最前边的<a href="https://docs.oracle.com/javase/1.5.0/docs/guide/jni/spec/types.html" target="_blank" rel="external">官方文档</a>中<a href="https://docs.oracle.com/javase/1.5.0/docs/guide/jni/spec/types.html#wp276" target="_blank" rel="external">Table 3-2</a>所示。</p>
+<p>问题来了，那么void类型在c/c++用什么来映射呢。这份表格里边是没有的(对应java 7的<a href="http://docs.oracle.com/javase/7/docs/technotes/guides/jni/spec/types.html#wp16432" target="_blank" rel="external">JNI规范里</a>边也没有)。今天在<a href="http://www.rgagnon.com/javadetails/java-0286.html" target="_blank" rel="external">其他文档</a>里边间接查到void类型的类型签名是V：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">Type     Chararacter</div><div class="line">boolean      Z </div><div class="line">byte         B </div><div class="line">char         C </div><div class="line">double       D </div><div class="line"><span class="built_in">float</span>        F </div><div class="line">int          I </div><div class="line">long         J </div><div class="line">object       L </div><div class="line">short        S </div><div class="line">void         V</div><div class="line">array        [</div></pre></td></tr></table></figure>
+<p>比如Java方法：<br><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">jsDebugDetachCallback</span><span class="params">(<span class="keyword">long</span> udata)</span></span></div></pre></td></tr></table></figure></p>
+<p>的类型签名为(其中返回值类型V不可省略)：<br><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="string">"(J)V"</span></div></pre></td></tr></table></figure></p>
+<p>在c中获取该方法id的方式为：<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line">jsDebugDetachCallbackMethod = (*env)-&gt;GetStaticMethodID(env, someClz, <span class="string">"jsDebugDetachCallback"</span>, <span class="string">"(J)V"</span>);</div></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/01/05/2015-09-22-first/" itemprop="url">
+                  Clojure 生产环境中怎么使用environ
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-01-05T17:09:35+08:00" content="2016-01-05">
+              2016-01-05
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/01/05/2015-09-22-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/05/2015-09-22-first/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><a href="https://github.com/weavejester/environ" target="_blank" rel="external">environ</a>可以很方便帮我们管理项目中的各种配置，但是最近在使用的时候遇到了一个问题，就是我在dev, test profile下配置的database-uri到打出uberjar之后就访问不到了。最后看了下源码，在生产环境下，需要通过进程环境变量或Java系统属性来完成这一目的：</p>
+<p>进程环境变量：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">DATABASE_URL=jdbc:postgres://localhost/prod java -jar standalone.jar</div></pre></td></tr></table></figure>
+<p>Java系统属性：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">java -Ddatabase.url=jdbc:postgres://localhost/prod -jar standalone.jar</div></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/01/05/2015-09-08-first/" itemprop="url">
+                  Luminus web项目中让ajax请求和anti-forgery共存
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-01-05T17:09:35+08:00" content="2016-01-05">
+              2016-01-05
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/01/05/2015-09-08-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/05/2015-09-08-first/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>Luminus web项目默认会启用anti-forgery特性以防止跨站攻击，极大增强了安全性。但是也为一些异步发生（不是来源于服务端的输出页面）的请求（ajax）带来了不便。</p>
+<p>可以如下解决之：</p>
+<p>若你的网页模板是经由selmer layout的，它会自动带上这个anti-forgery token。你便可以在js中添加如下代码</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">var</span> csrfToken = <span class="string">"&#123;&#123;csrf-token&#125;&#125;"</span>;</div><div class="line">$.ajaxPrefilter(<span class="function"><span class="keyword">function</span> (<span class="params">options, originalOptions, request</span>) </span>&#123;</div><div class="line">    <span class="keyword">if</span> (csrfToken) &#123;</div><div class="line">        request.setRequestHeader(<span class="string">'X-CSRF-Token'</span>, csrfToken);</div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>Luminus框架的anti-forgery middleware也可以接受http header中的”X-CSRF-Token”指定的token。<br>这样子就把token给带到服务端了。让ajax请求顺利发出。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/01/05/2015-07-09-second/" itemprop="url">
+                  以UTF-8编码建立postgresql数据库
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-01-05T17:09:35+08:00" content="2016-01-05">
+              2016-01-05
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/01/05/2015-07-09-second/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/05/2015-07-09-second/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>因为要与java后端协作，数据库得建成UTF-8编码的。折腾了半天，实在是没有办法，改了locale，重新安装postgresql-server，最终通过命令行指定编码和模板（这点很重要）这样蒙混过关：</p>
+<p>命令行：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">createdb --locale=en_US.utf8 --encoding=UTF8 --template=template0 <span class="built_in">test</span>_db</div></pre></td></tr></table></figure>
+<p>然后确认下：</p>
+<p><img src="/uploads/2015_09_02_01.jpg" alt="psql_result"></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/01/05/2016-01-21-first/" itemprop="url">
+                  git pull --rebase
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-01-05T17:09:35+08:00" content="2016-01-05">
+              2016-01-05
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/01/05/2016-01-21-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/05/2016-01-21-first/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>有的同学在使用 git 时会不小心本地分支merge了远端的公共分支（通过 git pull ），我找了篇文章帮助大家学会 pull 的时候直接 rebase</p>
+<p><a href="http://gitready.com/advanced/2009/02/11/pull-with-rebase.html" target="_blank" rel="external">http://gitready.com/advanced/2009/02/11/pull-with-rebase.html</a></p>
+<p>其实很简单，对应的命令行是：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">git pull --rebase &lt;remote name&gt; &lt;branch name&gt;</div></pre></td></tr></table></figure>
+<p>由于 merge 提交会湮灭掉一些原始 commit 导致 rebase 时带来混乱，同时 merge 提交的 commit message 本身没有什么额外有价值的信息，我个人关于 merge 提交的经验是：  </p>
+<blockquote>
+<p>如果你的角色是scm，代码集成者，多个分支隔离开发很长时间之后的合并建议使用merge；每天持续开发中的数量不多的提交都最好使用rebase，这样可以让提交记录尽量保持线性和整洁，进而方便代码的集成和追踪。</p>
+</blockquote>
+<p><img src="/uploads/2016_01_21_01.png" alt=""></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/01/05/2015-06-29-first/" itemprop="url">
+                  clojure map-indexed使用实例
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-01-05T17:09:35+08:00" content="2016-01-05">
+              2016-01-05
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/01/05/2015-06-29-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/05/2015-06-29-first/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>用了clojure，才发现北方有一座高山……</p>
+<p>今天网站中需要做一个小功能，通过restful api请求另外一个内部网站的数据，但是写这个网站的同学给出的数据是[[a b c] [d e f]…]另外还有一个用于代表每一项的链接的links: [link1 link2 link3…]</p>
+<p>需要将之每项对应合并起来，找了下发现map-indexed非常适合这个场景：</p>
+<figure class="highlight"><table><tr><td class="code"><pre><div class="line">(def test1 [['a ] ['b] ['c]])</div><div class="line">(def test2 ['c 'd 'e])</div><div class="line">(defn my-merge [vect1 vect2]</div><div class="line">(into [] (map-indexed</div><div class="line">(fn [idx item] (merge item (vect2 idx))) vect1)))</div><div class="line"></div><div class="line">(my-merge test1 test2)</div><div class="line"></div><div class="line">=&gt;[[a c] [b d] [c e]]</div></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/01/05/2016-01-25-first/" itemprop="url">
+                  android开发中ConditionVariable的典型用法
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-01-05T17:09:35+08:00" content="2016-01-05">
+              2016-01-05
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/01/05/2016-01-25-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/05/2016-01-25-first/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>尽管现在诞生的高级语言里边有了什么STM，协程，绿程的概念，但写代码总会遇到现实（商业级平台都不会用很新的东西）的多线程的问题。</p>
+<p>比如有时候你需要同步的获取在另一个线程执行的代码的结果，在android里这种场景下ConditionVariable就非常好用了。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">if</span> (Looper.myLooper() != Looper.getMainLooper()) &#123;</div><div class="line"></div><div class="line">    <span class="keyword">final</span> ConditionVariable completed = <span class="keyword">new</span> ConditionVariable(); <span class="comment">// 构造一个条件变量</span></div><div class="line"></div><div class="line">    view.runOnUiThread(<span class="keyword">new</span> Runnable() &#123;</div><div class="line"></div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                doSomeThingInUiThread(); <span class="comment">// 将期望在另外线程做的事post出去</span></div><div class="line">            &#125; <span class="keyword">finally</span> &#123; <span class="comment">// finally很重要，防止运行时异常远跳转将ConditionVariable忘了open</span></div><div class="line">                completed.open(); <span class="comment">// 事情办完了，notify到另外线程</span></div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line">    completed.block(TIMEOUT_WAIT_UI); <span class="comment">// 等着另外线程做的事完成，同时支持设置超时</span></div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">    doSomeThingInUiThread();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>当然了以上是很简单的一个场景，使用ConditionVariable非常方便且够用。对于复杂的多线程之间的协同还是使用标准的条件变量结合lock + while 循环检查。</p>
+<p>在一些新语言中有非常丰富的并发编程原语（future, delay, promise），特别是协程让我们用代码自主的确定代码流之间的协作关系而不是被动的作为OS调度器的奴隶，来支撑一些并行需求。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+  </section>
+
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right"></i></a>
+  </nav>
+
+
+
+          </div>
+          
+
+
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.jpeg"
+               alt="faywong" />
+          <p class="site-author-name" itemprop="name">faywong</p>
+          <p class="site-description motion-element" itemprop="description">blog of faywong, faywong, 王飞</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">36</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">faywong</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="http://ajax.useso.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"faywong"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
