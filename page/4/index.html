@@ -248,8 +248,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/01/05/2015-09-22-second/" itemprop="url">
-                  fastjson for android名不副实
+                <a class="post-title-link" href="/2016/07/19/2016-03-13-first/" itemprop="url">
+                  当四字节UTF-8遇上JNI
                 </a>
               
             
@@ -262,8 +262,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-01-05T17:09:35+08:00" content="2016-01-05">
-              2016-01-05
+            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
+              2016-07-19
             </time>
           </span>
 
@@ -273,8 +273,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/01/05/2015-09-22-second/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/05/2015-09-22-second/" itemprop="commentsCount"></span>
+                <a href="/2016/07/19/2016-03-13-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2016-03-13-first/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -299,11 +299,18 @@
       
         
           
-            <p>今天在尝试优化json的序列化和反序列化。发现一个陷阱：<br>android自带的json比fastjson（fastjson-1.1.43）解析在9k（及以下）大小字符串输入下性能要高10倍，在解析19k大小字符串时性能高3倍。如下图所示：</p>
-<p>三星Note 3:<br><img src="/uploads/2015_09_22_01.png" alt="note 3"></p>
-<p>一加1代：<br><img src="/uploads/2015_09_22_02.png" alt="note 3"></p>
-<p>详细数据如下：<br>json字符串体积: 6k，android终端：三星note3<br><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">09-22 11:42:55.234: D/faywong(7810): org.json.JSONObject consumes: 1ms to parse json</div><div class="line">09-22 11:42:55.254: D/faywong(7810): com.alibaba.fastjson.JSONObject consumes: 15ms to parse json</div><div class="line"> </div><div class="line">json字符串体积: 9k，android终端：三星note3</div><div class="line">09-22 11:11:45.944: D/faywong(26631): org.json.JSONObject consumes: 1ms to parse json</div><div class="line">09-22 11:11:45.954: D/faywong(26631): com.alibaba.fastjson.JSONObject consumes: 15ms to parse json</div><div class="line"> </div><div class="line">json字符串体积: 19k，android终端：三星note3</div><div class="line">09-22 11:48:15.844: D/faywong(11569): org.json.JSONObject consumes: 6ms to parse json</div><div class="line">09-22 11:48:15.864: D/faywong(11569): com.alibaba.fastjson.JSONObject consumes: 19ms to parse json</div><div class="line"> </div><div class="line">json字符串体积: 6k，android终端：一加1代</div><div class="line">09-22 11:39:55.304: D/faywong(12964): org.json.JSONObject consumes: 1ms to parse json</div><div class="line">09-22 11:39:55.315: D/faywong(12964): com.alibaba.fastjson.JSONObject consumes: 11ms to parse json</div><div class="line">json字符串体积: 9k，android终端：一加1代</div><div class="line">09-22 11:30:06.378: D/faywong(11412): org.json.JSONObject consumes: 1ms to parse json</div><div class="line">09-22 11:30:06.395: D/faywong(11412): com.alibaba.fastjson.JSONObject consumes: 17ms to parse json</div><div class="line"> </div><div class="line">json字符串体积: 19k，android终端：一加1代</div><div class="line">09-22 11:53:30.551: D/faywong(14248): org.json.JSONObject consumes: 3ms to parse json</div><div class="line">09-22 11:53:30.564: D/faywong(14248): com.alibaba.fastjson.JSONObject consumes: 13ms to parse json</div></pre></td></tr></table></figure></p>
-<p>总结下json序列化和反序列化的使用经验：<br>在能控制json序列化和反序列化的整个闭环中（比如服务端+客户端）使用fastjson之类的方案是有优势的；如果你只是在其中的一环，并不知道前边的json是谁以怎样的方式序列化/反序列化得来，建议你使用org.json版本，这样性能不至于很差。</p>
+            <p>android在Java层对 utf 编码是支持得很好了，非常全面；但当你从事一些c/c++工程的开发时可就没有这么幸运了。<br>笔者最近在使用v8 javascript 引擎时便碰到了一个问题：</p>
+<p>有些用户在昵称中使用了 emoji 表情，v8 引擎内部默认会使用utf-16编码，通过 v8 API 取到这个值之后转为utf-8的字符串，进而通过 JNI 的 API JNIEnv-&gt;NewStringUTF 往 Java 传递时会被系统的 checkJNI 给拦截住而<a href="https://code.google.com/p/android/issues/detail?id=81341" target="_blank" rel="external">报错</a>。原因在为了让字符串中不包含任何 null 字节，JNI 以及 Java VM 内部都是使用的<a href="http://docs.oracle.com/javase/7/docs/technotes/guides/jni/spec/types.html" target="_blank" rel="external">Modified UTF-8</a>格式来编码字符串。</p>
+<p>后来找到一个办法可以通过将字符串转为 utf-16 编码后传递给 JNI API JNIEnv-&gt;NewString 解决之：</p>
+<ol>
+<li><p>使用 v8 API 将 utf-8 的字符串转为 utf-16 编码</p>
+<figure class="highlight"><table><tr><td class="code"><pre><div class="line">size_t utf8_to_utf16(const char *src, const uint16_t **dest) &#123;</div><div class="line">    if (src == NULL || dest == NULL) &#123;</div><div class="line">        return 0;</div><div class="line">    &#125;</div><div class="line">    Isolate::Scope scope(Isolate::GetCurrent());</div><div class="line">    HandleScope handle_scope;</div><div class="line">    Local&lt;String&gt; str = String::New(src);</div><div class="line">    String::Value val(str); // String::Value的内部编码是 utf-16</div><div class="line">    const size_t len = (val.length()) * sizeof(uint16_t);</div><div class="line">    uint16_t* target = (uint16_t*)calloc(val.length() + 1, sizeof(uint16_t));</div><div class="line">    if (target == NULL) &#123;</div><div class="line">        return 0;</div><div class="line">    &#125;</div><div class="line">    memcpy(target, *val, len);</div><div class="line">    *dest = target;</div><div class="line">    return val.length();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>将生成的 utf-16 字符串通过 JNI 传递到 Java 层</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">uint16_t</span> *utf16_action = <span class="literal">NULL</span>;</div><div class="line"><span class="keyword">size_t</span> len = utf8_to_utf16(action, &amp;utf16_action);</div><div class="line">jstring jText = (*env)-&gt;NewString(env, utf16_action, len);</div><div class="line"><span class="keyword">if</span> (utf16_action != <span class="literal">NULL</span>) &#123;</div><div class="line">    <span class="built_in">free</span>(utf16_action);</div><div class="line">&#125;</div><div class="line"><span class="keyword">if</span> (len == <span class="number">0</span>) &#123;</div><div class="line">    jText = (*env)-&gt;NewStringUTF(env, <span class="string">""</span>); <span class="comment">// 降级到使用NewStringUTF来创建一个""字符串</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>另外一种解决方法是通过 byteArray 来将 utf-8 编码的字符串传送到java层，详情请参考这篇<a href="http://banachowski.com/deprogramming/2012/02/working-around-jni-utf-8-strings/" target="_blank" rel="external">文章</a></p>
 
           
         
@@ -353,8 +360,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/01/05/2015-07-09-first/" itemprop="url">
-                  Nosql in postgresql
+                <a class="post-title-link" href="/2016/07/19/2016-03-20-first/" itemprop="url">
+                  为 Duktape 添加 JavaScript 模块化加载能力
                 </a>
               
             
@@ -367,8 +374,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-01-05T17:09:35+08:00" content="2016-01-05">
-              2016-01-05
+            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
+              2016-07-19
             </time>
           </span>
 
@@ -378,8 +385,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/01/05/2015-07-09-first/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/05/2015-07-09-first/" itemprop="commentsCount"></span>
+                <a href="/2016/07/19/2016-03-20-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2016-03-20-first/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -404,22 +411,20 @@
       
         
           
-            <p>PostgrepSQL 9.4开始支持了jsonb数据类型，从而支持了一部分nosql特性。今天使用了下，简要记录下：</p>
-<p>记得在pgadmin中验证下postgresql的版本号:</p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">SELECT</span> <span class="keyword">version</span>();</div></pre></td></tr></table></figure>
-<p>确认是9.4以上。</p>
-<p>确认之后可以在SQL终端继续感受下：</p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> <span class="string">'&#123;"bar": "baz", "balance": 7.77, "active":false&#125;'</span>::<span class="keyword">json</span>;</div></pre></td></tr></table></figure>
-<p>创建一个jsonb类型的字段：</p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> mobile_analysis</div><div class="line">(<span class="keyword">id</span> <span class="built_in">serial</span> PRIMARY <span class="keyword">KEY</span>,</div><div class="line">datadoc jsonb,</div><div class="line">create_at <span class="keyword">TIMESTAMP</span> <span class="keyword">WITH</span> <span class="keyword">TIME</span> ZONE <span class="keyword">default</span> <span class="keyword">current_timestamp</span>);</div></pre></td></tr></table></figure>
-<p>其中datadoc是我想存为json格式的字段的名称，为了支持后续的检索，为其创建索引：</p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">CREATE</span> <span class="keyword">INDEX</span> idx_mobile_analysis <span class="keyword">ON</span> mobile_analysis <span class="keyword">USING</span> gin (datadoc jsonb_path_ops);</div></pre></td></tr></table></figure>
-<p>其中的jsonb_path_ops是为了支持对jsonb字段的值进行检索，条件过滤（比如包含有特定的key-value对的记录）所必需的。</p>
-<p>插入一条测试数据：</p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> mobile_analysis(datadoc)</div><div class="line"><span class="keyword">VALUES</span> (<span class="string">'&#123;"a": 1, "b":2, "d": "string_val"&#125;'</span>);</div></pre></td></tr></table></figure>
-<p>通过包含条件查询之：</p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> mobile_analysis <span class="keyword">WHERE</span> datadoc @&gt; <span class="string">'&#123;"a":1&#125;'</span></div></pre></td></tr></table></figure>
-<p>更多的关于json/jsonb类型的函数和操作符的资料请见这里。</p>
+            <p><a href="http://duktape.org/" target="_blank" rel="external">Duktape</a> 是一个体积小巧、可移植性高、适合嵌入到各种环境中的 JavaScript 引擎。</p>
+<p>最近需要将 <a href="https://github.com/dcodeIO/protobuf.js" target="_blank" rel="external">protobuf.js</a> 移植到 Duktape 里边运行起来，所以需要解决 JavaScript 模块化加载问题，也就是要支持 require, module.exports 语法。我们通过 modSearch 函数来实现模块化加载：</p>
+<h4 id="实现-modSearch-函数"><a href="#实现-modSearch-函数" class="headerlink" title="实现 modSearch 函数"></a>实现 modSearch 函数</h4><p><a href="http://wiki.duktape.org/HowtoModules.html" target="_blank" rel="external">Implementing a native modSearch() function</a>这篇 guide 里边有说通过在 native 实现 modSearch 函数就可以在 JavaScript 里通过require的时候加载到别的模块。</p>
+<p>我在 c 层实现 modSearch 函数如下:</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="comment">//</span></div><div class="line"><span class="comment">//  main.c</span></div><div class="line"><span class="comment">//  duktape</span></div><div class="line"><span class="comment">//</span></div><div class="line"><span class="comment">//  Created by faywong on 16/3/18.</span></div><div class="line"><span class="comment">//  Copyright © 2016年 faywong. All rights reserved.</span></div><div class="line"><span class="comment">//</span></div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"duktape.h"</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"fileio.h"</span></span></div><div class="line"></div><div class="line"><span class="keyword">duk_ret_t</span> my_mod_search(duk_context *ctx) &#123;</div><div class="line">    <span class="comment">/*</span></div><div class="line">     *   index 0: id (string)</div><div class="line">     *   index 1: require (object)</div><div class="line">     *   index 2: exports (object)</div><div class="line">     *   index 3: module (object)</div><div class="line">     */</div><div class="line">    <span class="built_in">printf</span>(<span class="string">"fun: %s in, id: %s\n"</span>, <span class="number">__F</span>UNCTION__, duk_require_string(ctx, <span class="number">0</span>));</div><div class="line"></div><div class="line">    <span class="keyword">const</span> <span class="keyword">char</span> *id = duk_require_string(ctx, <span class="number">0</span>);</div><div class="line">    duk_pop_n(ctx, duk_get_top(ctx));</div><div class="line"></div><div class="line">    <span class="keyword">const</span> <span class="keyword">int</span> FILE_PATH_LEN = <span class="number">1024</span>;</div><div class="line">    <span class="keyword">char</span> file[FILE_PATH_LEN];</div><div class="line">    <span class="built_in">memset</span>(file, <span class="number">0</span>, FILE_PATH_LEN);</div><div class="line">    <span class="built_in">snprintf</span>(file, FILE_PATH_LEN, <span class="string">"/Users/faywong/%s.js"</span>, id);</div><div class="line"></div><div class="line">    duk_push_string_file(ctx, file);</div><div class="line">    <span class="keyword">return</span> <span class="number">1</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/*</span></div><div class="line"> * Register Duktape.modSearch</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">register_mod_search</span><span class="params">(duk_context *ctx)</span> </span>&#123;</div><div class="line">    duk_eval_string(ctx, <span class="string">"(function (fun) &#123; Duktape.modSearch = fun; &#125;)"</span>);</div><div class="line">    duk_push_c_function(ctx, my_mod_search, <span class="number">4</span> <span class="comment">/*nargs*/</span>);</div><div class="line">    duk_call(ctx, <span class="number">1</span>);</div><div class="line">    duk_pop(ctx);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> * argv[])</span> </span>&#123;</div><div class="line"></div><div class="line">    duk_context *ctx = duk_create_heap_default();</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (ctx) &#123;</div><div class="line"></div><div class="line">        register_mod_search(ctx);</div><div class="line"></div><div class="line">        register_fileio(ctx);</div><div class="line"></div><div class="line">        duk_eval_file(ctx, <span class="string">"/Users/faywong/test.js"</span>);</div><div class="line">        <span class="built_in">printf</span>(<span class="string">"result is: %s\n"</span>, duk_safe_to_string(ctx, <span class="number">-1</span>));</div><div class="line">        duk_pop(ctx);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>test.js 用以验证实现的模块化加载功能是否正常，内容如下：<br><figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="keyword">var</span> ByteBuffer = <span class="built_in">require</span>(<span class="string">'bytebuffer'</span>);</div><div class="line"><span class="keyword">var</span> test = <span class="keyword">new</span> ByteBuffer(<span class="number">10</span>);</div><div class="line">print(<span class="string">'step 1, ByteBuffer ok: '</span> + test.toString());</div><div class="line"><span class="keyword">var</span> ProtoBuf = <span class="built_in">require</span>(<span class="string">'protobuf'</span>);</div><div class="line">print(<span class="string">'step 2, ProtoBuf ok: '</span> + (<span class="keyword">typeof</span> ProtoBuf));</div><div class="line">print(<span class="string">'step 3, typeof ProtoBuf.loadProtoFile: '</span> + (<span class="keyword">typeof</span> ProtoBuf.loadProtoFile));</div><div class="line"><span class="keyword">var</span> builder = ProtoBuf.loadProtoFile(<span class="string">'/Users/faywong/complex.proto'</span>);</div><div class="line">print(<span class="string">'step 4, typeof builder: '</span> + (<span class="keyword">typeof</span> builder));</div><div class="line"></div><div class="line">Game = builder.build(<span class="string">"Game"</span>),</div><div class="line">Car = Game.Cars.Car;</div><div class="line"></div><div class="line"><span class="comment">// OR: Construct with values from an object, implicit message creation (address) and enum values as strings:</span></div><div class="line"><span class="keyword">var</span> car = <span class="keyword">new</span> Car(&#123;</div><div class="line">    <span class="string">"model"</span>: <span class="string">"Rustywq"</span>,</div><div class="line">    <span class="string">"vendor"</span>: &#123;</div><div class="line">        <span class="string">"name"</span>: <span class="string">"Iron Inc."</span>,</div><div class="line">        <span class="string">"address"</span>: &#123;</div><div class="line">            <span class="string">"country"</span>: <span class="string">"US"</span></div><div class="line">        &#125;</div><div class="line">    &#125;,</div><div class="line">    <span class="string">"speed"</span>: <span class="string">"SUPERFAST"</span> <span class="comment">// also equivalent to "speed": 2</span></div><div class="line">&#125;);</div><div class="line"></div><div class="line"><span class="comment">// OR: It's also possible to mix all of this!</span></div><div class="line"></div><div class="line"><span class="comment">// Afterwards, just encode your message:</span></div><div class="line"><span class="keyword">var</span> buffer = car.encode();</div><div class="line"></div><div class="line">print(<span class="string">'step 5, typeof buffer: '</span> + (<span class="keyword">typeof</span> buffer) + <span class="string">' toString(): '</span> + buffer.toString());</div></pre></td></tr></table></figure></p>
+<p>其中：</p>
+<ul>
+<li><p><strong>register_mod_search</strong> 函数用于向 Duktape 注册一个用于加载 JavaScript 模块的函数 <strong>my_mod_search</strong>，该函数有四个入参，分别为模块 id、发起 require 的模块、本模块的 exports 对象、本模块的 module 对象，该函数加载 /Users/faywong 目录下以 id 为主文件名（比如在 test.js 中 require 到的 bytebuffer, protobuf）的 JavaScript 文件并将文件内容返回给 Duktape</p>
+</li>
+<li><p>为了方便，test.js 中 require 的其他 JavaScript 模块被笔者放在了自己的家目录下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">/Users/faywong/bytebuffer.js</div><div class="line">/Users/faywong/protobuf.js</div><div class="line">/Users/faywong/test.js</div></pre></td></tr></table></figure>
+</li>
+</ul>
 
           
         
@@ -469,8 +474,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/01/03/2015-12-09-first/" itemprop="url">
-                  常见js引擎在Android上性能对比
+                <a class="post-title-link" href="/2016/07/19/2016-04-19-first/" itemprop="url">
+                  针对View LayoutParams做动画
                 </a>
               
             
@@ -483,8 +488,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-01-03T10:38:29+08:00" content="2016-01-03">
-              2016-01-03
+            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
+              2016-07-19
             </time>
           </span>
 
@@ -494,8 +499,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/01/03/2015-12-09-first/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/03/2015-12-09-first/" itemprop="commentsCount"></span>
+                <a href="/2016/07/19/2016-04-19-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2016-04-19-first/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -520,20 +525,8 @@
       
         
           
-            <p>以如下裴波那契数列为测试代码：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">fibonacci</span>(<span class="params">n</span>)</span></div><div class="line">&#123;</div><div class="line">       <span class="keyword">if</span> (n &lt; <span class="number">2</span>) <span class="keyword">return</span> n;</div><div class="line">       <span class="keyword">return</span> fibonacci(n - <span class="number">1</span>) + fibonacci(n - <span class="number">2</span>);</div><div class="line">&#125;</div><div class="line">print(<span class="string">'fibonacci(20):'</span> + fibonacci(<span class="number">20</span>));</div></pre></td></tr></table></figure>
-<p>当输入为10时的结果（单位：ms）：</p>
-<p>27 12-09 14:13:04.371  4816  4816 E BirdNest: fibonacci(10):55</p>
-<p>29 12-09 14:13:04.371  4816  4816 I faywong : benchmark(v8): 537</p>
-<p>31 12-09 14:13:04.391  4816  4816 I BirdNest: fibonacci(10):55</p>
-<p>32 12-09 14:13:04.391  4816  4816 I faywong : benchmark(duktape): 2336</p>
-<p>当输入为20时的结果：</p>
-<p>59 12-09 14:15:38.621  9196  9196 E BirdNest: fibonacci(20):6765</p>
-<p>61 12-09 14:15:38.621  9196  9196 I faywong : benchmark(v8): 1583</p>
-<p>63 12-09 14:15:38.841  9196  9196 I BirdNest: fibonacci(20):6765</p>
-<p>64 12-09 14:15:38.841  9196  9196 I faywong : benchmark(duktape): 189211</p>
-<p>大致汇总下：在输入为10时，v8性能是duktape的4倍；</p>
-<p>在输入为20时，v8性能是duktape的119倍，jsc是duktape的接近100倍</p>
+            <p>mView是我们期望有动画效果的目标View</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line">FrameLayout.LayoutParams mParams = ... <span class="comment">// 我们的目标 layout params</span></div><div class="line"><span class="keyword">if</span> (mTransitionTime &gt; <span class="number">0</span>) &#123;</div><div class="line">    ValueAnimator widthAnim = ValueAnimator.ofInt(<span class="number">0</span>, mParams.width); <span class="comment">// 从0变化到期望的宽度</span></div><div class="line">    widthAnim.addUpdateListener(<span class="keyword">new</span> ValueAnimator.AnimatorUpdateListener() &#123;</div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAnimationUpdate</span><span class="params">(ValueAnimator valueAnimator)</span> </span>&#123;</div><div class="line">            <span class="comment">// 在回调里我们踩着节拍来修改 view 的 layout params</span></div><div class="line">            <span class="keyword">int</span> val = (Integer) valueAnimator.getAnimatedValue();</div><div class="line">            mParams.width = val;</div><div class="line">            <span class="keyword">if</span> (mView != <span class="keyword">null</span>) &#123;</div><div class="line">                mView.setLayoutParams(mParams);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line">    widthAnim.setDuration(mTransitionTime);</div><div class="line">    widthAnim.start();</div><div class="line"></div><div class="line">    ValueAnimator heightAnim = ValueAnimator.ofInt(<span class="number">0</span>, mParams.height); <span class="comment">// 从0变化到期望的高度</span></div><div class="line">    heightAnim.addUpdateListener(<span class="keyword">new</span> ValueAnimator.AnimatorUpdateListener() &#123;</div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAnimationUpdate</span><span class="params">(ValueAnimator valueAnimator)</span> </span>&#123;</div><div class="line">            <span class="comment">// 在回调里我们踩着节拍来修改 view 的 layout params</span></div><div class="line">            <span class="keyword">int</span> val = (Integer) valueAnimator.getAnimatedValue();</div><div class="line">            mParams.height = val;</div><div class="line">            <span class="keyword">if</span> (mView != <span class="keyword">null</span>) &#123;</div><div class="line">                mView.setLayoutParams(mParams);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line">    heightAnim.setDuration(mTransitionTime);</div><div class="line">    heightAnim.start();</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">if</span> (mTransformDegree &gt; <span class="number">0</span>) &#123; <span class="comment">// 如果需要，在由小变大的过程中添加旋转效果</span></div><div class="line">    ObjectAnimator.ofFloat(mView, <span class="string">"rotation"</span>, <span class="number">0f</span>, mTransformDegree * <span class="number">1.0f</span>)</div><div class="line">            .setDuration(mTransitionTime &gt; <span class="number">0</span> ? mTransitionTime : <span class="number">0</span>).start();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 
           
         
@@ -583,8 +576,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/01/03/2015-11-17-first/" itemprop="url">
-                  让opengrok支持webservice
+                <a class="post-title-link" href="/2016/07/19/2016-04-01-first/" itemprop="url">
+                  RN 对 模块尺寸的处理
                 </a>
               
             
@@ -597,8 +590,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-01-03T10:38:29+08:00" content="2016-01-03">
-              2016-01-03
+            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
+              2016-07-19
             </time>
           </span>
 
@@ -608,8 +601,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/01/03/2015-11-17-first/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/03/2015-11-17-first/" itemprop="commentsCount"></span>
+                <a href="/2016/07/19/2016-04-01-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2016-04-01-first/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -634,11 +627,14 @@
       
         
           
-            <p>最近需要使用opengrok作为webservice来提供代码交叉索引功能。</p>
-<p>但是opengrok的release版本中还没有提供这个功能，原因在于这个提交没有被release。</p>
-<p>所以只能自己编译最新的master分支代码并deploy。注意一点编译时需要1.8的jdk，tomcat server也需要1.8jdk来运行方能不出错。</p>
-<p>在服务的url后边加上json?freetext=ThreadPoolExecutor之类的参数（其他参数请见我在Opengrok项目上的回复）便可查询到结果了。</p>
-<p>针对这个问题本人贡献了一遍详细点的<a href="https://github.com/OpenGrok/OpenGrok/wiki/OpenGrok-web-services" target="_blank" rel="external">文档</a>，请参阅。</p>
+            <p>由于容纳 RN view 的外围控件不确定，同时又要与其他view协调好尺寸和布局。<br>所以 RN 对 RootView（包含了一个模块的所有布局）的处理挺有技巧，RN 中有如下调用逻辑:</p>
+<p>ReactActivity.createRootView -&gt; setContentView(mReactRootView)</p>
+<p>ReactRootView.onMeasure()</p>
+<p>ReactInstanceManagerImpl.attachMeasuredRootViewToInstance</p>
+<p>UIManagerModule.addMeasuredRootView </p>
+<p>得到宽高：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">final</span> <span class="keyword">int</span> width;</div><div class="line"><span class="keyword">final</span> <span class="keyword">int</span> height;</div><div class="line"><span class="comment">// If LayoutParams sets size explicitly, we can use that. Otherwise get the size from the view.</span></div><div class="line"><span class="keyword">if</span> (rootView.getLayoutParams() != <span class="keyword">null</span> &amp;&amp;</div><div class="line">    rootView.getLayoutParams().width &gt; <span class="number">0</span> &amp;&amp;</div><div class="line">    rootView.getLayoutParams().height &gt; <span class="number">0</span>) &#123;</div><div class="line">    width = rootView.getLayoutParams().width;</div><div class="line">    height = rootView.getLayoutParams().height;</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">    width = rootView.getWidth();</div><div class="line">    height = rootView.getHeight();</div><div class="line">&#125;   </div><div class="line"></div><div class="line">rootView.setOnSizeChangedListener(</div><div class="line"><span class="keyword">new</span> SizeMonitoringFrameLayout.OnSizeChangedListener() &#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onSizeChanged</span><span class="params">(<span class="keyword">final</span> <span class="keyword">int</span> width, <span class="keyword">final</span> <span class="keyword">int</span> height, <span class="keyword">int</span> oldW, <span class="keyword">int</span> oldH)</span> </span>&#123;</div><div class="line">    getReactApplicationContext().runOnNativeModulesQueueThread(</div><div class="line">        <span class="keyword">new</span> Runnable() &#123;</div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">            updateRootNodeSize(tag, width, height);</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>通过这个 SizeMonitoringFrameLayout.OnSizeChangedListener 将 SizeMonitoringFrameLayout（实际扮演一个容器 ViewGroup 来监听布局的改变）的宽高传递给 css-layout 用于布局各个”盒”节点。</p>
 
           
         
@@ -688,8 +684,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/01/03/2015-11-26-first/" itemprop="url">
-                  浅谈NavigationBar高度的获取
+                <a class="post-title-link" href="/2016/07/19/2016-01-21-first/" itemprop="url">
+                  git pull --rebase
                 </a>
               
             
@@ -702,8 +698,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-01-03T10:38:29+08:00" content="2016-01-03">
-              2016-01-03
+            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
+              2016-07-19
             </time>
           </span>
 
@@ -713,8 +709,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/01/03/2015-11-26-first/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/03/2015-11-26-first/" itemprop="commentsCount"></span>
+                <a href="/2016/07/19/2016-01-21-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2016-01-21-first/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -739,12 +735,16 @@
       
         
           
-            <p>由于MEIZU手机的特殊性，对于NavigationBar的获取有特殊的讲究，有三个方面的因素：</p>
-<p>1）MEIZU早期的系统（flyme os 5以下）存在smartbar，且可以设置智能隐藏；flyme os 5及以后smartbar被废弃，而使用android的NavigationBar</p>
-<p>2）flymeos 5以下的系统有些存在系统dimen资源用于获取smartbar高度，有些则不再存在</p>
-<p>3）是否智能隐藏SmartBar的开关并不与Android是否显示NavigationBar的开关为同一个</p>
-<p>所以我今天研究了下，封装了一个方法：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">getNavigationBarHeight</span><span class="params">(Context context)</span> </span>&#123;</div><div class="line">    <span class="keyword">final</span> <span class="keyword">boolean</span> isMeiZu = Build.MANUFACTURER.equals(<span class="string">"Meizu"</span>);</div><div class="line"></div><div class="line">    <span class="keyword">final</span> <span class="keyword">boolean</span> autoHideSmartBar = Settings.System.getInt(context.getContentResolver(),</div><div class="line">            <span class="string">"mz_smartbar_auto_hide"</span>, <span class="number">0</span>) == <span class="number">1</span>;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (isMeiZu) &#123;</div><div class="line">        <span class="keyword">if</span> (autoHideSmartBar) &#123;</div><div class="line">            <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                Class c = Class.forName(<span class="string">"com.android.internal.R$dimen"</span>);</div><div class="line">                Object obj = c.newInstance();</div><div class="line">                Field field = c.getField(<span class="string">"mz_action_button_min_height"</span>);</div><div class="line">                <span class="keyword">int</span> height = Integer.parseInt(field.get(obj).toString());</div><div class="line">                <span class="keyword">return</span> context.getResources().getDimensionPixelSize(height);</div><div class="line">            &#125; <span class="keyword">catch</span> (Throwable e) &#123; <span class="comment">// 不自动隐藏smartbar同时又没有smartbar高度字段供访问，取系统navigationbar的高度</span></div><div class="line">                <span class="keyword">return</span> getNormalNavigationBarHeight(context);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">return</span> getNormalNavigationBarHeight(context);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">getNormalNavigationBarHeight</span><span class="params">(<span class="keyword">final</span> Context ctx)</span> </span>&#123;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        <span class="keyword">final</span> Resources res = ctx.getResources();</div><div class="line">        <span class="keyword">int</span> rid = res.getIdentifier(<span class="string">"config_showNavigationBar"</span>, <span class="string">"bool"</span>, <span class="string">"android"</span>);</div><div class="line">        <span class="keyword">if</span> (rid &gt; <span class="number">0</span>) &#123;</div><div class="line">            <span class="keyword">boolean</span> flag = res.getBoolean(rid);</div><div class="line">            <span class="keyword">if</span> (flag) &#123;</div><div class="line">                <span class="keyword">int</span> resourceId = res.getIdentifier(<span class="string">"navigation_bar_height"</span>, <span class="string">"dimen"</span>, <span class="string">"android"</span>);</div><div class="line">                <span class="keyword">if</span> (resourceId &gt; <span class="number">0</span>) &#123;</div><div class="line">                    <span class="keyword">return</span> res.getDimensionPixelSize(resourceId);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125; <span class="keyword">catch</span> (Throwable e) &#123;</div><div class="line">        LogCatLog.d(<span class="string">"FBTools"</span>, <span class="string">"getNormalNavigationBarHeight() exception:"</span> + e.getMessage());</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+            <p>有的同学在使用 git 时会不小心本地分支merge了远端的公共分支（通过 git pull ），我找了篇文章帮助大家学会 pull 的时候直接 rebase</p>
+<p><a href="http://gitready.com/advanced/2009/02/11/pull-with-rebase.html" target="_blank" rel="external">http://gitready.com/advanced/2009/02/11/pull-with-rebase.html</a></p>
+<p>其实很简单，对应的命令行是：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">git pull --rebase &lt;remote name&gt; &lt;branch name&gt;</div></pre></td></tr></table></figure>
+<p>由于 merge 提交会湮灭掉一些原始 commit 导致 rebase 时带来混乱，同时 merge 提交的 commit message 本身没有什么额外有价值的信息，我个人关于 merge 提交的经验是：  </p>
+<blockquote>
+<p>如果你的角色是scm，代码集成者，多个分支隔离开发很长时间之后的合并建议使用merge；每天持续开发中的数量不多的提交都最好使用rebase，这样可以让提交记录尽量保持线性和整洁，进而方便代码的集成和追踪。</p>
+</blockquote>
+<p><img src="/uploads/2016_01_21_01.png" alt=""></p>
+
           
         
       
@@ -793,8 +793,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/01/03/2015-12-03-first/" itemprop="url">
-                  CheckBox on HM NOTE 1W,4.4.2,WIFI
+                <a class="post-title-link" href="/2016/07/18/isnanf引发的血案/" itemprop="url">
+                  __isnanf引发的血案
                 </a>
               
             
@@ -807,8 +807,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-01-03T10:38:29+08:00" content="2016-01-03">
-              2016-01-03
+            <time itemprop="dateCreated" datetime="2016-07-18T15:41:25+08:00" content="2016-07-18">
+              2016-07-18
             </time>
           </span>
 
@@ -818,8 +818,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/01/03/2015-12-03-first/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/03/2015-12-03-first/" itemprop="commentsCount"></span>
+                <a href="/2016/07/18/isnanf引发的血案/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/18/isnanf引发的血案/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -844,8 +844,130 @@
       
         
           
-            <p>这台红米Note1W上会有系统资源（res/drawable/btn_check_holo_light.xml）找不到的问题。备忘下。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">0x10800de</div><div class="line">java.lang.NullPointerException</div><div class="line">at android.graphics.drawable.DrawableContainer<span class="variable">$DrawableContainerState</span>.addChild(DrawableContainer.java:584)</div><div class="line">at android.graphics.drawable.StateListDrawable<span class="variable">$StateListState</span>.addStateSet(StateListDrawable.java:291)</div><div class="line">at android.graphics.drawable.StateListDrawable.inflate(StateListDrawable.java:189)</div><div class="line">at android.graphics.drawable.Drawable.createFromXmlInner(Drawable.java:937)</div><div class="line">at android.graphics.drawable.Drawable.createFromXml(Drawable.java:877)</div><div class="line">at android.content.res.Resources.createFromXml(Resources.java:2821)</div><div class="line">at android.content.res.Resources.loadDrawable(Resources.java:2191)</div><div class="line">at android.content.res.Resources.loadDrawable(Resources.java:2103)</div><div class="line">at android.content.res.TypedArray.getDrawable(TypedArray.java:602)</div><div class="line">at android.widget.CompoundButton.&lt;init&gt;(CompoundButton.java:74)</div><div class="line">at android.widget.CheckBox.&lt;init&gt;(CheckBox.java:68)</div><div class="line">at android.widget.CheckBox.&lt;init&gt;(CheckBox.java:64)</div><div class="line">at android.widget.CheckBox.&lt;init&gt;(CheckBox.java:60)</div></pre></td></tr></table></figure>
+            <p>最近遇到了4.x版本 android 上由<strong>__isnanf</strong>引发的血案，过程就不表了。典型出错日志(4.2.2)：<br><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">07-18 11:58:20.445 W/ExceptionHandler(15303): Caused by: java.lang.UnsatisfiedLinkError: Cannot load library: soinfo_relocate(linker.cpp:975): cannot locate symbol <span class="string">"__isnanf"</span> referenced by <span class="string">"libmylibrary.so"</span>...</div></pre></td></tr></table></figure></p>
+<p>在4.2.2版本的 <a href="http://androidxref.com/4.2.2_r1/xref/bionic/libm/include/math.h" target="_blank" rel="external">bionic c</a> 中：<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">define</span>	isnan(x)					\</span></div><div class="line">    ((sizeof (x) == sizeof (float)) ? isnanf(x)		\</div><div class="line">    : (sizeof (x) == sizeof (double)) ? isnan(x)	\</div><div class="line">    : __isnanl(x))</div></pre></td></tr></table></figure></p>
+<p>在后来的版本中，以<a href="http://androidxref.com/5.1.1_r6/xref/bionic/libm/include/math.h" target="_blank" rel="external">5.1.1</a>为例，它变成了：<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">define</span>	isnan(x)					\</span></div><div class="line">   ((sizeof (x) == sizeof (float)) ? __isnanf(x)	\</div><div class="line">    : (sizeof (x) == sizeof (double)) ? isnan(x)	\</div><div class="line">    : __isnanl(x))</div></pre></td></tr></table></figure></p>
+<p>我们看下 ndk 中的头文件(以r10e)为例: platform-21 中使用的是 __isnanf，platform-21 以下版本的是 isnanf。</p>
+<p>有此可见在低版本的 android 上 __isnanf 不是一定存在的，使用它是不安全的，同时由于 ndk 的不同版本（有些版本有bug，推荐使用 r10e ）所包含的 libm.so 并没有与具体的 platform上的 libm.so 保持一致，在链接时并不能发现这一问题。所以针对这个问题，有两个方面要注意：</p>
+<p>1) 编译完动态库之后用如下命令查看下动态符号表，确认是否引用了 __isnanf 符号：<br><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">arm-linux-androideabi-objdump -T &#123;your_library&#125;</div></pre></td></tr></table></figure></p>
+<p>2）如果你觉得1) 这种方式麻烦，你可以采用如下方式将 isnan 转为安全的 __builtin_isnan<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;math.h&gt;</span></span></div><div class="line">+<span class="meta">#<span class="meta-keyword">undef</span> isnan</span></div><div class="line">+<span class="meta">#<span class="meta-keyword">define</span> isnan(x) __builtin_isnan(x)</span></div></pre></td></tr></table></figure></p>
+<p>在调查以上问题时，还 get 到了一个很偏门的 c 语言小知识：<br>在一些 libc 头文件会以如下方式(函数名外边套一对圆括号)声明函数：<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">int</span> (isnan)(<span class="keyword">double</span>) <span class="number">__</span>NDK_FPABI_MATH__ <span class="number">__</span>pure2;</div></pre></td></tr></table></figure></p>
+<p>其目的在于抑制宏替换，示例如下：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="comment">/* the macro */</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> isdigit(c) ...</span></div><div class="line"></div><div class="line"><span class="comment">/* the function */</span></div><div class="line"><span class="keyword">int</span> (<span class="built_in">isdigit</span>)(<span class="keyword">int</span> c) <span class="comment">/* avoid the macro through the use of parentheses */</span></div><div class="line">&#123;</div><div class="line">  <span class="keyword">return</span> <span class="built_in">isdigit</span>(c); <span class="comment">/* use the macro */</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>机理请见下文：</p>
+<blockquote>
+<p>7.1.4 Use of library functions</p>
+<p>Any function declared in a header may be additionally implemented as a function-like macro deﬁned in the header, so if a library function is declared explicitly when its header is included, one of the techniques shown below can be used to ensure the declaration is not affected by such a macro. Any macro deﬁnition of a function can be suppressed locally by enclosing the name of the function in parentheses, because the name is then not followed by the left parenthesis that indicates expansion of a macro function name. For the same syntactic reason, it is permitted to take the address of a library function even if it is also deﬁned as a macro.</p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/11/git自动补全/" itemprop="url">
+                  git自动补全
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-11T15:31:26+08:00" content="2016-07-11">
+              2016-07-11
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/11/git自动补全/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/11/git自动补全/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>为 git 添加自动补全可以为平时的开发工作提升很多效率。而其方法也非常容易：</p>
+<ol>
+<li><p>下载 git-completion 脚本</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">wget https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash</div></pre></td></tr></table></figure>
+</li>
+<li><p>配置自动加载以上脚本<br>若期望整个系统生效，则在 /etc/profile 中（若为单个用户，则在 ~/.bashrc 中）添加:</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line"><span class="built_in">source</span> &#123;git-completion.bash&#125;</div></pre></td></tr></table></figure></li>
+</ol>
+
           
         
       
@@ -918,7 +1040,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">36</span>
+              <span class="site-state-item-count">37</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -928,7 +1050,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-count">11</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

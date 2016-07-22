@@ -1,0 +1,640 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.useso.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="android," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="在android的开发中，我们不时需要客观的测量和评估android应用程序的帧率。这篇文章我打算分享下这几天我在这方面的尝试：
+1） fps meter
+这个软件是我使用最早的，但是对手机的要求很高。第一是root，root完毕也不是每个手机上都能很好的工作。现在小米的MIUI对于root这件事是越来越不大方了，所以也更加添加了使用的难度。
+root成本高昂，root完毕仍然不一定适用于所有的手">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何评估Android应用程序的帧率">
+<meta property="og:url" content="http://faywong.github.io/2016/07/19/2015-08-31-first/index.html">
+<meta property="og:site_name" content="blog of faywong">
+<meta property="og:description" content="在android的开发中，我们不时需要客观的测量和评估android应用程序的帧率。这篇文章我打算分享下这几天我在这方面的尝试：
+1） fps meter
+这个软件是我使用最早的，但是对手机的要求很高。第一是root，root完毕也不是每个手机上都能很好的工作。现在小米的MIUI对于root这件事是越来越不大方了，所以也更加添加了使用的难度。
+root成本高昂，root完毕仍然不一定适用于所有的手">
+<meta property="og:image" content="http://faywong.github.io/uploads/2015-08-31-01.png">
+<meta property="og:image" content="http://faywong.github.io/uploads/2015-08-31-02.png">
+<meta property="og:image" content="http://faywong.github.io/uploads/2015-08-31-03.png">
+<meta property="og:updated_time" content="2016-07-19T03:05:25.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何评估Android应用程序的帧率">
+<meta name="twitter:description" content="在android的开发中，我们不时需要客观的测量和评估android应用程序的帧率。这篇文章我打算分享下这几天我在这方面的尝试：
+1） fps meter
+这个软件是我使用最早的，但是对手机的要求很高。第一是root，root完毕也不是每个手机上都能很好的工作。现在小米的MIUI对于root这件事是越来越不大方了，所以也更加添加了使用的难度。
+root成本高昂，root完毕仍然不一定适用于所有的手">
+<meta name="twitter:image" content="http://faywong.github.io/uploads/2015-08-31-01.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://faywong.github.io/2016/07/19/2015-08-31-first/"/>
+
+  <title> 如何评估Android应用程序的帧率 | blog of faywong </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">blog of faywong</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">love coding, love life</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                如何评估Android应用程序的帧率
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
+              2016-07-19
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/19/2015-08-31-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-08-31-first/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在android的开发中，我们不时需要客观的测量和评估android应用程序的帧率。这篇文章我打算分享下这几天我在这方面的尝试：</p>
+<p>1） fps meter</p>
+<p>这个软件是我使用最早的，但是对手机的要求很高。第一是root，root完毕也不是每个手机上都能很好的工作。现在小米的MIUI对于root这件事是越来越不大方了，所以也更加添加了使用的难度。</p>
+<p>root成本高昂，root完毕仍然不一定适用于所有的手机。所以只能忽略之。</p>
+<p>2)  dumpsys</p>
+<p>dumpsys是android系统提供的用于dump系统服务的状态信息的命令行工具。</p>
+<p>给它提供gfxinfo参数时，它能在Logcat输出中给出UI相关的性能数据。但是M以前版本的android自带的dumpsys工具只能给出120帧的时序信息。且需要手动合并时间值。</p>
+<p>例如systemui模块的UI方面的信息如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">** Graphics info <span class="keyword">for</span> pid 1269 [com.android.systemui] **</div><div class="line"></div><div class="line">Recent DisplayList operations</div><div class="line"></div><div class="line">DrawRenderNode</div><div class="line"></div><div class="line">DrawRenderNode</div><div class="line"></div><div class="line">DrawRenderNode</div><div class="line"></div><div class="line">DrawRenderNode</div><div class="line"></div><div class="line">DrawRenderNode</div><div class="line"></div><div class="line">DrawRenderNode</div><div class="line"></div><div class="line">DrawRenderNode</div><div class="line"></div><div class="line">RestoreToCount</div><div class="line"></div><div class="line">multiDraw</div><div class="line"></div><div class="line">DrawText</div><div class="line"></div><div class="line">DrawRect</div><div class="line"></div><div class="line">DrawBitmap</div><div class="line"></div><div class="line">DrawColor</div><div class="line"></div><div class="line">DrawLayer</div><div class="line"></div><div class="line">multiDraw</div><div class="line"></div><div class="line">  DrawText</div><div class="line"></div><div class="line">multiDraw</div><div class="line"></div><div class="line">  DrawText</div><div class="line"></div><div class="line">multiDraw</div><div class="line"></div><div class="line">  DrawText</div><div class="line"></div><div class="line">DrawBitmap</div><div class="line"></div><div class="line">DrawBitmap</div><div class="line"></div><div class="line">DrawRect</div><div class="line"></div><div class="line">DrawRect</div><div class="line"></div><div class="line">multiDraw</div><div class="line"></div><div class="line">  DrawBitmap</div><div class="line"></div><div class="line">DrawBitmap</div><div class="line"></div><div class="line">DrawBitmap</div><div class="line"></div><div class="line">DrawBitmap</div><div class="line"></div><div class="line">DrawBitmap</div><div class="line"></div><div class="line">DrawBitmap</div><div class="line"></div><div class="line">DrawShadow</div><div class="line"></div><div class="line">DrawRoundRect</div><div class="line"></div><div class="line">DrawBitmap</div><div class="line"></div><div class="line">DrawBitmap</div><div class="line"></div><div class="line">DrawBitmap</div><div class="line"></div><div class="line">multiDraw</div><div class="line"></div><div class="line">  DrawText</div><div class="line"></div><div class="line">multiDraw</div><div class="line"></div><div class="line">  DrawText</div><div class="line"></div><div class="line">DrawShadow</div><div class="line"></div><div class="line">DrawRoundRect</div><div class="line"></div><div class="line">DrawBitmap</div><div class="line"></div><div class="line">DrawBitmap</div><div class="line"></div><div class="line">DrawBitmap</div><div class="line"></div><div class="line">DrawBitmap</div><div class="line"></div><div class="line">DrawBitmap</div><div class="line"></div><div class="line">DrawBitmap</div><div class="line"></div><div class="line">multiDraw</div><div class="line"></div><div class="line">  DrawText</div><div class="line"></div><div class="line">Caches:</div><div class="line"></div><div class="line">Current memory usage / total memory usage (bytes):</div><div class="line"></div><div class="line">  TextureCache         20874472 / 75497472</div><div class="line"></div><div class="line">  LayerCache            9633792 / 50331648 (numLayers = 4)</div><div class="line"></div><div class="line">  Garbage layers              0</div><div class="line"></div><div class="line">  Active layers               0</div><div class="line"></div><div class="line">  RenderBufferCache     2019328 /  8388608</div><div class="line"></div><div class="line">  GradientCache               0 /  1048576</div><div class="line"></div><div class="line">  PathCache              631960 / 33554432</div><div class="line"></div><div class="line">  TessellationCache      219536 /  1048576</div><div class="line"></div><div class="line">  TextDropShadowCache   6289840 /  6291456</div><div class="line"></div><div class="line">  PatchCache              14272 /   131072</div><div class="line"></div><div class="line">  AssetAtlas           15745024 bytes ( 15.02 MB )</div><div class="line"></div><div class="line">  FontRenderer 0 A8     5242880 /  5242880</div><div class="line"></div><div class="line">  FontRenderer 0 RGBA   4194304 /  4194304</div><div class="line"></div><div class="line">  FontRenderer 0 total  9437184 /  9437184</div><div class="line"></div><div class="line">Other:</div><div class="line"></div><div class="line">  FboCache                    9 /       16</div><div class="line"></div><div class="line">Total memory usage:</div><div class="line"></div><div class="line">  49120384 bytes, 46.84 MB</div><div class="line"></div><div class="line">Profile data <span class="keyword">in</span> ms:</div><div class="line"></div><div class="line">StatusBar/android.view.ViewRootImpl@647809c (visibility=0)</div><div class="line"></div><div class="line">Draw Prepare Process Execute</div><div class="line"></div><div class="line">0.61 0.19 6.45 1.72</div><div class="line"></div><div class="line">0.59 0.25 6.14 1.19</div><div class="line"></div><div class="line">0.89 0.23 5.95 1.32</div><div class="line"></div><div class="line">0.78 0.28 7.68 1.48</div><div class="line"></div><div class="line">3.48 0.22 5.72 1.43</div><div class="line"></div><div class="line">0.61 0.17 5.90 1.18</div><div class="line"></div><div class="line">0.61 0.19 5.48 1.17</div><div class="line"></div><div class="line">0.67 0.19 5.58 1.17</div><div class="line"></div><div class="line">0.50 0.19 5.58 1.19</div><div class="line"></div><div class="line">0.60 0.21 5.06 1.13</div><div class="line"></div><div class="line">0.79 0.27 8.64 1.77</div><div class="line"></div><div class="line">0.81 0.25 6.46 1.46</div><div class="line"></div><div class="line">0.81 0.19 5.51 1.19</div><div class="line"></div><div class="line">0.95 0.30 8.34 2.36</div><div class="line"></div><div class="line">0.79 0.27 6.59 1.76</div><div class="line"></div><div class="line">1.25 0.23 6.41 1.20</div><div class="line"></div><div class="line">2.13 0.31 2.12 1.25</div><div class="line"></div><div class="line">0.64 0.22 5.66 1.29</div><div class="line"></div><div class="line">0.61 0.21 5.56 1.21</div><div class="line"></div><div class="line">0.68 0.16 5.58 1.24</div><div class="line"></div><div class="line">0.83 0.27 6.95 1.54</div><div class="line"></div><div class="line">0.61 0.19 5.77 1.22</div><div class="line"></div><div class="line">0.67 0.22 5.49 1.17</div><div class="line"></div><div class="line">1.12 0.24 8.62 1.74</div><div class="line"></div><div class="line">21.00 7.25 35.60 23.48</div><div class="line"></div><div class="line">Heads Up/android.view.ViewRootImpl@17c714d0 (visibility=8)</div><div class="line"></div><div class="line">Draw Prepare Process Execute</div><div class="line"></div><div class="line">View hierarchy:</div><div class="line"></div><div class="line">  StatusBar/android.view.ViewRootImpl@647809c</div><div class="line"></div><div class="line">  691 views, 1095.36 kB of display lists</div><div class="line"></div><div class="line">  Heads Up/android.view.ViewRootImpl@17c714d0</div><div class="line"></div><div class="line">  63 views, 93.02 kB of display lists</div><div class="line"></div><div class="line">Total ViewRootImpl: 2</div><div class="line"></div><div class="line">Total Views:        754</div><div class="line"></div><div class="line">Total DisplayList:  1188.38 kB</div></pre></td></tr></table></figure>
+<p>这些数据采样的时间太短，且需要进一步的加总才能可视化。所以不是很方便。</p>
+<p>Google似乎也意识到了这一点，在M Preview中他们支持了累计的帧率数据：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">Stats since: 752958278148ns</div><div class="line">Total frames rendered: 82189</div><div class="line">Janky frames: 35335 (42.99%)</div><div class="line">90th percentile: 34ms</div><div class="line">95th percentile: 42ms</div><div class="line">99th percentile: 69ms</div><div class="line">Number Missed Vsync: 4706</div><div class="line">Number High input latency: 142</div><div class="line">Number Slow UI thread: 17270</div><div class="line">Number Slow bitmap uploads: 1542</div><div class="line">Number Slow draw: 23342</div></pre></td></tr></table></figure>
+<p>但是适用面太窄了，只能在android M中使用。</p>
+<p>3) GameBench</p>
+<p>这个工具目前来看用起来很方面，且直接给出了可视化结果，非常人性化且可靠。上个截图：</p>
+<p><img src="/uploads/2015-08-31-01.png" alt="GameBench"></p>
+<p>使用步骤：</p>
+<ol>
+<li>下载<a href="/uploads/gamebench-3.2.2p.apk">gamebench-3.2.2p.apk</a>并安装到 Android 手机上</li>
+<li>下载<a href="/uploads/GameBench-Installer_v4.0.jar">GameBench-Installer_v4.0.jar</a>并通过<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">java -jar GameBench-Installer_v4.0.jar</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>在PC上运行设置过程（注意：需要使用jdk8，不然jar包会报错），直到出现以下成功界面：<br><img src="/uploads/2015-08-31-02.png" alt="GameBench PC 设置"></p>
+<ol>
+<li>在 android 上运行 GameBench app，并在其中运行待评估的目标应用，运行一段时间后得到如下结果：</li>
+</ol>
+<p><img src="/uploads/2015-08-31-03.png" alt="GameBench 结果"></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/android/" rel="tag">#android</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/07/19/2015-01-15-first/" rel="next" title="WebView中支持input type="file"元素">
+                <i class="fa fa-chevron-left"></i> WebView中支持input type="file"元素
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/07/19/2015-07-09-second/" rel="prev" title="以UTF-8编码建立postgresql数据库">
+                以UTF-8编码建立postgresql数据库 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/07/19/2015-08-31-first/"
+           data-title="如何评估Android应用程序的帧率" data-url="http://faywong.github.io/2016/07/19/2015-08-31-first/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.jpeg"
+               alt="faywong" />
+          <p class="site-author-name" itemprop="name">faywong</p>
+          <p class="site-description motion-element" itemprop="description">blog of faywong, faywong, 王飞</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">37</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <p class="post-toc-empty">此文章未包含目录</p>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">faywong</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="http://ajax.useso.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"faywong"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,622 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.useso.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="JavaScript,Duktape," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="Duktape 是一个体积小巧、可移植性高、适合嵌入到各种环境中的 JavaScript 引擎。
+最近需要将 protobuf.js 移植到 Duktape 里边运行起来，所以需要解决 JavaScript 模块化加载问题，也就是要支持 require, module.exports 语法。我们通过 modSearch 函数来实现模块化加载：
+实现 modSearch 函数Implementing">
+<meta property="og:type" content="article">
+<meta property="og:title" content="为 Duktape 添加 JavaScript 模块化加载能力">
+<meta property="og:url" content="http://faywong.github.io/2016/07/19/2016-03-20-first/index.html">
+<meta property="og:site_name" content="blog of faywong">
+<meta property="og:description" content="Duktape 是一个体积小巧、可移植性高、适合嵌入到各种环境中的 JavaScript 引擎。
+最近需要将 protobuf.js 移植到 Duktape 里边运行起来，所以需要解决 JavaScript 模块化加载问题，也就是要支持 require, module.exports 语法。我们通过 modSearch 函数来实现模块化加载：
+实现 modSearch 函数Implementing">
+<meta property="og:updated_time" content="2016-07-19T03:05:25.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="为 Duktape 添加 JavaScript 模块化加载能力">
+<meta name="twitter:description" content="Duktape 是一个体积小巧、可移植性高、适合嵌入到各种环境中的 JavaScript 引擎。
+最近需要将 protobuf.js 移植到 Duktape 里边运行起来，所以需要解决 JavaScript 模块化加载问题，也就是要支持 require, module.exports 语法。我们通过 modSearch 函数来实现模块化加载：
+实现 modSearch 函数Implementing">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://faywong.github.io/2016/07/19/2016-03-20-first/"/>
+
+  <title> 为 Duktape 添加 JavaScript 模块化加载能力 | blog of faywong </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">blog of faywong</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">love coding, love life</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                为 Duktape 添加 JavaScript 模块化加载能力
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
+              2016-07-19
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/19/2016-03-20-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2016-03-20-first/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><a href="http://duktape.org/" target="_blank" rel="external">Duktape</a> 是一个体积小巧、可移植性高、适合嵌入到各种环境中的 JavaScript 引擎。</p>
+<p>最近需要将 <a href="https://github.com/dcodeIO/protobuf.js" target="_blank" rel="external">protobuf.js</a> 移植到 Duktape 里边运行起来，所以需要解决 JavaScript 模块化加载问题，也就是要支持 require, module.exports 语法。我们通过 modSearch 函数来实现模块化加载：</p>
+<h4 id="实现-modSearch-函数"><a href="#实现-modSearch-函数" class="headerlink" title="实现 modSearch 函数"></a>实现 modSearch 函数</h4><p><a href="http://wiki.duktape.org/HowtoModules.html" target="_blank" rel="external">Implementing a native modSearch() function</a>这篇 guide 里边有说通过在 native 实现 modSearch 函数就可以在 JavaScript 里通过require的时候加载到别的模块。</p>
+<p>我在 c 层实现 modSearch 函数如下:</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="comment">//</span></div><div class="line"><span class="comment">//  main.c</span></div><div class="line"><span class="comment">//  duktape</span></div><div class="line"><span class="comment">//</span></div><div class="line"><span class="comment">//  Created by faywong on 16/3/18.</span></div><div class="line"><span class="comment">//  Copyright © 2016年 faywong. All rights reserved.</span></div><div class="line"><span class="comment">//</span></div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"duktape.h"</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"fileio.h"</span></span></div><div class="line"></div><div class="line"><span class="keyword">duk_ret_t</span> my_mod_search(duk_context *ctx) &#123;</div><div class="line">    <span class="comment">/*</span></div><div class="line">     *   index 0: id (string)</div><div class="line">     *   index 1: require (object)</div><div class="line">     *   index 2: exports (object)</div><div class="line">     *   index 3: module (object)</div><div class="line">     */</div><div class="line">    <span class="built_in">printf</span>(<span class="string">"fun: %s in, id: %s\n"</span>, <span class="number">__F</span>UNCTION__, duk_require_string(ctx, <span class="number">0</span>));</div><div class="line"></div><div class="line">    <span class="keyword">const</span> <span class="keyword">char</span> *id = duk_require_string(ctx, <span class="number">0</span>);</div><div class="line">    duk_pop_n(ctx, duk_get_top(ctx));</div><div class="line"></div><div class="line">    <span class="keyword">const</span> <span class="keyword">int</span> FILE_PATH_LEN = <span class="number">1024</span>;</div><div class="line">    <span class="keyword">char</span> file[FILE_PATH_LEN];</div><div class="line">    <span class="built_in">memset</span>(file, <span class="number">0</span>, FILE_PATH_LEN);</div><div class="line">    <span class="built_in">snprintf</span>(file, FILE_PATH_LEN, <span class="string">"/Users/faywong/%s.js"</span>, id);</div><div class="line"></div><div class="line">    duk_push_string_file(ctx, file);</div><div class="line">    <span class="keyword">return</span> <span class="number">1</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/*</span></div><div class="line"> * Register Duktape.modSearch</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">register_mod_search</span><span class="params">(duk_context *ctx)</span> </span>&#123;</div><div class="line">    duk_eval_string(ctx, <span class="string">"(function (fun) &#123; Duktape.modSearch = fun; &#125;)"</span>);</div><div class="line">    duk_push_c_function(ctx, my_mod_search, <span class="number">4</span> <span class="comment">/*nargs*/</span>);</div><div class="line">    duk_call(ctx, <span class="number">1</span>);</div><div class="line">    duk_pop(ctx);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> * argv[])</span> </span>&#123;</div><div class="line"></div><div class="line">    duk_context *ctx = duk_create_heap_default();</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (ctx) &#123;</div><div class="line"></div><div class="line">        register_mod_search(ctx);</div><div class="line"></div><div class="line">        register_fileio(ctx);</div><div class="line"></div><div class="line">        duk_eval_file(ctx, <span class="string">"/Users/faywong/test.js"</span>);</div><div class="line">        <span class="built_in">printf</span>(<span class="string">"result is: %s\n"</span>, duk_safe_to_string(ctx, <span class="number">-1</span>));</div><div class="line">        duk_pop(ctx);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>test.js 用以验证实现的模块化加载功能是否正常，内容如下：<br><figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="keyword">var</span> ByteBuffer = <span class="built_in">require</span>(<span class="string">'bytebuffer'</span>);</div><div class="line"><span class="keyword">var</span> test = <span class="keyword">new</span> ByteBuffer(<span class="number">10</span>);</div><div class="line">print(<span class="string">'step 1, ByteBuffer ok: '</span> + test.toString());</div><div class="line"><span class="keyword">var</span> ProtoBuf = <span class="built_in">require</span>(<span class="string">'protobuf'</span>);</div><div class="line">print(<span class="string">'step 2, ProtoBuf ok: '</span> + (<span class="keyword">typeof</span> ProtoBuf));</div><div class="line">print(<span class="string">'step 3, typeof ProtoBuf.loadProtoFile: '</span> + (<span class="keyword">typeof</span> ProtoBuf.loadProtoFile));</div><div class="line"><span class="keyword">var</span> builder = ProtoBuf.loadProtoFile(<span class="string">'/Users/faywong/complex.proto'</span>);</div><div class="line">print(<span class="string">'step 4, typeof builder: '</span> + (<span class="keyword">typeof</span> builder));</div><div class="line"></div><div class="line">Game = builder.build(<span class="string">"Game"</span>),</div><div class="line">Car = Game.Cars.Car;</div><div class="line"></div><div class="line"><span class="comment">// OR: Construct with values from an object, implicit message creation (address) and enum values as strings:</span></div><div class="line"><span class="keyword">var</span> car = <span class="keyword">new</span> Car(&#123;</div><div class="line">    <span class="string">"model"</span>: <span class="string">"Rustywq"</span>,</div><div class="line">    <span class="string">"vendor"</span>: &#123;</div><div class="line">        <span class="string">"name"</span>: <span class="string">"Iron Inc."</span>,</div><div class="line">        <span class="string">"address"</span>: &#123;</div><div class="line">            <span class="string">"country"</span>: <span class="string">"US"</span></div><div class="line">        &#125;</div><div class="line">    &#125;,</div><div class="line">    <span class="string">"speed"</span>: <span class="string">"SUPERFAST"</span> <span class="comment">// also equivalent to "speed": 2</span></div><div class="line">&#125;);</div><div class="line"></div><div class="line"><span class="comment">// OR: It's also possible to mix all of this!</span></div><div class="line"></div><div class="line"><span class="comment">// Afterwards, just encode your message:</span></div><div class="line"><span class="keyword">var</span> buffer = car.encode();</div><div class="line"></div><div class="line">print(<span class="string">'step 5, typeof buffer: '</span> + (<span class="keyword">typeof</span> buffer) + <span class="string">' toString(): '</span> + buffer.toString());</div></pre></td></tr></table></figure></p>
+<p>其中：</p>
+<ul>
+<li><p><strong>register_mod_search</strong> 函数用于向 Duktape 注册一个用于加载 JavaScript 模块的函数 <strong>my_mod_search</strong>，该函数有四个入参，分别为模块 id、发起 require 的模块、本模块的 exports 对象、本模块的 module 对象，该函数加载 /Users/faywong 目录下以 id 为主文件名（比如在 test.js 中 require 到的 bytebuffer, protobuf）的 JavaScript 文件并将文件内容返回给 Duktape</p>
+</li>
+<li><p>为了方便，test.js 中 require 的其他 JavaScript 模块被笔者放在了自己的家目录下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">/Users/faywong/bytebuffer.js</div><div class="line">/Users/faywong/protobuf.js</div><div class="line">/Users/faywong/test.js</div></pre></td></tr></table></figure>
+</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JavaScript/" rel="tag">#JavaScript</a>
+          
+            <a href="/tags/Duktape/" rel="tag">#Duktape</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/07/19/2016-04-19-first/" rel="next" title="针对View LayoutParams做动画">
+                <i class="fa fa-chevron-left"></i> 针对View LayoutParams做动画
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/07/19/2016-03-13-first/" rel="prev" title="当四字节UTF-8遇上JNI">
+                当四字节UTF-8遇上JNI <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/07/19/2016-03-20-first/"
+           data-title="为 Duktape 添加 JavaScript 模块化加载能力" data-url="http://faywong.github.io/2016/07/19/2016-03-20-first/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.jpeg"
+               alt="faywong" />
+          <p class="site-author-name" itemprop="name">faywong</p>
+          <p class="site-description motion-element" itemprop="description">blog of faywong, faywong, 王飞</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">37</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#实现-modSearch-函数"><span class="nav-number">1.</span> <span class="nav-text">实现 modSearch 函数</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">faywong</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="http://ajax.useso.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"faywong"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
