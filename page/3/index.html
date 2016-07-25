@@ -248,8 +248,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/07/19/2015-09-22-second/" itemprop="url">
-                  fastjson for android名不副实
+                <a class="post-title-link" href="/2016/07/19/2015-06-29-first/" itemprop="url">
+                  clojure map-indexed使用实例
                 </a>
               
             
@@ -273,8 +273,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/07/19/2015-09-22-second/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-09-22-second/" itemprop="commentsCount"></span>
+                <a href="/2016/07/19/2015-06-29-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-06-29-first/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -299,117 +299,10 @@
       
         
           
-            <p>今天在尝试优化json的序列化和反序列化。发现一个陷阱：<br>android自带的json比fastjson（fastjson-1.1.43）解析在9k（及以下）大小字符串输入下性能要高10倍，在解析19k大小字符串时性能高3倍。如下图所示：</p>
-<p>三星Note 3:<br><img src="/uploads/2015_09_22_01.png" alt="note 3"></p>
-<p>一加1代：<br><img src="/uploads/2015_09_22_02.png" alt="note 3"></p>
-<p>详细数据如下：<br>json字符串体积: 6k，android终端：三星note3<br><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">09-22 11:42:55.234: D/faywong(7810): org.json.JSONObject consumes: 1ms to parse json</div><div class="line">09-22 11:42:55.254: D/faywong(7810): com.alibaba.fastjson.JSONObject consumes: 15ms to parse json</div><div class="line"> </div><div class="line">json字符串体积: 9k，android终端：三星note3</div><div class="line">09-22 11:11:45.944: D/faywong(26631): org.json.JSONObject consumes: 1ms to parse json</div><div class="line">09-22 11:11:45.954: D/faywong(26631): com.alibaba.fastjson.JSONObject consumes: 15ms to parse json</div><div class="line"> </div><div class="line">json字符串体积: 19k，android终端：三星note3</div><div class="line">09-22 11:48:15.844: D/faywong(11569): org.json.JSONObject consumes: 6ms to parse json</div><div class="line">09-22 11:48:15.864: D/faywong(11569): com.alibaba.fastjson.JSONObject consumes: 19ms to parse json</div><div class="line"> </div><div class="line">json字符串体积: 6k，android终端：一加1代</div><div class="line">09-22 11:39:55.304: D/faywong(12964): org.json.JSONObject consumes: 1ms to parse json</div><div class="line">09-22 11:39:55.315: D/faywong(12964): com.alibaba.fastjson.JSONObject consumes: 11ms to parse json</div><div class="line">json字符串体积: 9k，android终端：一加1代</div><div class="line">09-22 11:30:06.378: D/faywong(11412): org.json.JSONObject consumes: 1ms to parse json</div><div class="line">09-22 11:30:06.395: D/faywong(11412): com.alibaba.fastjson.JSONObject consumes: 17ms to parse json</div><div class="line"> </div><div class="line">json字符串体积: 19k，android终端：一加1代</div><div class="line">09-22 11:53:30.551: D/faywong(14248): org.json.JSONObject consumes: 3ms to parse json</div><div class="line">09-22 11:53:30.564: D/faywong(14248): com.alibaba.fastjson.JSONObject consumes: 13ms to parse json</div></pre></td></tr></table></figure></p>
-<p>总结下json序列化和反序列化的使用经验：<br>在能控制json序列化和反序列化的整个闭环中（比如服务端+客户端）使用fastjson之类的方案是有优势的；如果你只是在其中的一环，并不知道前边的json是谁以怎样的方式序列化/反序列化得来，建议你使用org.json版本，这样性能不至于很差。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/19/2015-11-17-first/" itemprop="url">
-                  让opengrok支持webservice
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
-              2016-07-19
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/19/2015-11-17-first/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-11-17-first/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>最近需要使用opengrok作为webservice来提供代码交叉索引功能。</p>
-<p>但是opengrok的release版本中还没有提供这个功能，原因在于这个提交没有被release。</p>
-<p>所以只能自己编译最新的master分支代码并deploy。注意一点编译时需要1.8的jdk，tomcat server也需要1.8jdk来运行方能不出错。</p>
-<p>在服务的url后边加上json?freetext=ThreadPoolExecutor之类的参数（其他参数请见我在Opengrok项目上的回复）便可查询到结果了。</p>
-<p>针对这个问题本人贡献了一遍详细点的<a href="https://github.com/OpenGrok/OpenGrok/wiki/OpenGrok-web-services" target="_blank" rel="external">文档</a>，请参阅。</p>
-
+            <p>用了clojure，才发现北方有一座高山……</p>
+<p>今天网站中需要做一个小功能，通过restful api请求另外一个内部网站的数据，但是写这个网站的同学给出的数据是[[a b c] [d e f]…]另外还有一个用于代表每一项的链接的links: [link1 link2 link3…]</p>
+<p>需要将之每项对应合并起来，找了下发现map-indexed非常适合这个场景：</p>
+<figure class="highlight"><table><tr><td class="code"><pre><div class="line">(def test1 [['a ] ['b] ['c]])</div><div class="line">(def test2 ['c 'd 'e])</div><div class="line">(defn my-merge [vect1 vect2]</div><div class="line">(into [] (map-indexed</div><div class="line">(fn [idx item] (merge item (vect2 idx))) vect1)))</div><div class="line"></div><div class="line">(my-merge test1 test2)</div><div class="line"></div><div class="line">=&gt;[[a c] [b d] [c e]]</div></pre></td></tr></table></figure>
           
         
       
@@ -787,6 +680,112 @@
             
               
                 
+                <a class="post-title-link" href="/2016/07/19/2016-01-14-first/" itemprop="url">
+                  Java JNI打印Java层异常
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
+              2016-07-19
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/19/2016-01-14-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2016-01-14-first/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>在一些复杂的JNI调用中，比如JNI调用Java层的对象、Java层又调native方法，嵌套过多了，某一次调用产生的异常会在下一次调用JNI时被check出来，<br>这时候会产生如下日志：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">01-13 21:22:43.247 24613-24613/com.somepkg A/art: art/runtime/check_jni.cc:65] JNI DETECTED ERROR IN APPLICATION: JNI NewByteArray called with pending exception <span class="string">'java.lang.NullPointerException'</span> thrown <span class="keyword">in</span> unknown throw location</div><div class="line">01-13 21:22:43.247 24613-24613/com.somepkg A/art: art/runtime/check_jni.cc:65]     <span class="keyword">in</span> call to NewByteArray</div></pre></td></tr></table></figure>
+<p>这种问题都是在Java代码中产生了异常，但是并不是所有case下都能一眼通过逻辑判断是哪行，这时候有个JNIEnv的方法能帮上我们大忙：<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line">jthrowable thr = (*env)-&gt;ExceptionOccurred(env);</div><div class="line"></div><div class="line"><span class="keyword">if</span> (thr) &#123;</div><div class="line">    (*env)-&gt;ExceptionDescribe(env);</div><div class="line">    (*env)-&gt;ExceptionClear(env);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>c++版本：<br><figure class="highlight c++"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">CheckException</span><span class="params">(JNIEnv* env)</span> </span>&#123;</div><div class="line">  <span class="keyword">if</span> (!HasException(env)) <span class="keyword">return</span>;</div><div class="line"></div><div class="line">  <span class="comment">// Exception has been found, might as well tell breakpad about it.</span></div><div class="line">  jthrowable java_throwable = env-&gt;ExceptionOccurred();</div><div class="line">  <span class="keyword">if</span> (!java_throwable) &#123;</div><div class="line">    <span class="comment">// Do nothing but return false.</span></div><div class="line">    CHECK(<span class="literal">false</span>);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="comment">// Clear the pending exception, since a local reference is now held.</span></div><div class="line">  env-&gt;ExceptionDescribe();</div><div class="line">  env-&gt;ExceptionClear();</div><div class="line"></div><div class="line">  <span class="comment">// Set the exception_string in BuildInfo so that breakpad can read it.</span></div><div class="line">  <span class="comment">// RVO should avoid any extra copies of the exception string.</span></div><div class="line">  base::android::BuildInfo::GetInstance()-&gt;set_java_exception_info(</div><div class="line">      GetJavaExceptionInfo(env, java_throwable));</div><div class="line"></div><div class="line">  <span class="comment">// Now, feel good about it and die.</span></div><div class="line">  CHECK(<span class="literal">false</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>在被checkjni侦测到异常的代码（比如上例中是NewByteArray）之前加上如上代码就可以将Java层的异常信息给优雅地打印出来，从而精准定位问题。</p>
+<p>另一种定位此类问题的方式是打开Android设备的CheckJni功能。但是一般production设备上都不太容易实现。所以强力推荐以上方法。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/07/19/2015-12-09-first/" itemprop="url">
                   常见js引擎在Android上性能对比
                 </a>
@@ -1007,8 +1006,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/07/19/2016-01-14-first/" itemprop="url">
-                  Java JNI打印Java层异常
+                <a class="post-title-link" href="/2016/07/19/2016-01-21-first/" itemprop="url">
+                  git pull --rebase
                 </a>
               
             
@@ -1032,8 +1031,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/07/19/2016-01-14-first/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2016-01-14-first/" itemprop="commentsCount"></span>
+                <a href="/2016/07/19/2016-01-21-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2016-01-21-first/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -1058,12 +1057,120 @@
       
         
           
-            <p>在一些复杂的JNI调用中，比如JNI调用Java层的对象、Java层又调native方法，嵌套过多了，某一次调用产生的异常会在下一次调用JNI时被check出来，<br>这时候会产生如下日志：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">01-13 21:22:43.247 24613-24613/com.somepkg A/art: art/runtime/check_jni.cc:65] JNI DETECTED ERROR IN APPLICATION: JNI NewByteArray called with pending exception <span class="string">'java.lang.NullPointerException'</span> thrown <span class="keyword">in</span> unknown throw location</div><div class="line">01-13 21:22:43.247 24613-24613/com.somepkg A/art: art/runtime/check_jni.cc:65]     <span class="keyword">in</span> call to NewByteArray</div></pre></td></tr></table></figure>
-<p>这种问题都是在Java代码中产生了异常，但是并不是所有case下都能一眼通过逻辑判断是哪行，这时候有个JNIEnv的方法能帮上我们大忙：<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line">jthrowable thr = (*env)-&gt;ExceptionOccurred(env);</div><div class="line"></div><div class="line"><span class="keyword">if</span> (thr) &#123;</div><div class="line">    (*env)-&gt;ExceptionDescribe(env);</div><div class="line">    (*env)-&gt;ExceptionClear(env);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>c++版本：<br><figure class="highlight c++"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">CheckException</span><span class="params">(JNIEnv* env)</span> </span>&#123;</div><div class="line">  <span class="keyword">if</span> (!HasException(env)) <span class="keyword">return</span>;</div><div class="line"></div><div class="line">  <span class="comment">// Exception has been found, might as well tell breakpad about it.</span></div><div class="line">  jthrowable java_throwable = env-&gt;ExceptionOccurred();</div><div class="line">  <span class="keyword">if</span> (!java_throwable) &#123;</div><div class="line">    <span class="comment">// Do nothing but return false.</span></div><div class="line">    CHECK(<span class="literal">false</span>);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="comment">// Clear the pending exception, since a local reference is now held.</span></div><div class="line">  env-&gt;ExceptionDescribe();</div><div class="line">  env-&gt;ExceptionClear();</div><div class="line"></div><div class="line">  <span class="comment">// Set the exception_string in BuildInfo so that breakpad can read it.</span></div><div class="line">  <span class="comment">// RVO should avoid any extra copies of the exception string.</span></div><div class="line">  base::android::BuildInfo::GetInstance()-&gt;set_java_exception_info(</div><div class="line">      GetJavaExceptionInfo(env, java_throwable));</div><div class="line"></div><div class="line">  <span class="comment">// Now, feel good about it and die.</span></div><div class="line">  CHECK(<span class="literal">false</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>在被checkjni侦测到异常的代码（比如上例中是NewByteArray）之前加上如上代码就可以将Java层的异常信息给优雅地打印出来，从而精准定位问题。</p>
-<p>另一种定位此类问题的方式是打开Android设备的CheckJni功能。但是一般production设备上都不太容易实现。所以强力推荐以上方法。</p>
+            <p>有的同学在使用 git 时会不小心本地分支merge了远端的公共分支（通过 git pull ），我找了篇文章帮助大家学会 pull 的时候直接 rebase</p>
+<p><a href="http://gitready.com/advanced/2009/02/11/pull-with-rebase.html" target="_blank" rel="external">http://gitready.com/advanced/2009/02/11/pull-with-rebase.html</a></p>
+<p>其实很简单，对应的命令行是：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">git pull --rebase &lt;remote name&gt; &lt;branch name&gt;</div></pre></td></tr></table></figure>
+<p>由于 merge 提交会湮灭掉一些原始 commit 导致 rebase 时带来混乱，同时 merge 提交的 commit message 本身没有什么额外有价值的信息，我个人关于 merge 提交的经验是：  </p>
+<blockquote>
+<p>如果你的角色是scm，代码集成者，多个分支隔离开发很长时间之后的合并建议使用merge；每天持续开发中的数量不多的提交都最好使用rebase，这样可以让提交记录尽量保持线性和整洁，进而方便代码的集成和追踪。</p>
+</blockquote>
+<p><img src="/uploads/2016_01_21_01.png" alt=""></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/19/2015-11-17-first/" itemprop="url">
+                  让opengrok支持webservice
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
+              2016-07-19
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/19/2015-11-17-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-11-17-first/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>最近需要使用opengrok作为webservice来提供代码交叉索引功能。</p>
+<p>但是opengrok的release版本中还没有提供这个功能，原因在于这个提交没有被release。</p>
+<p>所以只能自己编译最新的master分支代码并deploy。注意一点编译时需要1.8的jdk，tomcat server也需要1.8jdk来运行方能不出错。</p>
+<p>在服务的url后边加上json?freetext=ThreadPoolExecutor之类的参数（其他参数请见我在Opengrok项目上的回复）便可查询到结果了。</p>
+<p>针对这个问题本人贡献了一遍详细点的<a href="https://github.com/OpenGrok/OpenGrok/wiki/OpenGrok-web-services" target="_blank" rel="external">文档</a>，请参阅。</p>
 
           
         
@@ -1204,111 +1311,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/19/2016-01-25-first/" itemprop="url">
-                  android开发中ConditionVariable的典型用法
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
-              2016-07-19
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/19/2016-01-25-first/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2016-01-25-first/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>尽管现在诞生的高级语言里边有了什么STM，协程，绿程的概念，但写代码总会遇到现实（商业级平台都不会用很新的东西）的多线程的问题。</p>
-<p>比如有时候你需要同步的获取在另一个线程执行的代码的结果，在android里这种场景下ConditionVariable就非常好用了。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">if</span> (Looper.myLooper() != Looper.getMainLooper()) &#123;</div><div class="line"></div><div class="line">    <span class="keyword">final</span> ConditionVariable completed = <span class="keyword">new</span> ConditionVariable(); <span class="comment">// 构造一个条件变量</span></div><div class="line"></div><div class="line">    view.runOnUiThread(<span class="keyword">new</span> Runnable() &#123;</div><div class="line"></div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                doSomeThingInUiThread(); <span class="comment">// 将期望在另外线程做的事post出去</span></div><div class="line">            &#125; <span class="keyword">finally</span> &#123; <span class="comment">// finally很重要，防止运行时异常远跳转将ConditionVariable忘了open</span></div><div class="line">                completed.open(); <span class="comment">// 事情办完了，notify到另外线程</span></div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line">    completed.block(TIMEOUT_WAIT_UI); <span class="comment">// 等着另外线程做的事完成，同时支持设置超时</span></div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">    doSomeThingInUiThread();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>当然了以上是很简单的一个场景，使用ConditionVariable非常方便且够用。对于复杂的多线程之间的协同还是使用标准的条件变量结合lock + while 循环检查。</p>
-<p>在一些新语言中有非常丰富的并发编程原语（future, delay, promise），特别是协程让我们用代码自主的确定代码流之间的协作关系而不是被动的作为OS调度器的奴隶，来支撑一些并行需求。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1354,7 +1356,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">37</span>
+              <span class="site-state-item-count">38</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

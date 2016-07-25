@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="android," />
+  <meta name="keywords" content="blog of faywong, android, lisp, clojure" />
 
 
 
@@ -84,28 +84,16 @@
 
 
 
-<meta name="description" content="今天在尝试优化json的序列化和反序列化。发现一个陷阱：android自带的json比fastjson（fastjson-1.1.43）解析在9k（及以下）大小字符串输入下性能要高10倍，在解析19k大小字符串时性能高3倍。如下图所示：
-三星Note 3:
-一加1代：
-详细数据如下：json字符串体积: 6k，android终端：三星note309-22 11:42:55.234: D/faywo">
+<meta name="description" content="最近换了 mac book pro，重新安装 jdk 时默认选择了 jdk 8，结果下载 android studio 2.1.2 后没法启动。显示如下 crash 信息：java.lang.reflect.InvocationTargetException    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)    a">
 <meta property="og:type" content="article">
-<meta property="og:title" content="fastjson for android名不副实">
-<meta property="og:url" content="http://faywong.github.io/2016/07/19/2015-09-22-second/index.html">
+<meta property="og:title" content="android studio + jdk7 的bug">
+<meta property="og:url" content="http://faywong.github.io/2016/07/25/android-studio-jdk7-的bug/index.html">
 <meta property="og:site_name" content="blog of faywong">
-<meta property="og:description" content="今天在尝试优化json的序列化和反序列化。发现一个陷阱：android自带的json比fastjson（fastjson-1.1.43）解析在9k（及以下）大小字符串输入下性能要高10倍，在解析19k大小字符串时性能高3倍。如下图所示：
-三星Note 3:
-一加1代：
-详细数据如下：json字符串体积: 6k，android终端：三星note309-22 11:42:55.234: D/faywo">
-<meta property="og:image" content="http://faywong.github.io/uploads/2015_09_22_01.png">
-<meta property="og:image" content="http://faywong.github.io/uploads/2015_09_22_02.png">
-<meta property="og:updated_time" content="2016-07-19T03:05:25.000Z">
+<meta property="og:description" content="最近换了 mac book pro，重新安装 jdk 时默认选择了 jdk 8，结果下载 android studio 2.1.2 后没法启动。显示如下 crash 信息：java.lang.reflect.InvocationTargetException    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)    a">
+<meta property="og:updated_time" content="2016-07-25T02:35:36.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="fastjson for android名不副实">
-<meta name="twitter:description" content="今天在尝试优化json的序列化和反序列化。发现一个陷阱：android自带的json比fastjson（fastjson-1.1.43）解析在9k（及以下）大小字符串输入下性能要高10倍，在解析19k大小字符串时性能高3倍。如下图所示：
-三星Note 3:
-一加1代：
-详细数据如下：json字符串体积: 6k，android终端：三星note309-22 11:42:55.234: D/faywo">
-<meta name="twitter:image" content="http://faywong.github.io/uploads/2015_09_22_01.png">
+<meta name="twitter:title" content="android studio + jdk7 的bug">
+<meta name="twitter:description" content="最近换了 mac book pro，重新安装 jdk 时默认选择了 jdk 8，结果下载 android studio 2.1.2 后没法启动。显示如下 crash 信息：java.lang.reflect.InvocationTargetException    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)    a">
 
 
 
@@ -126,9 +114,9 @@
 
 
 
-  <link rel="canonical" href="http://faywong.github.io/2016/07/19/2015-09-22-second/"/>
+  <link rel="canonical" href="http://faywong.github.io/2016/07/25/android-studio-jdk7-的bug/"/>
 
-  <title> fastjson for android名不副实 | blog of faywong </title>
+  <title> android studio + jdk7 的bug | blog of faywong </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -258,7 +246,7 @@
             
             
               
-                fastjson for android名不副实
+                android studio + jdk7 的bug
               
             
           </h1>
@@ -270,8 +258,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
-              2016-07-19
+            <time itemprop="dateCreated" datetime="2016-07-25T10:32:27+08:00" content="2016-07-25">
+              2016-07-25
             </time>
           </span>
 
@@ -281,8 +269,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/07/19/2015-09-22-second/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-09-22-second/" itemprop="commentsCount"></span>
+                <a href="/2016/07/25/android-studio-jdk7-的bug/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/25/android-studio-jdk7-的bug/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -305,12 +293,9 @@
       
 
       
-        <p>今天在尝试优化json的序列化和反序列化。发现一个陷阱：<br>android自带的json比fastjson（fastjson-1.1.43）解析在9k（及以下）大小字符串输入下性能要高10倍，在解析19k大小字符串时性能高3倍。如下图所示：</p>
-<p>三星Note 3:<br><img src="/uploads/2015_09_22_01.png" alt="note 3"></p>
-<p>一加1代：<br><img src="/uploads/2015_09_22_02.png" alt="note 3"></p>
-<p>详细数据如下：<br>json字符串体积: 6k，android终端：三星note3<br><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">09-22 11:42:55.234: D/faywong(7810): org.json.JSONObject consumes: 1ms to parse json</div><div class="line">09-22 11:42:55.254: D/faywong(7810): com.alibaba.fastjson.JSONObject consumes: 15ms to parse json</div><div class="line"> </div><div class="line">json字符串体积: 9k，android终端：三星note3</div><div class="line">09-22 11:11:45.944: D/faywong(26631): org.json.JSONObject consumes: 1ms to parse json</div><div class="line">09-22 11:11:45.954: D/faywong(26631): com.alibaba.fastjson.JSONObject consumes: 15ms to parse json</div><div class="line"> </div><div class="line">json字符串体积: 19k，android终端：三星note3</div><div class="line">09-22 11:48:15.844: D/faywong(11569): org.json.JSONObject consumes: 6ms to parse json</div><div class="line">09-22 11:48:15.864: D/faywong(11569): com.alibaba.fastjson.JSONObject consumes: 19ms to parse json</div><div class="line"> </div><div class="line">json字符串体积: 6k，android终端：一加1代</div><div class="line">09-22 11:39:55.304: D/faywong(12964): org.json.JSONObject consumes: 1ms to parse json</div><div class="line">09-22 11:39:55.315: D/faywong(12964): com.alibaba.fastjson.JSONObject consumes: 11ms to parse json</div><div class="line">json字符串体积: 9k，android终端：一加1代</div><div class="line">09-22 11:30:06.378: D/faywong(11412): org.json.JSONObject consumes: 1ms to parse json</div><div class="line">09-22 11:30:06.395: D/faywong(11412): com.alibaba.fastjson.JSONObject consumes: 17ms to parse json</div><div class="line"> </div><div class="line">json字符串体积: 19k，android终端：一加1代</div><div class="line">09-22 11:53:30.551: D/faywong(14248): org.json.JSONObject consumes: 3ms to parse json</div><div class="line">09-22 11:53:30.564: D/faywong(14248): com.alibaba.fastjson.JSONObject consumes: 13ms to parse json</div></pre></td></tr></table></figure></p>
-<p>总结下json序列化和反序列化的使用经验：<br>在能控制json序列化和反序列化的整个闭环中（比如服务端+客户端）使用fastjson之类的方案是有优势的；如果你只是在其中的一环，并不知道前边的json是谁以怎样的方式序列化/反序列化得来，建议你使用org.json版本，这样性能不至于很差。</p>
-
+        <p>最近换了 mac book pro，重新安装 jdk 时默认选择了 jdk 8，结果下载 android studio 2.1.2 后没法启动。显示如下 crash 信息：<br><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">java.lang.reflect.InvocationTargetException</div><div class="line">    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)</div><div class="line">    at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)</div><div class="line">    at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)</div><div class="line">    at java.lang.reflect.Method.invoke(Method.java:606)</div><div class="line">    at com.intellij.ide.Bootstrap.main(Bootstrap.java:39)</div><div class="line">    at com.intellij.idea.Main.main(Main.java:103)</div><div class="line">Caused by: java.lang.UnsatisfiedLinkError: /Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home/jre/lib/lwawt/liblwawt.dylib: dlopen(/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home/jre/lib/lwawt/liblwawt.dylib, 1): Library not loaded: @rpath/libosxapp.dylib</div><div class="line">  Referenced from: /Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home/jre/lib/lwawt/liblwawt.dylib</div><div class="line">  Reason: image not found</div></pre></td></tr></table></figure></p>
+<p>后来 google 之，找到一个简单的解决方案（rpath设置不全的原因）：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line"><span class="built_in">cd</span> /Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home/jre/lib/</div><div class="line">sudo cp -rf libosxapp.dylib lwawt/</div></pre></td></tr></table></figure>
       
     </div>
 
@@ -330,28 +315,18 @@
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/tags/android/" rel="tag">#android</a>
-          
-        </div>
-      
 
       
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/07/19/2015-01-16-first/" rel="next" title="WebView getUserAgentString的副作用分析">
-                <i class="fa fa-chevron-left"></i> WebView getUserAgentString的副作用分析
+              <a href="/2016/07/19/2015-09-22-second/" rel="next" title="fastjson for android名不副实">
+                <i class="fa fa-chevron-left"></i> fastjson for android名不副实
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/07/25/android-studio-jdk7-的bug/" rel="prev" title="android studio + jdk7 的bug">
-                android studio + jdk7 的bug <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -377,8 +352,8 @@
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/07/19/2015-09-22-second/"
-           data-title="fastjson for android名不副实" data-url="http://faywong.github.io/2016/07/19/2015-09-22-second/">
+      <div class="ds-thread" data-thread-key="2016/07/25/android-studio-jdk7-的bug/"
+           data-title="android studio + jdk7 的bug" data-url="http://faywong.github.io/2016/07/25/android-studio-jdk7-的bug/">
       </div>
     
   </div>

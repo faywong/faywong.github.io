@@ -248,109 +248,6 @@
             
               
                 
-                <a class="post-title-link" href="/2016/07/19/2015-02-06-first/" itemprop="url">
-                  Android 4.2.2上WebView.loadUrl带来软键盘自动收起的问题
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
-              2016-07-19
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/19/2015-02-06-first/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-02-06-first/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>今天由测试同学反映两款手机（红米，三星GS4，均搭载Android 4.2.2）存在WebApp中收到回调后软键盘自动收起。</p>
-<p>经过一段时间的研究，发现在Android 4.2.2上WebView.loadUrl()被调用后WebView会认为新的一个页面即将打开，而将软键盘收起。</p>
-<p>android填坑之旅还要继续……</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
                 <a class="post-title-link" href="/2016/07/19/2015-06-11-first/" itemprop="url">
                   Android L上WebView的行为变得更严格
                 </a>
@@ -404,6 +301,109 @@
           
             <p>android 5.0上WebView开始默认阻止Mixed Content，且不再接受第三方的cookie。所以为了你以往的WebApp里边的内容可以正常访问，需要使用WebSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW) 和CookieManager.setAcceptThirdPartyCookies({your_webview}, true) 来放开这一限制。</p>
 <p>当然最好是让你的页面不再存在mixed content，不再依赖第三方cookie最为完美。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/19/2015-06-20-first/" itemprop="url">
+                  [pgsql]仅当主key不存在时插入记录
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
+              2016-07-19
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/19/2015-06-20-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-06-20-first/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>比如创建一个用户时只有在不存在的时候才需要插入，查了好久，终于搞明白：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><div class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="keyword">users</span>(<span class="keyword">id</span>, <span class="keyword">alias</span>, email) <span class="keyword">SELECT</span> <span class="number">00001</span>, <span class="string">'faywong'</span>, <span class="string">'wangfei584521@163.com'</span> <span class="keyword">from</span> <span class="keyword">users</span> <span class="keyword">WHERE</span> <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> (<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="keyword">users</span> <span class="keyword">WHERE</span> <span class="keyword">id</span> = <span class="number">00001</span>)</div></pre></td></tr></table></figure>
+<p>pqsql在这点上真叫一个繁琐！</p>
 
           
         
@@ -558,8 +558,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/07/19/2015-06-20-first/" itemprop="url">
-                  [pgsql]仅当主key不存在时插入记录
+                <a class="post-title-link" href="/2016/07/19/2015-01-23-first/" itemprop="url">
+                  应用压入后台时由WebView带来的耗电问题
                 </a>
               
             
@@ -583,8 +583,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/07/19/2015-06-20-first/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-06-20-first/" itemprop="commentsCount"></span>
+                <a href="/2016/07/19/2015-01-23-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-01-23-first/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -609,9 +609,18 @@
       
         
           
-            <p>比如创建一个用户时只有在不存在的时候才需要插入，查了好久，终于搞明白：</p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><div class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="keyword">users</span>(<span class="keyword">id</span>, <span class="keyword">alias</span>, email) <span class="keyword">SELECT</span> <span class="number">00001</span>, <span class="string">'faywong'</span>, <span class="string">'wangfei584521@163.com'</span> <span class="keyword">from</span> <span class="keyword">users</span> <span class="keyword">WHERE</span> <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> (<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="keyword">users</span> <span class="keyword">WHERE</span> <span class="keyword">id</span> = <span class="number">00001</span>)</div></pre></td></tr></table></figure>
-<p>pqsql在这点上真叫一个繁琐！</p>
+            <p>最近遇到一个应用打开WebApp后，将应用压入后台，出现比较耗电的问题。集合众多同学的智慧之后定位到原因：</p>
+<p>在WebKit的内核中会引用从各个平台(android, linux pc, mac)注入的自己的服务比如：</p>
+<ul>
+<li>DeviceOrientationService</li>
+<li>DeviceMotionService</li>
+</ul>
+<p>而这两个Service在android平台上的实现皆通过注册侦听器到SensorManager来获知来自于加速度器，磁力计的方位、手机姿势数据。</p>
+<p>Sensor的使用是极其浪费电力的一件事情，所以就出现了上文所述问题。</p>
+<p>解决方法：</p>
+<p>1) 在Activity的onPause(), onResume()时调用WebView.onPause(), WebView.onResume()以尽量将JS执行线程以及其他WebCore中的线程给停住</p>
+<p>2) 在onStop()时将WebView中当前load的url记住，然后让WebView.loadUrl(“about:blank”)，在onStart()时WebView.loadUrl({your_previous_url})</p>
+<p>更新：<br>[2015/11]在最近的工作中还发现一种前端页面带来的耗电问题：当页面加载一些gif或者通过其他方式创建的动画效果，当webview变得不可见后这些动画如果没有被显式关掉，就会导致很严重的耗电问题。同时在桌面浏览器里边我也注意到页面里边持续运行的动画也会导致内存占用增大。</p>
 
           
         
@@ -661,8 +670,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/07/19/2015-06-29-first/" itemprop="url">
-                  clojure map-indexed使用实例
+                <a class="post-title-link" href="/2016/07/19/2015-07-09-second/" itemprop="url">
+                  以UTF-8编码建立postgresql数据库
                 </a>
               
             
@@ -686,8 +695,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/07/19/2015-06-29-first/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-06-29-first/" itemprop="commentsCount"></span>
+                <a href="/2016/07/19/2015-07-09-second/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-07-09-second/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -712,10 +721,12 @@
       
         
           
-            <p>用了clojure，才发现北方有一座高山……</p>
-<p>今天网站中需要做一个小功能，通过restful api请求另外一个内部网站的数据，但是写这个网站的同学给出的数据是[[a b c] [d e f]…]另外还有一个用于代表每一项的链接的links: [link1 link2 link3…]</p>
-<p>需要将之每项对应合并起来，找了下发现map-indexed非常适合这个场景：</p>
-<figure class="highlight"><table><tr><td class="code"><pre><div class="line">(def test1 [['a ] ['b] ['c]])</div><div class="line">(def test2 ['c 'd 'e])</div><div class="line">(defn my-merge [vect1 vect2]</div><div class="line">(into [] (map-indexed</div><div class="line">(fn [idx item] (merge item (vect2 idx))) vect1)))</div><div class="line"></div><div class="line">(my-merge test1 test2)</div><div class="line"></div><div class="line">=&gt;[[a c] [b d] [c e]]</div></pre></td></tr></table></figure>
+            <p>因为要与java后端协作，数据库得建成UTF-8编码的。折腾了半天，实在是没有办法，改了locale，重新安装postgresql-server，最终通过命令行指定编码和模板（这点很重要）这样蒙混过关：</p>
+<p>命令行：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">createdb --locale=en_US.utf8 --encoding=UTF8 --template=template0 <span class="built_in">test</span>_db</div></pre></td></tr></table></figure>
+<p>然后确认下：</p>
+<p><img src="/uploads/2015_09_02_01.jpg" alt="psql_result"></p>
+
           
         
       
@@ -831,111 +842,6 @@
 <p>通过包含条件查询之：</p>
 <figure class="highlight sql"><table><tr><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> mobile_analysis <span class="keyword">WHERE</span> datadoc @&gt; <span class="string">'&#123;"a":1&#125;'</span></div></pre></td></tr></table></figure>
 <p>更多的关于json/jsonb类型的函数和操作符的资料请见这里。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/19/2015-07-09-second/" itemprop="url">
-                  以UTF-8编码建立postgresql数据库
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
-              2016-07-19
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/19/2015-07-09-second/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-07-09-second/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>因为要与java后端协作，数据库得建成UTF-8编码的。折腾了半天，实在是没有办法，改了locale，重新安装postgresql-server，最终通过命令行指定编码和模板（这点很重要）这样蒙混过关：</p>
-<p>命令行：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">createdb --locale=en_US.utf8 --encoding=UTF8 --template=template0 <span class="built_in">test</span>_db</div></pre></td></tr></table></figure>
-<p>然后确认下：</p>
-<p><img src="/uploads/2015_09_02_01.jpg" alt="psql_result"></p>
 
           
         
@@ -1112,119 +1018,6 @@
             
               
                 
-                <a class="post-title-link" href="/2016/07/19/2015-01-15-first/" itemprop="url">
-                  WebView中支持input type="file"元素
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
-              2016-07-19
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/19/2015-01-15-first/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-01-15-first/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>方法如下：</p>
-<p>在自定义的WebChromeClient中实现如下方法（主要是为了保证不同android版本上的兼容性）：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">openFileChooser</span><span class="params">(<span class="keyword">final</span> ValueCallback&lt;Uri&gt; uploadMsg)</span></span></div><div class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">openFileChooser</span><span class="params">(ValueCallback uploadMsg, String acceptType)</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">openFileChooser</span><span class="params">(ValueCallback&lt;Uri&gt; uploadMsg, String acceptType, String capture)</span></div></pre></td></tr></table></figure>
-<p>并配置proguard保证其不被混淆掉。</p>
-<p>在openFileChooser中使用如下Intent调用系统文件浏览器：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> Intent <span class="title">createDefaultOpenableIntent</span><span class="params">(<span class="keyword">final</span> Context ctx)</span> </span>&#123;</div><div class="line"><span class="comment">// Create and return a chooser with the default OPENABLE</span></div><div class="line"><span class="comment">// actions including the camera, camcorder and sound</span></div><div class="line"><span class="comment">// recorder where available.</span></div><div class="line">Intent i = <span class="keyword">new</span> Intent(Intent.ACTION_GET_CONTENT);</div><div class="line">i.addCategory(Intent.CATEGORY_OPENABLE);</div><div class="line">i.setType(<span class="string">"*/*"</span>);</div><div class="line"></div><div class="line">Intent chooser = createChooserIntent(ctx, createCameraIntent(), createCamcorderIntent(),</div><div class="line">createSoundRecorderIntent());</div><div class="line">chooser.putExtra(Intent.EXTRA_INTENT, i);</div><div class="line"><span class="keyword">return</span> chooser;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>然后：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"></div><div class="line">startActivityForResult()</div></pre></td></tr></table></figure>
-<p>在主Activity的onActivityResult()中</p>
-<p>调用ValueCallback<uri>对象的onReceiveValue()方法中将选择文件的Uri传回。</uri></p>
-<p>但是问题还是来了，这样做了之后在4.4系统上WebView不会回调openFileChooser方法导致没法显示出选择文件的Activity。</p>
-<p>另外对于选择文件的应用也不能假定所有的Android系统上都有。</p>
-<p>所以终极解决方案就是拥有自主可控的WebView。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
                 <a class="post-title-link" href="/2016/07/19/2015-09-08-first/" itemprop="url">
                   Luminus web项目中让ajax请求和anti-forgery共存
                 </a>
@@ -1309,6 +1102,216 @@
 
 
     
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/19/2015-09-22-first/" itemprop="url">
+                  Clojure 生产环境中怎么使用environ
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
+              2016-07-19
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/19/2015-09-22-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-09-22-first/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><a href="https://github.com/weavejester/environ" target="_blank" rel="external">environ</a>可以很方便帮我们管理项目中的各种配置，但是最近在使用的时候遇到了一个问题，就是我在dev, test profile下配置的database-uri到打出uberjar之后就访问不到了。最后看了下源码，在生产环境下，需要通过进程环境变量或Java系统属性来完成这一目的：</p>
+<p>进程环境变量：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">DATABASE_URL=jdbc:postgres://localhost/prod java -jar standalone.jar</div></pre></td></tr></table></figure>
+<p>Java系统属性：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">java -Ddatabase.url=jdbc:postgres://localhost/prod -jar standalone.jar</div></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/19/2015-01-15-fourth/" itemprop="url">
+                  Android L上webview crash的问题
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
+              2016-07-19
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/19/2015-01-15-fourth/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-01-15-fourth/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>在android L上测试反馈使用WebApp时会出现如下crash：<br><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">F/libc    ( 7555): Fatal signal 6 (SIGABRT) <span class="keyword">in</span> tid 12577 (RenderThread)</div><div class="line"></div><div class="line">I/DEBUG   (  182): *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***</div><div class="line"></div><div class="line">I/DEBUG   (  182): Build fingerprint: <span class="string">'google/hammerhead/hammerhead:L/LPV79/1236599:user/release-keys'</span></div><div class="line"></div><div class="line">I/DEBUG   (  182): Revision: <span class="string">'11'</span></div><div class="line"></div><div class="line">I/DEBUG   (  182): pid: 7555, tid: 12577, name: RenderThread  &gt;&gt;&gt; com.eg.android.AlipayGphone &lt;&lt;&lt;</div><div class="line"></div><div class="line">I/DEBUG   (  182): signal 6 (SIGABRT), code 0 (SI_USER), fault addr --------</div></pre></td></tr></table></figure></p>
+<p>后来研究发现：</p>
+<p><a href="https://code.google.com/p/android-developer-preview/issues/detail?can=2&amp;start=0&amp;num=100&amp;q=&amp;colspec=ID%20Type%20Status%20Owner%20Summary&amp;groupby=&amp;sort=&amp;id=950" target="_blank" rel="external">https://code.google.com/p/android-developer-preview/issues/detail?can=2&amp;start=0&amp;num=100&amp;q=&amp;colspec=ID%20Type%20Status%20Owner%20Summary&amp;groupby=&amp;sort=&amp;id=950</a></p>
+<p>上有人报告同一问题。</p>
+<p>LPV79这个build为developer preview version.存在一些问题。</p>
+<p>后来在正式版本中验证同一问题，不可复现。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
   </section>
 
   
@@ -1354,7 +1357,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">37</span>
+              <span class="site-state-item-count">38</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
