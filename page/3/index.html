@@ -55,7 +55,7 @@
   
     
     
-    <link href="//fonts.useso.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+    <link href="//fonts.css.network/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
   
 
 
@@ -248,8 +248,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/07/19/2015-06-29-first/" itemprop="url">
-                  clojure map-indexed使用实例
+                <a class="post-title-link" href="/2016/07/19/2015-09-22-second/" itemprop="url">
+                  fastjson for android名不副实
                 </a>
               
             
@@ -273,8 +273,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/07/19/2015-06-29-first/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-06-29-first/" itemprop="commentsCount"></span>
+                <a href="/2016/07/19/2015-09-22-second/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-09-22-second/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -299,132 +299,11 @@
       
         
           
-            <p>用了clojure，才发现北方有一座高山……</p>
-<p>今天网站中需要做一个小功能，通过restful api请求另外一个内部网站的数据，但是写这个网站的同学给出的数据是[[a b c] [d e f]…]另外还有一个用于代表每一项的链接的links: [link1 link2 link3…]</p>
-<p>需要将之每项对应合并起来，找了下发现map-indexed非常适合这个场景：</p>
-<figure class="highlight"><table><tr><td class="code"><pre><div class="line">(def test1 [['a ] ['b] ['c]])</div><div class="line">(def test2 ['c 'd 'e])</div><div class="line">(defn my-merge [vect1 vect2]</div><div class="line">(into [] (map-indexed</div><div class="line">(fn [idx item] (merge item (vect2 idx))) vect1)))</div><div class="line"></div><div class="line">(my-merge test1 test2)</div><div class="line"></div><div class="line">=&gt;[[a c] [b d] [c e]]</div></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/19/2015-10-12-first/" itemprop="url">
-                  ndk-gdb时提示应用不可调试的解决方法
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
-              2016-07-19
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/19/2015-10-12-first/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-10-12-first/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>在开发包含c/c++本地代码的android项目中，通过gdb来调试代码是必不可少的前提。</p>
-<p>android官方为此提供了ndk-gdb，看起来非常之nice。但个人在实践中发现还是有一系列问题需要记载下(ndk版本：r10e)：</p>
-<p>1) ndk-build NDK_DEBUG=1这个选项编译时要加上，一般将之定制在你的c/c++ builder中</p>
-<p>2) 即便你按照1）做了，在项目根目录运行ndk-gdb的时候还是会报以下错误：</p>
-<p>ERROR: Package faywong.github.io.mediakit is not debuggable ! You can fix that in two ways:</p>
-<ul>
-<li><p>Rebuilt with the NDK_DEBUG=1 option when calling ‘ndk-build’.</p>
-</li>
-<li><p>Modify your manifest to set android:debuggable attribute to “true”,</p>
-<p>then rebuild normally.</p>
-</li>
-</ul>
-<p>After one of these, re-install to the device!</p>
-<p>然后我们乖乖地跑到AndroidManifest.xml里边去修改Application标签的debuggable属性，eclipse会提示你不能hardcode，可以通过如下方式设置下：</p>
-<p>QQ20151012-1</p>
-<p>3)  接下来还有可能会遇到如下问题：</p>
-<p>ERROR: Could not find gdb.setup under ./libs/</p>
-<p>这是由于ndk-gdb命令的bug带来的，它没有去参照ABI的不同设置去不同的目录下找gdb.setup文件（是一个脚本文件，帮你做一些繁琐的gdb server的启动，gdb client的启动和设置等任务）。</p>
-<p>简单绕过这个错误的方式是将libs/{your abi, e.g. armeabi-v7a}里的gdb.setup直接拷贝至libs目录下</p>
-<p>4)  在你跋山涉水，翻山越岭走了这么久之后，再次运行ndk-gdb，会出现以下惊喜：</p>
-<p>ERROR: Non-debuggable application installed on the target device.</p>
-<pre><code>Please re-install the debuggable version!
-</code></pre><h4 id="更新"><a href="#更新" class="headerlink" title="更新"></a>更新</h4><p>现在可以结合gradle-experimental插件和ndk中搭载的lldb + android studio 2.0断点native代码了，虽然还不那么完善，bug多多，但是相比过去的ndk-gdb时代还是进步一点了。</p>
+            <p>今天在尝试优化json的序列化和反序列化。发现一个陷阱：<br>android自带的json比fastjson（fastjson-1.1.43）解析在9k（及以下）大小字符串输入下性能要高10倍，在解析19k大小字符串时性能高3倍。如下图所示：</p>
+<p>三星Note 3:<br><img src="/uploads/2015_09_22_01.png" alt="note 3"></p>
+<p>一加1代：<br><img src="/uploads/2015_09_22_02.png" alt="note 3"></p>
+<p>详细数据如下：<br>json字符串体积: 6k，android终端：三星note3<br><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">09-22 11:42:55.234: D/faywong(7810): org.json.JSONObject consumes: 1ms to parse json</div><div class="line">09-22 11:42:55.254: D/faywong(7810): com.alibaba.fastjson.JSONObject consumes: 15ms to parse json</div><div class="line"> </div><div class="line">json字符串体积: 9k，android终端：三星note3</div><div class="line">09-22 11:11:45.944: D/faywong(26631): org.json.JSONObject consumes: 1ms to parse json</div><div class="line">09-22 11:11:45.954: D/faywong(26631): com.alibaba.fastjson.JSONObject consumes: 15ms to parse json</div><div class="line"> </div><div class="line">json字符串体积: 19k，android终端：三星note3</div><div class="line">09-22 11:48:15.844: D/faywong(11569): org.json.JSONObject consumes: 6ms to parse json</div><div class="line">09-22 11:48:15.864: D/faywong(11569): com.alibaba.fastjson.JSONObject consumes: 19ms to parse json</div><div class="line"> </div><div class="line">json字符串体积: 6k，android终端：一加1代</div><div class="line">09-22 11:39:55.304: D/faywong(12964): org.json.JSONObject consumes: 1ms to parse json</div><div class="line">09-22 11:39:55.315: D/faywong(12964): com.alibaba.fastjson.JSONObject consumes: 11ms to parse json</div><div class="line">json字符串体积: 9k，android终端：一加1代</div><div class="line">09-22 11:30:06.378: D/faywong(11412): org.json.JSONObject consumes: 1ms to parse json</div><div class="line">09-22 11:30:06.395: D/faywong(11412): com.alibaba.fastjson.JSONObject consumes: 17ms to parse json</div><div class="line"> </div><div class="line">json字符串体积: 19k，android终端：一加1代</div><div class="line">09-22 11:53:30.551: D/faywong(14248): org.json.JSONObject consumes: 3ms to parse json</div><div class="line">09-22 11:53:30.564: D/faywong(14248): com.alibaba.fastjson.JSONObject consumes: 13ms to parse json</div></pre></td></tr></table></figure></p>
+<p>总结下json序列化和反序列化的使用经验：<br>在能控制json序列化和反序列化的整个闭环中（比如服务端+客户端）使用fastjson之类的方案是有优势的；如果你只是在其中的一环，并不知道前边的json是谁以怎样的方式序列化/反序列化得来，建议你使用org.json版本，这样性能不至于很差。</p>
 
           
         
@@ -531,213 +410,6 @@
 <p>3）是否智能隐藏SmartBar的开关并不与Android是否显示NavigationBar的开关为同一个</p>
 <p>所以我今天研究了下，封装了一个方法：</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">getNavigationBarHeight</span><span class="params">(Context context)</span> </span>&#123;</div><div class="line">    <span class="keyword">final</span> <span class="keyword">boolean</span> isMeiZu = Build.MANUFACTURER.equals(<span class="string">"Meizu"</span>);</div><div class="line"></div><div class="line">    <span class="keyword">final</span> <span class="keyword">boolean</span> autoHideSmartBar = Settings.System.getInt(context.getContentResolver(),</div><div class="line">            <span class="string">"mz_smartbar_auto_hide"</span>, <span class="number">0</span>) == <span class="number">1</span>;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (isMeiZu) &#123;</div><div class="line">        <span class="keyword">if</span> (autoHideSmartBar) &#123;</div><div class="line">            <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                Class c = Class.forName(<span class="string">"com.android.internal.R$dimen"</span>);</div><div class="line">                Object obj = c.newInstance();</div><div class="line">                Field field = c.getField(<span class="string">"mz_action_button_min_height"</span>);</div><div class="line">                <span class="keyword">int</span> height = Integer.parseInt(field.get(obj).toString());</div><div class="line">                <span class="keyword">return</span> context.getResources().getDimensionPixelSize(height);</div><div class="line">            &#125; <span class="keyword">catch</span> (Throwable e) &#123; <span class="comment">// 不自动隐藏smartbar同时又没有smartbar高度字段供访问，取系统navigationbar的高度</span></div><div class="line">                <span class="keyword">return</span> getNormalNavigationBarHeight(context);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">return</span> getNormalNavigationBarHeight(context);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">getNormalNavigationBarHeight</span><span class="params">(<span class="keyword">final</span> Context ctx)</span> </span>&#123;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        <span class="keyword">final</span> Resources res = ctx.getResources();</div><div class="line">        <span class="keyword">int</span> rid = res.getIdentifier(<span class="string">"config_showNavigationBar"</span>, <span class="string">"bool"</span>, <span class="string">"android"</span>);</div><div class="line">        <span class="keyword">if</span> (rid &gt; <span class="number">0</span>) &#123;</div><div class="line">            <span class="keyword">boolean</span> flag = res.getBoolean(rid);</div><div class="line">            <span class="keyword">if</span> (flag) &#123;</div><div class="line">                <span class="keyword">int</span> resourceId = res.getIdentifier(<span class="string">"navigation_bar_height"</span>, <span class="string">"dimen"</span>, <span class="string">"android"</span>);</div><div class="line">                <span class="keyword">if</span> (resourceId &gt; <span class="number">0</span>) &#123;</div><div class="line">                    <span class="keyword">return</span> res.getDimensionPixelSize(resourceId);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125; <span class="keyword">catch</span> (Throwable e) &#123;</div><div class="line">        LogCatLog.d(<span class="string">"FBTools"</span>, <span class="string">"getNormalNavigationBarHeight() exception:"</span> + e.getMessage());</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/19/2015-12-03-first/" itemprop="url">
-                  CheckBox on HM NOTE 1W,4.4.2,WIFI
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
-              2016-07-19
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/19/2015-12-03-first/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-12-03-first/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>这台红米Note1W上会有系统资源（res/drawable/btn_check_holo_light.xml）找不到的问题。备忘下。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">0x10800de</div><div class="line">java.lang.NullPointerException</div><div class="line">at android.graphics.drawable.DrawableContainer<span class="variable">$DrawableContainerState</span>.addChild(DrawableContainer.java:584)</div><div class="line">at android.graphics.drawable.StateListDrawable<span class="variable">$StateListState</span>.addStateSet(StateListDrawable.java:291)</div><div class="line">at android.graphics.drawable.StateListDrawable.inflate(StateListDrawable.java:189)</div><div class="line">at android.graphics.drawable.Drawable.createFromXmlInner(Drawable.java:937)</div><div class="line">at android.graphics.drawable.Drawable.createFromXml(Drawable.java:877)</div><div class="line">at android.content.res.Resources.createFromXml(Resources.java:2821)</div><div class="line">at android.content.res.Resources.loadDrawable(Resources.java:2191)</div><div class="line">at android.content.res.Resources.loadDrawable(Resources.java:2103)</div><div class="line">at android.content.res.TypedArray.getDrawable(TypedArray.java:602)</div><div class="line">at android.widget.CompoundButton.&lt;init&gt;(CompoundButton.java:74)</div><div class="line">at android.widget.CheckBox.&lt;init&gt;(CheckBox.java:68)</div><div class="line">at android.widget.CheckBox.&lt;init&gt;(CheckBox.java:64)</div><div class="line">at android.widget.CheckBox.&lt;init&gt;(CheckBox.java:60)</div></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/19/2016-01-14-first/" itemprop="url">
-                  Java JNI打印Java层异常
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
-              2016-07-19
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/19/2016-01-14-first/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2016-01-14-first/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>在一些复杂的JNI调用中，比如JNI调用Java层的对象、Java层又调native方法，嵌套过多了，某一次调用产生的异常会在下一次调用JNI时被check出来，<br>这时候会产生如下日志：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">01-13 21:22:43.247 24613-24613/com.somepkg A/art: art/runtime/check_jni.cc:65] JNI DETECTED ERROR IN APPLICATION: JNI NewByteArray called with pending exception <span class="string">'java.lang.NullPointerException'</span> thrown <span class="keyword">in</span> unknown throw location</div><div class="line">01-13 21:22:43.247 24613-24613/com.somepkg A/art: art/runtime/check_jni.cc:65]     <span class="keyword">in</span> call to NewByteArray</div></pre></td></tr></table></figure>
-<p>这种问题都是在Java代码中产生了异常，但是并不是所有case下都能一眼通过逻辑判断是哪行，这时候有个JNIEnv的方法能帮上我们大忙：<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line">jthrowable thr = (*env)-&gt;ExceptionOccurred(env);</div><div class="line"></div><div class="line"><span class="keyword">if</span> (thr) &#123;</div><div class="line">    (*env)-&gt;ExceptionDescribe(env);</div><div class="line">    (*env)-&gt;ExceptionClear(env);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>c++版本：<br><figure class="highlight c++"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">CheckException</span><span class="params">(JNIEnv* env)</span> </span>&#123;</div><div class="line">  <span class="keyword">if</span> (!HasException(env)) <span class="keyword">return</span>;</div><div class="line"></div><div class="line">  <span class="comment">// Exception has been found, might as well tell breakpad about it.</span></div><div class="line">  jthrowable java_throwable = env-&gt;ExceptionOccurred();</div><div class="line">  <span class="keyword">if</span> (!java_throwable) &#123;</div><div class="line">    <span class="comment">// Do nothing but return false.</span></div><div class="line">    CHECK(<span class="literal">false</span>);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="comment">// Clear the pending exception, since a local reference is now held.</span></div><div class="line">  env-&gt;ExceptionDescribe();</div><div class="line">  env-&gt;ExceptionClear();</div><div class="line"></div><div class="line">  <span class="comment">// Set the exception_string in BuildInfo so that breakpad can read it.</span></div><div class="line">  <span class="comment">// RVO should avoid any extra copies of the exception string.</span></div><div class="line">  base::android::BuildInfo::GetInstance()-&gt;set_java_exception_info(</div><div class="line">      GetJavaExceptionInfo(env, java_throwable));</div><div class="line"></div><div class="line">  <span class="comment">// Now, feel good about it and die.</span></div><div class="line">  CHECK(<span class="literal">false</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>在被checkjni侦测到异常的代码（比如上例中是NewByteArray）之前加上如上代码就可以将Java层的异常信息给优雅地打印出来，从而精准定位问题。</p>
-<p>另一种定位此类问题的方式是打开Android设备的CheckJni功能。但是一般production设备上都不太容易实现。所以强力推荐以上方法。</p>
-
           
         
       
@@ -900,8 +572,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/07/19/2016-01-13-first/" itemprop="url">
-                  Java JNI方法签名void类型
+                <a class="post-title-link" href="/2016/07/19/2015-09-22-first/" itemprop="url">
+                  Clojure 生产环境中怎么使用environ
                 </a>
               
             
@@ -925,8 +597,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/07/19/2016-01-13-first/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2016-01-13-first/" itemprop="commentsCount"></span>
+                <a href="/2016/07/19/2015-09-22-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-09-22-first/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -951,122 +623,11 @@
       
         
           
-            <p>在Java中经常会遇到通过外部语言扩展Java本身的需要，此时就需要使用到JNI这门技术（规范）。<br>在c/c++中，java层的数据类型需要转化成类型签名，如在google中被收录在最前边的<a href="https://docs.oracle.com/javase/1.5.0/docs/guide/jni/spec/types.html" target="_blank" rel="external">官方文档</a>中<a href="https://docs.oracle.com/javase/1.5.0/docs/guide/jni/spec/types.html#wp276" target="_blank" rel="external">Table 3-2</a>所示。</p>
-<p>问题来了，那么void类型在c/c++用什么来映射呢。这份表格里边是没有的(对应java 7的<a href="http://docs.oracle.com/javase/7/docs/technotes/guides/jni/spec/types.html#wp16432" target="_blank" rel="external">JNI规范里</a>边也没有)。今天在<a href="http://www.rgagnon.com/javadetails/java-0286.html" target="_blank" rel="external">其他文档</a>里边间接查到void类型的类型签名是V：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">Type     Chararacter</div><div class="line">boolean      Z </div><div class="line">byte         B </div><div class="line">char         C </div><div class="line">double       D </div><div class="line"><span class="built_in">float</span>        F </div><div class="line">int          I </div><div class="line">long         J </div><div class="line">object       L </div><div class="line">short        S </div><div class="line">void         V</div><div class="line">array        [</div></pre></td></tr></table></figure>
-<p>比如Java方法：<br><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">jsDebugDetachCallback</span><span class="params">(<span class="keyword">long</span> udata)</span></span></div></pre></td></tr></table></figure></p>
-<p>的类型签名为(其中返回值类型V不可省略)：<br><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="string">"(J)V"</span></div></pre></td></tr></table></figure></p>
-<p>在c中获取该方法id的方式为：<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line">jsDebugDetachCallbackMethod = (*env)-&gt;GetStaticMethodID(env, someClz, <span class="string">"jsDebugDetachCallback"</span>, <span class="string">"(J)V"</span>);</div></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/19/2016-01-21-first/" itemprop="url">
-                  git pull --rebase
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
-              2016-07-19
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/19/2016-01-21-first/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2016-01-21-first/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>有的同学在使用 git 时会不小心本地分支merge了远端的公共分支（通过 git pull ），我找了篇文章帮助大家学会 pull 的时候直接 rebase</p>
-<p><a href="http://gitready.com/advanced/2009/02/11/pull-with-rebase.html" target="_blank" rel="external">http://gitready.com/advanced/2009/02/11/pull-with-rebase.html</a></p>
-<p>其实很简单，对应的命令行是：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">git pull --rebase &lt;remote name&gt; &lt;branch name&gt;</div></pre></td></tr></table></figure>
-<p>由于 merge 提交会湮灭掉一些原始 commit 导致 rebase 时带来混乱，同时 merge 提交的 commit message 本身没有什么额外有价值的信息，我个人关于 merge 提交的经验是：  </p>
-<blockquote>
-<p>如果你的角色是scm，代码集成者，多个分支隔离开发很长时间之后的合并建议使用merge；每天持续开发中的数量不多的提交都最好使用rebase，这样可以让提交记录尽量保持线性和整洁，进而方便代码的集成和追踪。</p>
-</blockquote>
-<p><img src="/uploads/2016_01_21_01.png" alt=""></p>
-
+            <p><a href="https://github.com/weavejester/environ" target="_blank" rel="external">environ</a>可以很方便帮我们管理项目中的各种配置，但是最近在使用的时候遇到了一个问题，就是我在dev, test profile下配置的database-uri到打出uberjar之后就访问不到了。最后看了下源码，在生产环境下，需要通过进程环境变量或Java系统属性来完成这一目的：</p>
+<p>进程环境变量：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">DATABASE_URL=jdbc:postgres://localhost/prod java -jar standalone.jar</div></pre></td></tr></table></figure>
+<p>Java系统属性：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">java -Ddatabase.url=jdbc:postgres://localhost/prod -jar standalone.jar</div></pre></td></tr></table></figure>
           
         
       
@@ -1220,6 +781,107 @@
             
               
                 
+                <a class="post-title-link" href="/2016/07/19/2015-12-03-first/" itemprop="url">
+                  CheckBox on HM NOTE 1W,4.4.2,WIFI
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
+              2016-07-19
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/19/2015-12-03-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-12-03-first/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>这台红米Note1W上会有系统资源（res/drawable/btn_check_holo_light.xml）找不到的问题。备忘下。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">0x10800de</div><div class="line">java.lang.NullPointerException</div><div class="line">at android.graphics.drawable.DrawableContainer<span class="variable">$DrawableContainerState</span>.addChild(DrawableContainer.java:584)</div><div class="line">at android.graphics.drawable.StateListDrawable<span class="variable">$StateListState</span>.addStateSet(StateListDrawable.java:291)</div><div class="line">at android.graphics.drawable.StateListDrawable.inflate(StateListDrawable.java:189)</div><div class="line">at android.graphics.drawable.Drawable.createFromXmlInner(Drawable.java:937)</div><div class="line">at android.graphics.drawable.Drawable.createFromXml(Drawable.java:877)</div><div class="line">at android.content.res.Resources.createFromXml(Resources.java:2821)</div><div class="line">at android.content.res.Resources.loadDrawable(Resources.java:2191)</div><div class="line">at android.content.res.Resources.loadDrawable(Resources.java:2103)</div><div class="line">at android.content.res.TypedArray.getDrawable(TypedArray.java:602)</div><div class="line">at android.widget.CompoundButton.&lt;init&gt;(CompoundButton.java:74)</div><div class="line">at android.widget.CheckBox.&lt;init&gt;(CheckBox.java:68)</div><div class="line">at android.widget.CheckBox.&lt;init&gt;(CheckBox.java:64)</div><div class="line">at android.widget.CheckBox.&lt;init&gt;(CheckBox.java:60)</div></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/07/19/2016-01-19-first/" itemprop="url">
                   那些年一起撸过的js引擎
                 </a>
@@ -1283,6 +945,327 @@
 </li>
 </ul>
 <h3 id="没事为什么要撸那么多js引擎"><a href="#没事为什么要撸那么多js引擎" class="headerlink" title="没事为什么要撸那么多js引擎"></a>没事为什么要撸那么多js引擎</h3><p>移动互联网年代客户端开发最痛苦的在于动态性，需求总有要变的时候，这时候一门灵活、能通过网络下载到客户端就地执行的语言就很重要了。而目前最合适的那门语言便是javascript。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/19/2016-01-13-first/" itemprop="url">
+                  Java JNI方法签名void类型
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
+              2016-07-19
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/19/2016-01-13-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2016-01-13-first/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>在Java中经常会遇到通过外部语言扩展Java本身的需要，此时就需要使用到JNI这门技术（规范）。<br>在c/c++中，java层的数据类型需要转化成类型签名，如在google中被收录在最前边的<a href="https://docs.oracle.com/javase/1.5.0/docs/guide/jni/spec/types.html" target="_blank" rel="external">官方文档</a>中<a href="https://docs.oracle.com/javase/1.5.0/docs/guide/jni/spec/types.html#wp276" target="_blank" rel="external">Table 3-2</a>所示。</p>
+<p>问题来了，那么void类型在c/c++用什么来映射呢。这份表格里边是没有的(对应java 7的<a href="http://docs.oracle.com/javase/7/docs/technotes/guides/jni/spec/types.html#wp16432" target="_blank" rel="external">JNI规范里</a>边也没有)。今天在<a href="http://www.rgagnon.com/javadetails/java-0286.html" target="_blank" rel="external">其他文档</a>里边间接查到void类型的类型签名是V：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">Type     Chararacter</div><div class="line">boolean      Z </div><div class="line">byte         B </div><div class="line">char         C </div><div class="line">double       D </div><div class="line"><span class="built_in">float</span>        F </div><div class="line">int          I </div><div class="line">long         J </div><div class="line">object       L </div><div class="line">short        S </div><div class="line">void         V</div><div class="line">array        [</div></pre></td></tr></table></figure>
+<p>比如Java方法：<br><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">jsDebugDetachCallback</span><span class="params">(<span class="keyword">long</span> udata)</span></span></div></pre></td></tr></table></figure></p>
+<p>的类型签名为(其中返回值类型V不可省略)：<br><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="string">"(J)V"</span></div></pre></td></tr></table></figure></p>
+<p>在c中获取该方法id的方式为：<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line">jsDebugDetachCallbackMethod = (*env)-&gt;GetStaticMethodID(env, someClz, <span class="string">"jsDebugDetachCallback"</span>, <span class="string">"(J)V"</span>);</div></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/19/2016-01-14-first/" itemprop="url">
+                  Java JNI打印Java层异常
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
+              2016-07-19
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/19/2016-01-14-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2016-01-14-first/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>在一些复杂的JNI调用中，比如JNI调用Java层的对象、Java层又调native方法，嵌套过多了，某一次调用产生的异常会在下一次调用JNI时被check出来，<br>这时候会产生如下日志：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">01-13 21:22:43.247 24613-24613/com.somepkg A/art: art/runtime/check_jni.cc:65] JNI DETECTED ERROR IN APPLICATION: JNI NewByteArray called with pending exception <span class="string">'java.lang.NullPointerException'</span> thrown <span class="keyword">in</span> unknown throw location</div><div class="line">01-13 21:22:43.247 24613-24613/com.somepkg A/art: art/runtime/check_jni.cc:65]     <span class="keyword">in</span> call to NewByteArray</div></pre></td></tr></table></figure>
+<p>这种问题都是在Java代码中产生了异常，但是并不是所有case下都能一眼通过逻辑判断是哪行，这时候有个JNIEnv的方法能帮上我们大忙：<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line">jthrowable thr = (*env)-&gt;ExceptionOccurred(env);</div><div class="line"></div><div class="line"><span class="keyword">if</span> (thr) &#123;</div><div class="line">    (*env)-&gt;ExceptionDescribe(env);</div><div class="line">    (*env)-&gt;ExceptionClear(env);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>c++版本：<br><figure class="highlight c++"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">CheckException</span><span class="params">(JNIEnv* env)</span> </span>&#123;</div><div class="line">  <span class="keyword">if</span> (!HasException(env)) <span class="keyword">return</span>;</div><div class="line"></div><div class="line">  <span class="comment">// Exception has been found, might as well tell breakpad about it.</span></div><div class="line">  jthrowable java_throwable = env-&gt;ExceptionOccurred();</div><div class="line">  <span class="keyword">if</span> (!java_throwable) &#123;</div><div class="line">    <span class="comment">// Do nothing but return false.</span></div><div class="line">    CHECK(<span class="literal">false</span>);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="comment">// Clear the pending exception, since a local reference is now held.</span></div><div class="line">  env-&gt;ExceptionDescribe();</div><div class="line">  env-&gt;ExceptionClear();</div><div class="line"></div><div class="line">  <span class="comment">// Set the exception_string in BuildInfo so that breakpad can read it.</span></div><div class="line">  <span class="comment">// RVO should avoid any extra copies of the exception string.</span></div><div class="line">  base::android::BuildInfo::GetInstance()-&gt;set_java_exception_info(</div><div class="line">      GetJavaExceptionInfo(env, java_throwable));</div><div class="line"></div><div class="line">  <span class="comment">// Now, feel good about it and die.</span></div><div class="line">  CHECK(<span class="literal">false</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>在被checkjni侦测到异常的代码（比如上例中是NewByteArray）之前加上如上代码就可以将Java层的异常信息给优雅地打印出来，从而精准定位问题。</p>
+<p>另一种定位此类问题的方式是打开Android设备的CheckJni功能。但是一般production设备上都不太容易实现。所以强力推荐以上方法。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/19/2016-01-21-first/" itemprop="url">
+                  git pull --rebase
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
+              2016-07-19
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/19/2016-01-21-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2016-01-21-first/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>有的同学在使用 git 时会不小心本地分支merge了远端的公共分支（通过 git pull ），我找了篇文章帮助大家学会 pull 的时候直接 rebase</p>
+<p><a href="http://gitready.com/advanced/2009/02/11/pull-with-rebase.html" target="_blank" rel="external">http://gitready.com/advanced/2009/02/11/pull-with-rebase.html</a></p>
+<p>其实很简单，对应的命令行是：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">git pull --rebase &lt;remote name&gt; &lt;branch name&gt;</div></pre></td></tr></table></figure>
+<p>由于 merge 提交会湮灭掉一些原始 commit 导致 rebase 时带来混乱，同时 merge 提交的 commit message 本身没有什么额外有价值的信息，我个人关于 merge 提交的经验是：  </p>
+<blockquote>
+<p>如果你的角色是scm，代码集成者，多个分支隔离开发很长时间之后的合并建议使用merge；每天持续开发中的数量不多的提交都最好使用rebase，这样可以让提交记录尽量保持线性和整洁，进而方便代码的集成和追踪。</p>
+</blockquote>
+<p><img src="/uploads/2016_01_21_01.png" alt=""></p>
 
           
         
@@ -1453,7 +1436,7 @@
 
 
   
-  <script type="text/javascript" src="http://ajax.useso.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
+  <script type="text/javascript" src="http://cdn.css.net/libs/jquery/1.8.0/jquery-1.8.0.min.js"></script>
 
   
   <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>

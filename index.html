@@ -55,7 +55,7 @@
   
     
     
-    <link href="//fonts.useso.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+    <link href="//fonts.css.network/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
   
 
 
@@ -350,8 +350,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/07/19/2015-09-22-second/" itemprop="url">
-                  fastjson for android名不副实
+                <a class="post-title-link" href="/2016/07/19/2015-07-09-second/" itemprop="url">
+                  以UTF-8编码建立postgresql数据库
                 </a>
               
             
@@ -375,8 +375,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/07/19/2015-09-22-second/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-09-22-second/" itemprop="commentsCount"></span>
+                <a href="/2016/07/19/2015-07-09-second/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-07-09-second/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -401,11 +401,117 @@
       
         
           
-            <p>今天在尝试优化json的序列化和反序列化。发现一个陷阱：<br>android自带的json比fastjson（fastjson-1.1.43）解析在9k（及以下）大小字符串输入下性能要高10倍，在解析19k大小字符串时性能高3倍。如下图所示：</p>
-<p>三星Note 3:<br><img src="/uploads/2015_09_22_01.png" alt="note 3"></p>
-<p>一加1代：<br><img src="/uploads/2015_09_22_02.png" alt="note 3"></p>
-<p>详细数据如下：<br>json字符串体积: 6k，android终端：三星note3<br><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">09-22 11:42:55.234: D/faywong(7810): org.json.JSONObject consumes: 1ms to parse json</div><div class="line">09-22 11:42:55.254: D/faywong(7810): com.alibaba.fastjson.JSONObject consumes: 15ms to parse json</div><div class="line"> </div><div class="line">json字符串体积: 9k，android终端：三星note3</div><div class="line">09-22 11:11:45.944: D/faywong(26631): org.json.JSONObject consumes: 1ms to parse json</div><div class="line">09-22 11:11:45.954: D/faywong(26631): com.alibaba.fastjson.JSONObject consumes: 15ms to parse json</div><div class="line"> </div><div class="line">json字符串体积: 19k，android终端：三星note3</div><div class="line">09-22 11:48:15.844: D/faywong(11569): org.json.JSONObject consumes: 6ms to parse json</div><div class="line">09-22 11:48:15.864: D/faywong(11569): com.alibaba.fastjson.JSONObject consumes: 19ms to parse json</div><div class="line"> </div><div class="line">json字符串体积: 6k，android终端：一加1代</div><div class="line">09-22 11:39:55.304: D/faywong(12964): org.json.JSONObject consumes: 1ms to parse json</div><div class="line">09-22 11:39:55.315: D/faywong(12964): com.alibaba.fastjson.JSONObject consumes: 11ms to parse json</div><div class="line">json字符串体积: 9k，android终端：一加1代</div><div class="line">09-22 11:30:06.378: D/faywong(11412): org.json.JSONObject consumes: 1ms to parse json</div><div class="line">09-22 11:30:06.395: D/faywong(11412): com.alibaba.fastjson.JSONObject consumes: 17ms to parse json</div><div class="line"> </div><div class="line">json字符串体积: 19k，android终端：一加1代</div><div class="line">09-22 11:53:30.551: D/faywong(14248): org.json.JSONObject consumes: 3ms to parse json</div><div class="line">09-22 11:53:30.564: D/faywong(14248): com.alibaba.fastjson.JSONObject consumes: 13ms to parse json</div></pre></td></tr></table></figure></p>
-<p>总结下json序列化和反序列化的使用经验：<br>在能控制json序列化和反序列化的整个闭环中（比如服务端+客户端）使用fastjson之类的方案是有优势的；如果你只是在其中的一环，并不知道前边的json是谁以怎样的方式序列化/反序列化得来，建议你使用org.json版本，这样性能不至于很差。</p>
+            <p>因为要与java后端协作，数据库得建成UTF-8编码的。折腾了半天，实在是没有办法，改了locale，重新安装postgresql-server，最终通过命令行指定编码和模板（这点很重要）这样蒙混过关：</p>
+<p>命令行：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">createdb --locale=en_US.utf8 --encoding=UTF8 --template=template0 <span class="built_in">test</span>_db</div></pre></td></tr></table></figure>
+<p>然后确认下：</p>
+<p><img src="/uploads/2015_09_02_01.jpg" alt="psql_result"></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/19/2015-01-15-fourth/" itemprop="url">
+                  Android L上webview crash的问题
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
+              2016-07-19
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/19/2015-01-15-fourth/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-01-15-fourth/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>在android L上测试反馈使用WebApp时会出现如下crash：<br><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">F/libc    ( 7555): Fatal signal 6 (SIGABRT) <span class="keyword">in</span> tid 12577 (RenderThread)</div><div class="line"></div><div class="line">I/DEBUG   (  182): *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***</div><div class="line"></div><div class="line">I/DEBUG   (  182): Build fingerprint: <span class="string">'google/hammerhead/hammerhead:L/LPV79/1236599:user/release-keys'</span></div><div class="line"></div><div class="line">I/DEBUG   (  182): Revision: <span class="string">'11'</span></div><div class="line"></div><div class="line">I/DEBUG   (  182): pid: 7555, tid: 12577, name: RenderThread  &gt;&gt;&gt; com.eg.android.AlipayGphone &lt;&lt;&lt;</div><div class="line"></div><div class="line">I/DEBUG   (  182): signal 6 (SIGABRT), code 0 (SI_USER), fault addr --------</div></pre></td></tr></table></figure></p>
+<p>后来研究发现：</p>
+<p><a href="https://code.google.com/p/android-developer-preview/issues/detail?can=2&amp;start=0&amp;num=100&amp;q=&amp;colspec=ID%20Type%20Status%20Owner%20Summary&amp;groupby=&amp;sort=&amp;id=950" target="_blank" rel="external">https://code.google.com/p/android-developer-preview/issues/detail?can=2&amp;start=0&amp;num=100&amp;q=&amp;colspec=ID%20Type%20Status%20Owner%20Summary&amp;groupby=&amp;sort=&amp;id=950</a></p>
+<p>上有人报告同一问题。</p>
+<p>LPV79这个build为developer preview version.存在一些问题。</p>
+<p>后来在正式版本中验证同一问题，不可复现。</p>
 
           
         
@@ -510,6 +616,110 @@
 <figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> String <span class="title">getUserAgentString</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (DESKTOP_USERAGENT.equals(mUserAgent) ||</div><div class="line">        IPHONE_USERAGENT.equals(mUserAgent) ||</div><div class="line">        !mUseDefaultUserAgent) &#123;</div><div class="line">        <span class="keyword">return</span> mUserAgent;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">boolean</span> doPostSync = <span class="keyword">false</span>;</div><div class="line">    <span class="keyword">synchronized</span>(sLockForLocaleSettings) &#123;</div><div class="line">        Locale currentLocale = Locale.getDefault();</div><div class="line">        <span class="keyword">if</span> (!sLocale.equals(currentLocale)) &#123;</div><div class="line">            sLocale = currentLocale;</div><div class="line">            mUserAgent = getCurrentUserAgent();</div><div class="line">            mAcceptLanguage = getCurrentAcceptLanguage();</div><div class="line">            doPostSync = <span class="keyword">true</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (doPostSync) &#123;</div><div class="line">        postSync();</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> mUserAgent;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>其中后半段代码用于将当前locale设定同步到生成的UA中。所以该方法是有副作用的。</p>
 <p>在一个使用了WebView的Activity里实例化完成和系统Configuration改变后都需要调用一次getUserAgentString()来让WebView的UA（前提是不要设置自己的UA，即没有针对此WebView调用过setUserAgentString）中locale分量与系统的设定保持一致。以免在访问多语言网站时出现适配问题。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/19/2015-01-19-first/" itemprop="url">
+                  android4.1上WebView页面加载成功时出现IllegalArgumentException
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
+              2016-07-19
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/19/2015-01-19-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-01-19-first/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>异常的堆栈如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line">java.lang.IllegalArgumentException: bad parameter</div><div class="line">   at org.apache.http.client.utils.URLEncodedUtils.parse(URLEncodedUtils.java:<span class="number">139</span>)</div><div class="line">   at org.apache.http.client.utils.URLEncodedUtils.parse(URLEncodedUtils.java:<span class="number">76</span>)</div><div class="line">   at android.webkit.AccessibilityInjector.getAxsUrlParameterValue(AccessibilityInjector.java:<span class="number">412</span>)</div><div class="line">   at android.webkit.AccessibilityInjector.shouldInjectJavaScript(AccessibilityInjector.java:<span class="number">327</span>)</div><div class="line">   at android.webkit.AccessibilityInjector.onPageFinished(AccessibilityInjector.java:<span class="number">286</span>)</div><div class="line">   at android.webkit.WebViewClassic.onPageFinished(WebViewClassic.java:<span class="number">4088</span>)</div><div class="line">   at android.webkit.CallbackProxy.handleMessage(CallbackProxy.java:<span class="number">332</span>)</div><div class="line">   at android.os.Handler.dispatchMessage(Handler.java:<span class="number">99</span>)</div><div class="line">   at android.os.Looper.loop(Looper.java:<span class="number">137</span>)</div><div class="line">   at android.app.ActivityThread.main(ActivityThread.java:<span class="number">4829</span>)</div><div class="line">   at java.lang.reflect.Method.invokeNative(Native Method)</div><div class="line">   at java.lang.reflect.Method.invoke(Method.java:<span class="number">511</span>)</div><div class="line">   at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:<span class="number">841</span>)</div><div class="line">   at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:<span class="number">608</span>)</div><div class="line">   at dalvik.system.NativeStart.main(Native Method)</div></pre></td></tr></table></figure>
+<p>相关的google code android project里边的issue中论述如下：</p>
+<p>“<br>A customer of mine running 4.1.2 just informed me that the issue is still<br>present! After this issue crashes my app, I have to pop up a dialog<br>telling them to disable all accessibility services.<br>Worst user experience ever, but what else can I do.<br>……<br>Fixed in an internal build, to be released in the next major release.<br>……<br>The bug doesn’t occur here in 4.2.1 (Galaxy Nexus, JOP40D).<br>“</p>
 
           
         
@@ -667,8 +877,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/07/19/2015-01-15-second/" itemprop="url">
-                  调用WebView中onPause方法需要好好权衡
+                <a class="post-title-link" href="/2016/07/19/2015-06-18-first/" itemprop="url">
+                  黑暗WebView@HuaweiMediaPad X1 C208B011
                 </a>
               
             
@@ -692,8 +902,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/07/19/2015-01-15-second/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-01-15-second/" itemprop="commentsCount"></span>
+                <a href="/2016/07/19/2015-06-18-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-06-18-first/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -718,9 +928,11 @@
       
         
           
-            <p>最近踩了一个坑，有个非全屏的dialog遮住我的WebApp容器时，WebApp容器中JS代码操纵dom对象显示文本（input框中）巨慢（俗话描述就是“软键盘中输入了字，但是上屏很慢”）。</p>
-<p>debug了一天之后发现。在WebView的onPause方法调用后，其内部JS引擎执行JS代码会慢好几倍。所以是否需要跟随Activity的生命周期调用onPause方法需要根据应用场景来区分：</p>
-<p>若是应用中严格依赖JS做一些比较紧要的事情，则不应该onPause WebView。否则应该onPause WebView以释放一部分系统资源。</p>
+            <p>最近遇到了一位很热心的用户，反映C208B011版本的Huawei X1（想想MediaPad系列本人几年前在华为也曾参与研发）上无法使用一个WebApp。debug后发现在该系统的WebView内的JS里无法使用console.log()导致严重的java-js之间的通信机制缺失。特意为其创建一个BridgePolicy类来维护之，若是该款机器，则切换至window.alert来实现java-js之间的通信，否则则使用console.log()。</p>
+<p>测试发现该机器的C208B009版本的WebView并无此问题（且与硬件，基带是3G或4G均无关）。</p>
+<p>第一次face to face面对我们的用户感触颇多，一个产品对于他们家里的人是如此重要，一个WebApp不能用又如此大程度的影响到他，因为存在这个问题甚至想换掉这部手机。</p>
+<p>用户对于解决问题的意愿极强。他（40岁左右的大叔）多次上Huawei X1论坛与其他用户交流看法和规律，寻求解决方案，为此去了解该机器的CPU，基带，ROM版本……。</p>
+<p>幸运的是，他们使用的是我们这个首屈一指的互联网公司的产品，遇到了我们这样的团队，得以面对面的反映他遇到的问题——没有抱怨，而是尽可能为我们提供他“调查”，“摸索”出来的规律。</p>
 
           
         
@@ -770,8 +982,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/07/19/2015-01-19-first/" itemprop="url">
-                  android4.1上WebView页面加载成功时出现IllegalArgumentException
+                <a class="post-title-link" href="/2016/07/19/2015-02-01-first/" itemprop="url">
+                  android库ShowcaseView
                 </a>
               
             
@@ -795,8 +1007,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/07/19/2015-01-19-first/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-01-19-first/" itemprop="commentsCount"></span>
+                <a href="/2016/07/19/2015-02-01-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-02-01-first/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -821,230 +1033,13 @@
       
         
           
-            <p>异常的堆栈如下：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><div class="line">java.lang.IllegalArgumentException: bad parameter</div><div class="line">   at org.apache.http.client.utils.URLEncodedUtils.parse(URLEncodedUtils.java:<span class="number">139</span>)</div><div class="line">   at org.apache.http.client.utils.URLEncodedUtils.parse(URLEncodedUtils.java:<span class="number">76</span>)</div><div class="line">   at android.webkit.AccessibilityInjector.getAxsUrlParameterValue(AccessibilityInjector.java:<span class="number">412</span>)</div><div class="line">   at android.webkit.AccessibilityInjector.shouldInjectJavaScript(AccessibilityInjector.java:<span class="number">327</span>)</div><div class="line">   at android.webkit.AccessibilityInjector.onPageFinished(AccessibilityInjector.java:<span class="number">286</span>)</div><div class="line">   at android.webkit.WebViewClassic.onPageFinished(WebViewClassic.java:<span class="number">4088</span>)</div><div class="line">   at android.webkit.CallbackProxy.handleMessage(CallbackProxy.java:<span class="number">332</span>)</div><div class="line">   at android.os.Handler.dispatchMessage(Handler.java:<span class="number">99</span>)</div><div class="line">   at android.os.Looper.loop(Looper.java:<span class="number">137</span>)</div><div class="line">   at android.app.ActivityThread.main(ActivityThread.java:<span class="number">4829</span>)</div><div class="line">   at java.lang.reflect.Method.invokeNative(Native Method)</div><div class="line">   at java.lang.reflect.Method.invoke(Method.java:<span class="number">511</span>)</div><div class="line">   at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:<span class="number">841</span>)</div><div class="line">   at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:<span class="number">608</span>)</div><div class="line">   at dalvik.system.NativeStart.main(Native Method)</div></pre></td></tr></table></figure>
-<p>相关的google code android project里边的issue中论述如下：</p>
-<p>“<br>A customer of mine running 4.1.2 just informed me that the issue is still<br>present! After this issue crashes my app, I have to pop up a dialog<br>telling them to disable all accessibility services.<br>Worst user experience ever, but what else can I do.<br>……<br>Fixed in an internal build, to be released in the next major release.<br>……<br>The bug doesn’t occur here in 4.2.1 (Galaxy Nexus, JOP40D).<br>“</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/19/2015-01-21-first/" itemprop="url">
-                  通过PackageManager query应用信息时出现java.lang.RuntimeException: Package manager has died
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
-              2016-07-19
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/19/2015-01-21-first/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-01-21-first/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>这属于android中最常见的TransactionTooLargeException的后果表现之一。</p>
-<p>该问题较多出现在使用PackageManager查询系统的应用的信息，通过Intent来过滤匹配目标应用组件（android四大组件）时，典型堆栈如下：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><div class="line">java.lang.RuntimeException: Package manager has died</div><div class="line">at android.app.ApplicationPackageManager.getPackageInfo(ApplicationPackageManager.java:<span class="number">78</span>)</div><div class="line"></div><div class="line">......</div><div class="line">Caused by: android.os.TransactionTooLargeException</div><div class="line">at android.os.BinderProxy.transact(Native Method)</div><div class="line">at android.content.pm.IPackageManager$Stub$Proxy.getPackageInfo(IPackageManager.java:<span class="number">1393</span>)</div><div class="line">at android.app.ApplicationPackageManager.getPackageInfo(ApplicationPackageManager.java:<span class="number">73</span>)</div><div class="line">... <span class="number">17</span> more</div><div class="line">android.os.TransactionTooLargeException</div><div class="line">at android.os.BinderProxy.transact(Native Method)</div><div class="line">at android.content.pm.IPackageManager$Stub$Proxy.getPackageInfo(IPackageManager.java:<span class="number">1393</span>)</div><div class="line">at android.app.ApplicationPackageManager.getPackageInfo(ApplicationPackageManager.java:<span class="number">73</span>)</div></pre></td></tr></table></figure>
-<p>这是Java层的堆栈，原始抛出异常的地方在于文件frameworks/base/core/jni/android_util_Binder.cpp：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">case</span> FAILED_TRANSACTION:</div><div class="line"> LOGE(<span class="string">"!!! FAILED BINDER TRANSACTION !!!"</span>);</div><div class="line"> <span class="comment">// TransactionTooLargeException is a checked exception, only throw from certain methods.</span></div><div class="line"> <span class="comment">// <span class="doctag">FIXME:</span> Transaction too large is the most common reason for FAILED_TRANSACTION</span></div><div class="line"> <span class="comment">//        but it is not the only one.  The Binder driver can return BR_FAILED_REPLY</span></div><div class="line"> <span class="comment">//        for other reasons also, such as if the transaction is malformed or</span></div><div class="line"> <span class="comment">//        refers to an FD that has been closed.  We should change the driver</span></div><div class="line"> <span class="comment">//        to enable us to distinguish these cases in the future.</span></div><div class="line"> jniThrowException(env, canThrowRemoteException</div><div class="line"> ? <span class="string">"android/os/TransactionTooLargeException"</span></div><div class="line"> : <span class="string">"java/lang/RuntimeException"</span>, <span class="literal">NULL</span>);</div><div class="line"> <span class="keyword">break</span>;</div></pre></td></tr></table></figure>
-<p>该FAILED_TRANSACTION错误码定义于：<br>/bionic/libc/kernel/common/linux/binder.h中的BR_FAILED_REPLY</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">enum</span> BinderDriverReturnProtocol &#123;</div><div class="line">BR_ERROR = <span class="number">_</span>IOR_BAD(<span class="string">'r'</span>, <span class="number">0</span>, <span class="keyword">int</span>),</div><div class="line"></div><div class="line">BR_OK = <span class="number">_</span>IO(<span class="string">'r'</span>, <span class="number">1</span>),</div><div class="line"></div><div class="line">BR_TRANSACTION = <span class="number">_</span>IOR_BAD(<span class="string">'r'</span>, <span class="number">2</span>, <span class="keyword">struct</span> binder_transaction_data),</div><div class="line">BR_REPLY = <span class="number">_</span>IOR_BAD(<span class="string">'r'</span>, <span class="number">3</span>, <span class="keyword">struct</span> binder_transaction_data),</div><div class="line"></div><div class="line">BR_ACQUIRE_RESULT = <span class="number">_</span>IOR_BAD(<span class="string">'r'</span>, <span class="number">4</span>, <span class="keyword">int</span>),</div><div class="line"></div><div class="line">BR_DEAD_REPLY = <span class="number">_</span>IO(<span class="string">'r'</span>, <span class="number">5</span>),</div><div class="line"></div><div class="line">BR_TRANSACTION_COMPLETE = <span class="number">_</span>IO(<span class="string">'r'</span>, <span class="number">6</span>),</div><div class="line"></div><div class="line">BR_INCREFS = <span class="number">_</span>IOR_BAD(<span class="string">'r'</span>, <span class="number">7</span>, <span class="keyword">struct</span> binder_ptr_cookie),</div><div class="line">BR_ACQUIRE = <span class="number">_</span>IOR_BAD(<span class="string">'r'</span>, <span class="number">8</span>, <span class="keyword">struct</span> binder_ptr_cookie),</div><div class="line">BR_RELEASE = <span class="number">_</span>IOR_BAD(<span class="string">'r'</span>, <span class="number">9</span>, <span class="keyword">struct</span> binder_ptr_cookie),</div><div class="line">BR_DECREFS = <span class="number">_</span>IOR_BAD(<span class="string">'r'</span>, <span class="number">10</span>, <span class="keyword">struct</span> binder_ptr_cookie),</div><div class="line"></div><div class="line">BR_ATTEMPT_ACQUIRE = <span class="number">_</span>IOR_BAD(<span class="string">'r'</span>, <span class="number">11</span>, <span class="keyword">struct</span> binder_pri_ptr_cookie),</div><div class="line"></div><div class="line">BR_NOOP = <span class="number">_</span>IO(<span class="string">'r'</span>, <span class="number">12</span>),</div><div class="line"></div><div class="line">BR_SPAWN_LOOPER = <span class="number">_</span>IO(<span class="string">'r'</span>, <span class="number">13</span>),</div><div class="line"></div><div class="line">BR_FINISHED = <span class="number">_</span>IO(<span class="string">'r'</span>, <span class="number">14</span>),</div><div class="line"></div><div class="line">BR_DEAD_BINDER = <span class="number">_</span>IOR_BAD(<span class="string">'r'</span>, <span class="number">15</span>, <span class="keyword">void</span> *),</div><div class="line"></div><div class="line">BR_CLEAR_DEATH_NOTIFICATION_DONE = <span class="number">_</span>IOR_BAD(<span class="string">'r'</span>, <span class="number">16</span>, <span class="keyword">void</span> *),</div><div class="line"></div><div class="line">BR_FAILED_REPLY = <span class="number">_</span>IO(<span class="string">'r'</span>, <span class="number">17</span>),</div><div class="line"></div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-<p>其原因总结如下，首先Android系统对于Binder IPC每进程的事务buffer上限是1M（为所有Binder事务共享，且不区分目标系统的ram配置等因素），在通过PackageManager中获取系统内应用时，比如应用的Icon是个bitmap，且不同应用所制作Icon的品质（像素数）上差异很大。会占用大量内存导致Binder事务内存超过上限。</p>
-<p>Binder事务buffer的尺寸定义在ProcessState.cpp：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">define</span> BINDER_VM_SIZE((1 * 1024 * 1024) - (4096 * 2))</span></div><div class="line">......</div><div class="line">ProcessState::ProcessState(): mDriverFD(open_driver()), mVMStart(MAP_FAILED), mManagesContexts(<span class="literal">false</span>), mBinderContextCheckFunc(<span class="literal">NULL</span>), mBinderContextUserData(<span class="literal">NULL</span>), mThreadPoolStarted(<span class="literal">false</span>), mThreadPoolSeq(<span class="number">1</span>) &#123;</div><div class="line">    <span class="keyword">if</span> (mDriverFD &gt;= <span class="number">0</span>) &#123;</div><div class="line">        <span class="comment">// XXX Ideally, there should be a specific define for whether we</span></div><div class="line">        <span class="comment">// have mmap (or whether we could possibly have the kernel module</span></div><div class="line">        <span class="comment">// availabla).</span></div><div class="line">        <span class="meta">#</span></div><div class="line">        <span class="meta-keyword">if</span> !defined(HAVE_WIN32_IPC)</div><div class="line">            <span class="comment">// mmap the binder, providing a chunk of virtual address space to receive transactions.</span></div><div class="line">        mVMStart = mmap(<span class="number">0</span>, BINDER_VM_SIZE, PROT_READ, MAP_PRIVATE | MAP_NORESERVE, mDriverFD, <span class="number">0</span>);</div><div class="line">        <span class="keyword">if</span> (mVMStart == MAP_FAILED) &#123;</div><div class="line">            <span class="comment">// *sigh*</span></div><div class="line">            LOGE(<span class="string">"Using /dev/binder failed: unable to mmap transaction memory.\n"</span>);</div><div class="line">            close(mDriverFD);</div><div class="line">            mDriverFD = <span class="number">-1</span>;</div><div class="line">        &#125;<span class="meta">#</span></div><div class="line">        <span class="meta-keyword">else</span></div><div class="line">            mDriverFD = <span class="number">-1</span>;<span class="meta">#</span></div><div class="line">        <span class="meta-keyword">endif</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    LOG_ALWAYS_FATAL_IF(mDriverFD &lt; <span class="number">0</span>, <span class="string">"Binder driver could not be opened.  Terminating."</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>App icon对应的数据模型如下：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">AppInfo</span> </span>&#123;</div><div class="line"></div><div class="line">......</div><div class="line"></div><div class="line"><span class="keyword">private</span> BitmapDrawable icon</div><div class="line"></div><div class="line">......</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>该问题是android系统的限制，只能通过上层来捕获该异常来绕过。当然也不仅限于PackageManager，其他系统服务，应用间的Binder调用也可以带来这一问题。</p>
-<p>最后的最后，由于在c++向java层抛出这个异常的场景有多种（见上边c++代码中“FAILED_TRANSACTION”处的注释），所以当你收到了TransactionTooLargeException的时候，不意味着真正的Transaction is Too Large。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/19/2015-01-20-second/" itemprop="url">
-                  开源的崩溃统计项目Socorro
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
-              2016-07-19
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/19/2015-01-20-second/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-01-20-second/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>由Mozilla开源的崩溃统计项目Socorro非常适合针对客户端的崩溃闪退、日志/堆栈上报，服务端进行采集、处理、分析、报告。</p>
-<p>客户端的工作由类库<a href="https://wiki.mozilla.org/Breakpad" target="_blank" rel="external">Breakpad</a>完成。</p>
-<p>服务端的工作由<a href="https://github.com/mozilla/socorro/" target="_blank" rel="external">Socorro</a>完成。</p>
-<p>代码托管在<a href="https://github.com/mozilla/socorro" target="_blank" rel="external">github</a>.</p>
-<p>看这个提交和发布的数目，迭代程度还是挺深的。</p>
-<p>这样针对移动开发，就不必重复造轮子了。</p>
+            <p>一个非常适合用于对用户进行第一次使用进行指导的库ShowcaseView，截图示例如下：</p>
+<p><img src="/uploads/2015-02-01-01.png" alt="showcase view 1"></p>
+<p><img src="/uploads/2015-02-01-02.png" alt="showcase view 2"></p>
+<p>下面给出一个实例，需要瞄定一个特殊的View(id为R.id.answers)，在其上显示一个ShowCaseView：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">new</span> ShowcaseView.Builder(getActivity()).setTarget(<span class="keyword">new</span> ActionItemTarget(getActivity(), R.id.answers)) </div><div class="line"><span class="comment">//Here is where you supply the id of the action bar item you want to display </span></div><div class="line">.setContentTitle(<span class="string">"Title"</span>).setContentText(<span class="string">"Description"</span>).hideOnTouchOutside().build();</div></pre></td></tr></table></figure>
+<p>项目主页位于：<a href="https://github.com/amlcurran/ShowcaseView，从其commit数和release数来看，应该非常靠谱。" target="_blank" rel="external">https://github.com/amlcurran/ShowcaseView，从其commit数和release数来看，应该非常靠谱。</a></p>
+<p>接下来打算在项目中使用起来，后续补上使用感受。</p>
 
           
         
@@ -1197,8 +1192,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/07/19/2015-02-01-first/" itemprop="url">
-                  android库ShowcaseView
+                <a class="post-title-link" href="/2016/07/19/2015-01-20-second/" itemprop="url">
+                  开源的崩溃统计项目Socorro
                 </a>
               
             
@@ -1222,8 +1217,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/07/19/2015-02-01-first/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-02-01-first/" itemprop="commentsCount"></span>
+                <a href="/2016/07/19/2015-01-20-second/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-01-20-second/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -1248,13 +1243,12 @@
       
         
           
-            <p>一个非常适合用于对用户进行第一次使用进行指导的库ShowcaseView，截图示例如下：</p>
-<p><img src="/uploads/2015-02-01-01.png" alt="showcase view 1"></p>
-<p><img src="/uploads/2015-02-01-02.png" alt="showcase view 2"></p>
-<p>下面给出一个实例，需要瞄定一个特殊的View(id为R.id.answers)，在其上显示一个ShowCaseView：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">new</span> ShowcaseView.Builder(getActivity()).setTarget(<span class="keyword">new</span> ActionItemTarget(getActivity(), R.id.answers)) </div><div class="line"><span class="comment">//Here is where you supply the id of the action bar item you want to display </span></div><div class="line">.setContentTitle(<span class="string">"Title"</span>).setContentText(<span class="string">"Description"</span>).hideOnTouchOutside().build();</div></pre></td></tr></table></figure>
-<p>项目主页位于：<a href="https://github.com/amlcurran/ShowcaseView，从其commit数和release数来看，应该非常靠谱。" target="_blank" rel="external">https://github.com/amlcurran/ShowcaseView，从其commit数和release数来看，应该非常靠谱。</a></p>
-<p>接下来打算在项目中使用起来，后续补上使用感受。</p>
+            <p>由Mozilla开源的崩溃统计项目Socorro非常适合针对客户端的崩溃闪退、日志/堆栈上报，服务端进行采集、处理、分析、报告。</p>
+<p>客户端的工作由类库<a href="https://wiki.mozilla.org/Breakpad" target="_blank" rel="external">Breakpad</a>完成。</p>
+<p>服务端的工作由<a href="https://github.com/mozilla/socorro/" target="_blank" rel="external">Socorro</a>完成。</p>
+<p>代码托管在<a href="https://github.com/mozilla/socorro" target="_blank" rel="external">github</a>.</p>
+<p>看这个提交和发布的数目，迭代程度还是挺深的。</p>
+<p>这样针对移动开发，就不必重复造轮子了。</p>
 
           
         
@@ -1425,7 +1419,7 @@
 
 
   
-  <script type="text/javascript" src="http://ajax.useso.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
+  <script type="text/javascript" src="http://cdn.css.net/libs/jquery/1.8.0/jquery-1.8.0.min.js"></script>
 
   
   <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>

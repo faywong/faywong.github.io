@@ -55,7 +55,7 @@
   
     
     
-    <link href="//fonts.useso.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+    <link href="//fonts.css.network/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
   
 
 
@@ -350,214 +350,6 @@
             
               
                 
-                <a class="post-title-link" href="/2016/07/19/2015-06-20-first/" itemprop="url">
-                  [pgsql]仅当主key不存在时插入记录
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
-              2016-07-19
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/19/2015-06-20-first/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-06-20-first/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>比如创建一个用户时只有在不存在的时候才需要插入，查了好久，终于搞明白：</p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><div class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="keyword">users</span>(<span class="keyword">id</span>, <span class="keyword">alias</span>, email) <span class="keyword">SELECT</span> <span class="number">00001</span>, <span class="string">'faywong'</span>, <span class="string">'wangfei584521@163.com'</span> <span class="keyword">from</span> <span class="keyword">users</span> <span class="keyword">WHERE</span> <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> (<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="keyword">users</span> <span class="keyword">WHERE</span> <span class="keyword">id</span> = <span class="number">00001</span>)</div></pre></td></tr></table></figure>
-<p>pqsql在这点上真叫一个繁琐！</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/19/2015-06-18-first/" itemprop="url">
-                  黑暗WebView@HuaweiMediaPad X1 C208B011
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
-              2016-07-19
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/19/2015-06-18-first/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-06-18-first/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>最近遇到了一位很热心的用户，反映C208B011版本的Huawei X1（想想MediaPad系列本人几年前在华为也曾参与研发）上无法使用一个WebApp。debug后发现在该系统的WebView内的JS里无法使用console.log()导致严重的java-js之间的通信机制缺失。特意为其创建一个BridgePolicy类来维护之，若是该款机器，则切换至window.alert来实现java-js之间的通信，否则则使用console.log()。</p>
-<p>测试发现该机器的C208B009版本的WebView并无此问题（且与硬件，基带是3G或4G均无关）。</p>
-<p>第一次face to face面对我们的用户感触颇多，一个产品对于他们家里的人是如此重要，一个WebApp不能用又如此大程度的影响到他，因为存在这个问题甚至想换掉这部手机。</p>
-<p>用户对于解决问题的意愿极强。他（40岁左右的大叔）多次上Huawei X1论坛与其他用户交流看法和规律，寻求解决方案，为此去了解该机器的CPU，基带，ROM版本……。</p>
-<p>幸运的是，他们使用的是我们这个首屈一指的互联网公司的产品，遇到了我们这样的团队，得以面对面的反映他遇到的问题——没有抱怨，而是尽可能为我们提供他“调查”，“摸索”出来的规律。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
                 <a class="post-title-link" href="/2016/07/19/2015-01-23-first/" itemprop="url">
                   应用压入后台时由WebView带来的耗电问题
                 </a>
@@ -670,8 +462,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/07/19/2015-07-09-second/" itemprop="url">
-                  以UTF-8编码建立postgresql数据库
+                <a class="post-title-link" href="/2016/07/19/2015-01-21-first/" itemprop="url">
+                  通过PackageManager query应用信息时出现java.lang.RuntimeException: Package manager has died
                 </a>
               
             
@@ -695,8 +487,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/07/19/2015-07-09-second/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-07-09-second/" itemprop="commentsCount"></span>
+                <a href="/2016/07/19/2015-01-21-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-01-21-first/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -721,11 +513,226 @@
       
         
           
-            <p>因为要与java后端协作，数据库得建成UTF-8编码的。折腾了半天，实在是没有办法，改了locale，重新安装postgresql-server，最终通过命令行指定编码和模板（这点很重要）这样蒙混过关：</p>
-<p>命令行：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">createdb --locale=en_US.utf8 --encoding=UTF8 --template=template0 <span class="built_in">test</span>_db</div></pre></td></tr></table></figure>
-<p>然后确认下：</p>
-<p><img src="/uploads/2015_09_02_01.jpg" alt="psql_result"></p>
+            <p>这属于android中最常见的TransactionTooLargeException的后果表现之一。</p>
+<p>该问题较多出现在使用PackageManager查询系统的应用的信息，通过Intent来过滤匹配目标应用组件（android四大组件）时，典型堆栈如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line">java.lang.RuntimeException: Package manager has died</div><div class="line">at android.app.ApplicationPackageManager.getPackageInfo(ApplicationPackageManager.java:<span class="number">78</span>)</div><div class="line"></div><div class="line">......</div><div class="line">Caused by: android.os.TransactionTooLargeException</div><div class="line">at android.os.BinderProxy.transact(Native Method)</div><div class="line">at android.content.pm.IPackageManager$Stub$Proxy.getPackageInfo(IPackageManager.java:<span class="number">1393</span>)</div><div class="line">at android.app.ApplicationPackageManager.getPackageInfo(ApplicationPackageManager.java:<span class="number">73</span>)</div><div class="line">... <span class="number">17</span> more</div><div class="line">android.os.TransactionTooLargeException</div><div class="line">at android.os.BinderProxy.transact(Native Method)</div><div class="line">at android.content.pm.IPackageManager$Stub$Proxy.getPackageInfo(IPackageManager.java:<span class="number">1393</span>)</div><div class="line">at android.app.ApplicationPackageManager.getPackageInfo(ApplicationPackageManager.java:<span class="number">73</span>)</div></pre></td></tr></table></figure>
+<p>这是Java层的堆栈，原始抛出异常的地方在于文件frameworks/base/core/jni/android_util_Binder.cpp：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">case</span> FAILED_TRANSACTION:</div><div class="line"> LOGE(<span class="string">"!!! FAILED BINDER TRANSACTION !!!"</span>);</div><div class="line"> <span class="comment">// TransactionTooLargeException is a checked exception, only throw from certain methods.</span></div><div class="line"> <span class="comment">// <span class="doctag">FIXME:</span> Transaction too large is the most common reason for FAILED_TRANSACTION</span></div><div class="line"> <span class="comment">//        but it is not the only one.  The Binder driver can return BR_FAILED_REPLY</span></div><div class="line"> <span class="comment">//        for other reasons also, such as if the transaction is malformed or</span></div><div class="line"> <span class="comment">//        refers to an FD that has been closed.  We should change the driver</span></div><div class="line"> <span class="comment">//        to enable us to distinguish these cases in the future.</span></div><div class="line"> jniThrowException(env, canThrowRemoteException</div><div class="line"> ? <span class="string">"android/os/TransactionTooLargeException"</span></div><div class="line"> : <span class="string">"java/lang/RuntimeException"</span>, <span class="literal">NULL</span>);</div><div class="line"> <span class="keyword">break</span>;</div></pre></td></tr></table></figure>
+<p>该FAILED_TRANSACTION错误码定义于：<br>/bionic/libc/kernel/common/linux/binder.h中的BR_FAILED_REPLY</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">enum</span> BinderDriverReturnProtocol &#123;</div><div class="line">BR_ERROR = <span class="number">_</span>IOR_BAD(<span class="string">'r'</span>, <span class="number">0</span>, <span class="keyword">int</span>),</div><div class="line"></div><div class="line">BR_OK = <span class="number">_</span>IO(<span class="string">'r'</span>, <span class="number">1</span>),</div><div class="line"></div><div class="line">BR_TRANSACTION = <span class="number">_</span>IOR_BAD(<span class="string">'r'</span>, <span class="number">2</span>, <span class="keyword">struct</span> binder_transaction_data),</div><div class="line">BR_REPLY = <span class="number">_</span>IOR_BAD(<span class="string">'r'</span>, <span class="number">3</span>, <span class="keyword">struct</span> binder_transaction_data),</div><div class="line"></div><div class="line">BR_ACQUIRE_RESULT = <span class="number">_</span>IOR_BAD(<span class="string">'r'</span>, <span class="number">4</span>, <span class="keyword">int</span>),</div><div class="line"></div><div class="line">BR_DEAD_REPLY = <span class="number">_</span>IO(<span class="string">'r'</span>, <span class="number">5</span>),</div><div class="line"></div><div class="line">BR_TRANSACTION_COMPLETE = <span class="number">_</span>IO(<span class="string">'r'</span>, <span class="number">6</span>),</div><div class="line"></div><div class="line">BR_INCREFS = <span class="number">_</span>IOR_BAD(<span class="string">'r'</span>, <span class="number">7</span>, <span class="keyword">struct</span> binder_ptr_cookie),</div><div class="line">BR_ACQUIRE = <span class="number">_</span>IOR_BAD(<span class="string">'r'</span>, <span class="number">8</span>, <span class="keyword">struct</span> binder_ptr_cookie),</div><div class="line">BR_RELEASE = <span class="number">_</span>IOR_BAD(<span class="string">'r'</span>, <span class="number">9</span>, <span class="keyword">struct</span> binder_ptr_cookie),</div><div class="line">BR_DECREFS = <span class="number">_</span>IOR_BAD(<span class="string">'r'</span>, <span class="number">10</span>, <span class="keyword">struct</span> binder_ptr_cookie),</div><div class="line"></div><div class="line">BR_ATTEMPT_ACQUIRE = <span class="number">_</span>IOR_BAD(<span class="string">'r'</span>, <span class="number">11</span>, <span class="keyword">struct</span> binder_pri_ptr_cookie),</div><div class="line"></div><div class="line">BR_NOOP = <span class="number">_</span>IO(<span class="string">'r'</span>, <span class="number">12</span>),</div><div class="line"></div><div class="line">BR_SPAWN_LOOPER = <span class="number">_</span>IO(<span class="string">'r'</span>, <span class="number">13</span>),</div><div class="line"></div><div class="line">BR_FINISHED = <span class="number">_</span>IO(<span class="string">'r'</span>, <span class="number">14</span>),</div><div class="line"></div><div class="line">BR_DEAD_BINDER = <span class="number">_</span>IOR_BAD(<span class="string">'r'</span>, <span class="number">15</span>, <span class="keyword">void</span> *),</div><div class="line"></div><div class="line">BR_CLEAR_DEATH_NOTIFICATION_DONE = <span class="number">_</span>IOR_BAD(<span class="string">'r'</span>, <span class="number">16</span>, <span class="keyword">void</span> *),</div><div class="line"></div><div class="line">BR_FAILED_REPLY = <span class="number">_</span>IO(<span class="string">'r'</span>, <span class="number">17</span>),</div><div class="line"></div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>其原因总结如下，首先Android系统对于Binder IPC每进程的事务buffer上限是1M（为所有Binder事务共享，且不区分目标系统的ram配置等因素），在通过PackageManager中获取系统内应用时，比如应用的Icon是个bitmap，且不同应用所制作Icon的品质（像素数）上差异很大。会占用大量内存导致Binder事务内存超过上限。</p>
+<p>Binder事务buffer的尺寸定义在ProcessState.cpp：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">define</span> BINDER_VM_SIZE((1 * 1024 * 1024) - (4096 * 2))</span></div><div class="line">......</div><div class="line">ProcessState::ProcessState(): mDriverFD(open_driver()), mVMStart(MAP_FAILED), mManagesContexts(<span class="literal">false</span>), mBinderContextCheckFunc(<span class="literal">NULL</span>), mBinderContextUserData(<span class="literal">NULL</span>), mThreadPoolStarted(<span class="literal">false</span>), mThreadPoolSeq(<span class="number">1</span>) &#123;</div><div class="line">    <span class="keyword">if</span> (mDriverFD &gt;= <span class="number">0</span>) &#123;</div><div class="line">        <span class="comment">// XXX Ideally, there should be a specific define for whether we</span></div><div class="line">        <span class="comment">// have mmap (or whether we could possibly have the kernel module</span></div><div class="line">        <span class="comment">// availabla).</span></div><div class="line">        <span class="meta">#</span></div><div class="line">        <span class="meta-keyword">if</span> !defined(HAVE_WIN32_IPC)</div><div class="line">            <span class="comment">// mmap the binder, providing a chunk of virtual address space to receive transactions.</span></div><div class="line">        mVMStart = mmap(<span class="number">0</span>, BINDER_VM_SIZE, PROT_READ, MAP_PRIVATE | MAP_NORESERVE, mDriverFD, <span class="number">0</span>);</div><div class="line">        <span class="keyword">if</span> (mVMStart == MAP_FAILED) &#123;</div><div class="line">            <span class="comment">// *sigh*</span></div><div class="line">            LOGE(<span class="string">"Using /dev/binder failed: unable to mmap transaction memory.\n"</span>);</div><div class="line">            close(mDriverFD);</div><div class="line">            mDriverFD = <span class="number">-1</span>;</div><div class="line">        &#125;<span class="meta">#</span></div><div class="line">        <span class="meta-keyword">else</span></div><div class="line">            mDriverFD = <span class="number">-1</span>;<span class="meta">#</span></div><div class="line">        <span class="meta-keyword">endif</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    LOG_ALWAYS_FATAL_IF(mDriverFD &lt; <span class="number">0</span>, <span class="string">"Binder driver could not be opened.  Terminating."</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>App icon对应的数据模型如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">AppInfo</span> </span>&#123;</div><div class="line"></div><div class="line">......</div><div class="line"></div><div class="line"><span class="keyword">private</span> BitmapDrawable icon</div><div class="line"></div><div class="line">......</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>该问题是android系统的限制，只能通过上层来捕获该异常来绕过。当然也不仅限于PackageManager，其他系统服务，应用间的Binder调用也可以带来这一问题。</p>
+<p>最后的最后，由于在c++向java层抛出这个异常的场景有多种（见上边c++代码中“FAILED_TRANSACTION”处的注释），所以当你收到了TransactionTooLargeException的时候，不意味着真正的Transaction is Too Large。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/19/2015-06-29-first/" itemprop="url">
+                  clojure map-indexed使用实例
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
+              2016-07-19
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/19/2015-06-29-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-06-29-first/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>用了clojure，才发现北方有一座高山……</p>
+<p>今天网站中需要做一个小功能，通过restful api请求另外一个内部网站的数据，但是写这个网站的同学给出的数据是[[a b c] [d e f]…]另外还有一个用于代表每一项的链接的links: [link1 link2 link3…]</p>
+<p>需要将之每项对应合并起来，找了下发现map-indexed非常适合这个场景：</p>
+<figure class="highlight"><table><tr><td class="code"><pre><div class="line">(def test1 [['a ] ['b] ['c]])</div><div class="line">(def test2 ['c 'd 'e])</div><div class="line">(defn my-merge [vect1 vect2]</div><div class="line">(into [] (map-indexed</div><div class="line">(fn [idx item] (merge item (vect2 idx))) vect1)))</div><div class="line"></div><div class="line">(my-merge test1 test2)</div><div class="line"></div><div class="line">=&gt;[[a c] [b d] [c e]]</div></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/19/2015-06-20-first/" itemprop="url">
+                  [pgsql]仅当主key不存在时插入记录
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
+              2016-07-19
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/19/2015-06-20-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-06-20-first/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>比如创建一个用户时只有在不存在的时候才需要插入，查了好久，终于搞明白：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><div class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="keyword">users</span>(<span class="keyword">id</span>, <span class="keyword">alias</span>, email) <span class="keyword">SELECT</span> <span class="number">00001</span>, <span class="string">'faywong'</span>, <span class="string">'wangfei584521@163.com'</span> <span class="keyword">from</span> <span class="keyword">users</span> <span class="keyword">WHERE</span> <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> (<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="keyword">users</span> <span class="keyword">WHERE</span> <span class="keyword">id</span> = <span class="number">00001</span>)</div></pre></td></tr></table></figure>
+<p>pqsql在这点上真叫一个繁琐！</p>
 
           
         
@@ -842,6 +849,111 @@
 <p>通过包含条件查询之：</p>
 <figure class="highlight sql"><table><tr><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> mobile_analysis <span class="keyword">WHERE</span> datadoc @&gt; <span class="string">'&#123;"a":1&#125;'</span></div></pre></td></tr></table></figure>
 <p>更多的关于json/jsonb类型的函数和操作符的资料请见这里。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/19/2015-09-08-first/" itemprop="url">
+                  Luminus web项目中让ajax请求和anti-forgery共存
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
+              2016-07-19
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/19/2015-09-08-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-09-08-first/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>Luminus web项目默认会启用anti-forgery特性以防止跨站攻击，极大增强了安全性。但是也为一些异步发生（不是来源于服务端的输出页面）的请求（ajax）带来了不便。</p>
+<p>可以如下解决之：</p>
+<p>若你的网页模板是经由selmer layout的，它会自动带上这个anti-forgery token。你便可以在js中添加如下代码</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">var</span> csrfToken = <span class="string">"&#123;&#123;csrf-token&#125;&#125;"</span>;</div><div class="line">$.ajaxPrefilter(<span class="function"><span class="keyword">function</span> (<span class="params">options, originalOptions, request</span>) </span>&#123;</div><div class="line">    <span class="keyword">if</span> (csrfToken) &#123;</div><div class="line">        request.setRequestHeader(<span class="string">'X-CSRF-Token'</span>, csrfToken);</div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>Luminus框架的anti-forgery middleware也可以接受http header中的”X-CSRF-Token”指定的token。<br>这样子就把token给带到服务端了。让ajax请求顺利发出。</p>
 
           
         
@@ -1018,8 +1130,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/07/19/2015-09-08-first/" itemprop="url">
-                  Luminus web项目中让ajax请求和anti-forgery共存
+                <a class="post-title-link" href="/2016/07/19/2015-10-12-first/" itemprop="url">
+                  ndk-gdb时提示应用不可调试的解决方法
                 </a>
               
             
@@ -1043,8 +1155,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/07/19/2015-09-08-first/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-09-08-first/" itemprop="commentsCount"></span>
+                <a href="/2016/07/19/2015-10-12-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-10-12-first/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -1069,11 +1181,29 @@
       
         
           
-            <p>Luminus web项目默认会启用anti-forgery特性以防止跨站攻击，极大增强了安全性。但是也为一些异步发生（不是来源于服务端的输出页面）的请求（ajax）带来了不便。</p>
-<p>可以如下解决之：</p>
-<p>若你的网页模板是经由selmer layout的，它会自动带上这个anti-forgery token。你便可以在js中添加如下代码</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">var</span> csrfToken = <span class="string">"&#123;&#123;csrf-token&#125;&#125;"</span>;</div><div class="line">$.ajaxPrefilter(<span class="function"><span class="keyword">function</span> (<span class="params">options, originalOptions, request</span>) </span>&#123;</div><div class="line">    <span class="keyword">if</span> (csrfToken) &#123;</div><div class="line">        request.setRequestHeader(<span class="string">'X-CSRF-Token'</span>, csrfToken);</div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-<p>Luminus框架的anti-forgery middleware也可以接受http header中的”X-CSRF-Token”指定的token。<br>这样子就把token给带到服务端了。让ajax请求顺利发出。</p>
+            <p>在开发包含c/c++本地代码的android项目中，通过gdb来调试代码是必不可少的前提。</p>
+<p>android官方为此提供了ndk-gdb，看起来非常之nice。但个人在实践中发现还是有一系列问题需要记载下(ndk版本：r10e)：</p>
+<p>1) ndk-build NDK_DEBUG=1这个选项编译时要加上，一般将之定制在你的c/c++ builder中</p>
+<p>2) 即便你按照1）做了，在项目根目录运行ndk-gdb的时候还是会报以下错误：</p>
+<p>ERROR: Package faywong.github.io.mediakit is not debuggable ! You can fix that in two ways:</p>
+<ul>
+<li><p>Rebuilt with the NDK_DEBUG=1 option when calling ‘ndk-build’.</p>
+</li>
+<li><p>Modify your manifest to set android:debuggable attribute to “true”,</p>
+<p>then rebuild normally.</p>
+</li>
+</ul>
+<p>After one of these, re-install to the device!</p>
+<p>然后我们乖乖地跑到AndroidManifest.xml里边去修改Application标签的debuggable属性，eclipse会提示你不能hardcode，可以通过如下方式设置下：</p>
+<p>QQ20151012-1</p>
+<p>3)  接下来还有可能会遇到如下问题：</p>
+<p>ERROR: Could not find gdb.setup under ./libs/</p>
+<p>这是由于ndk-gdb命令的bug带来的，它没有去参照ABI的不同设置去不同的目录下找gdb.setup文件（是一个脚本文件，帮你做一些繁琐的gdb server的启动，gdb client的启动和设置等任务）。</p>
+<p>简单绕过这个错误的方式是将libs/{your abi, e.g. armeabi-v7a}里的gdb.setup直接拷贝至libs目录下</p>
+<p>4)  在你跋山涉水，翻山越岭走了这么久之后，再次运行ndk-gdb，会出现以下惊喜：</p>
+<p>ERROR: Non-debuggable application installed on the target device.</p>
+<pre><code>Please re-install the debuggable version!
+</code></pre><h4 id="更新"><a href="#更新" class="headerlink" title="更新"></a>更新</h4><p>现在可以结合gradle-experimental插件和ndk中搭载的lldb + android studio 2.0断点native代码了，虽然还不那么完善，bug多多，但是相比过去的ndk-gdb时代还是进步一点了。</p>
 
           
         
@@ -1123,8 +1253,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/07/19/2015-09-22-first/" itemprop="url">
-                  Clojure 生产环境中怎么使用environ
+                <a class="post-title-link" href="/2016/07/19/2015-01-15-second/" itemprop="url">
+                  调用WebView中onPause方法需要好好权衡
                 </a>
               
             
@@ -1148,8 +1278,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/07/19/2015-09-22-first/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-09-22-first/" itemprop="commentsCount"></span>
+                <a href="/2016/07/19/2015-01-15-second/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-01-15-second/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -1174,116 +1304,9 @@
       
         
           
-            <p><a href="https://github.com/weavejester/environ" target="_blank" rel="external">environ</a>可以很方便帮我们管理项目中的各种配置，但是最近在使用的时候遇到了一个问题，就是我在dev, test profile下配置的database-uri到打出uberjar之后就访问不到了。最后看了下源码，在生产环境下，需要通过进程环境变量或Java系统属性来完成这一目的：</p>
-<p>进程环境变量：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">DATABASE_URL=jdbc:postgres://localhost/prod java -jar standalone.jar</div></pre></td></tr></table></figure>
-<p>Java系统属性：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">java -Ddatabase.url=jdbc:postgres://localhost/prod -jar standalone.jar</div></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/19/2015-01-15-fourth/" itemprop="url">
-                  Android L上webview crash的问题
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
-              2016-07-19
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/19/2015-01-15-fourth/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-01-15-fourth/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>在android L上测试反馈使用WebApp时会出现如下crash：<br><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">F/libc    ( 7555): Fatal signal 6 (SIGABRT) <span class="keyword">in</span> tid 12577 (RenderThread)</div><div class="line"></div><div class="line">I/DEBUG   (  182): *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***</div><div class="line"></div><div class="line">I/DEBUG   (  182): Build fingerprint: <span class="string">'google/hammerhead/hammerhead:L/LPV79/1236599:user/release-keys'</span></div><div class="line"></div><div class="line">I/DEBUG   (  182): Revision: <span class="string">'11'</span></div><div class="line"></div><div class="line">I/DEBUG   (  182): pid: 7555, tid: 12577, name: RenderThread  &gt;&gt;&gt; com.eg.android.AlipayGphone &lt;&lt;&lt;</div><div class="line"></div><div class="line">I/DEBUG   (  182): signal 6 (SIGABRT), code 0 (SI_USER), fault addr --------</div></pre></td></tr></table></figure></p>
-<p>后来研究发现：</p>
-<p><a href="https://code.google.com/p/android-developer-preview/issues/detail?can=2&amp;start=0&amp;num=100&amp;q=&amp;colspec=ID%20Type%20Status%20Owner%20Summary&amp;groupby=&amp;sort=&amp;id=950" target="_blank" rel="external">https://code.google.com/p/android-developer-preview/issues/detail?can=2&amp;start=0&amp;num=100&amp;q=&amp;colspec=ID%20Type%20Status%20Owner%20Summary&amp;groupby=&amp;sort=&amp;id=950</a></p>
-<p>上有人报告同一问题。</p>
-<p>LPV79这个build为developer preview version.存在一些问题。</p>
-<p>后来在正式版本中验证同一问题，不可复现。</p>
+            <p>最近踩了一个坑，有个非全屏的dialog遮住我的WebApp容器时，WebApp容器中JS代码操纵dom对象显示文本（input框中）巨慢（俗话描述就是“软键盘中输入了字，但是上屏很慢”）。</p>
+<p>debug了一天之后发现。在WebView的onPause方法调用后，其内部JS引擎执行JS代码会慢好几倍。所以是否需要跟随Activity的生命周期调用onPause方法需要根据应用场景来区分：</p>
+<p>若是应用中严格依赖JS做一些比较紧要的事情，则不应该onPause WebView。否则应该onPause WebView以释放一部分系统资源。</p>
 
           
         
@@ -1454,7 +1477,7 @@
 
 
   
-  <script type="text/javascript" src="http://ajax.useso.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
+  <script type="text/javascript" src="http://cdn.css.net/libs/jquery/1.8.0/jquery-1.8.0.min.js"></script>
 
   
   <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>

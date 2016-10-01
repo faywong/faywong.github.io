@@ -55,7 +55,7 @@
   
     
     
-    <link href="//fonts.useso.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+    <link href="//fonts.css.network/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
   
 
 
@@ -226,6 +226,118 @@
           <div id="content" class="content">
             
   <section id="posts" class="posts-expand">
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/19/2016-03-13-first/" itemprop="url">
+                  当四字节UTF-8遇上JNI
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
+              2016-07-19
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/19/2016-03-13-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2016-03-13-first/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>android在Java层对 utf 编码是支持得很好了，非常全面；但当你从事一些c/c++工程的开发时可就没有这么幸运了。<br>笔者最近在使用v8 javascript 引擎时便碰到了一个问题：</p>
+<p>有些用户在昵称中使用了 emoji 表情，v8 引擎内部默认会使用utf-16编码，通过 v8 API 取到这个值之后转为utf-8的字符串，进而通过 JNI 的 API JNIEnv-&gt;NewStringUTF 往 Java 传递时会被系统的 checkJNI 给拦截住而<a href="https://code.google.com/p/android/issues/detail?id=81341" target="_blank" rel="external">报错</a>。原因在为了让字符串中不包含任何 null 字节，JNI 以及 Java VM 内部都是使用的<a href="http://docs.oracle.com/javase/7/docs/technotes/guides/jni/spec/types.html" target="_blank" rel="external">Modified UTF-8</a>格式来编码字符串。</p>
+<p>后来找到一个办法可以通过将字符串转为 utf-16 编码后传递给 JNI API JNIEnv-&gt;NewString 解决之：</p>
+<ol>
+<li><p>使用 v8 API 将 utf-8 的字符串转为 utf-16 编码</p>
+<figure class="highlight"><table><tr><td class="code"><pre><div class="line">size_t utf8_to_utf16(const char *src, const uint16_t **dest) &#123;</div><div class="line">    if (src == NULL || dest == NULL) &#123;</div><div class="line">        return 0;</div><div class="line">    &#125;</div><div class="line">    Isolate::Scope scope(Isolate::GetCurrent());</div><div class="line">    HandleScope handle_scope;</div><div class="line">    Local&lt;String&gt; str = String::New(src);</div><div class="line">    String::Value val(str); // String::Value的内部编码是 utf-16</div><div class="line">    const size_t len = (val.length()) * sizeof(uint16_t);</div><div class="line">    uint16_t* target = (uint16_t*)calloc(val.length() + 1, sizeof(uint16_t));</div><div class="line">    if (target == NULL) &#123;</div><div class="line">        return 0;</div><div class="line">    &#125;</div><div class="line">    memcpy(target, *val, len);</div><div class="line">    *dest = target;</div><div class="line">    return val.length();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>将生成的 utf-16 字符串通过 JNI 传递到 Java 层</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">uint16_t</span> *utf16_action = <span class="literal">NULL</span>;</div><div class="line"><span class="keyword">size_t</span> len = utf8_to_utf16(action, &amp;utf16_action);</div><div class="line">jstring jText = (*env)-&gt;NewString(env, utf16_action, len);</div><div class="line"><span class="keyword">if</span> (utf16_action != <span class="literal">NULL</span>) &#123;</div><div class="line">    <span class="built_in">free</span>(utf16_action);</div><div class="line">&#125;</div><div class="line"><span class="keyword">if</span> (len == <span class="number">0</span>) &#123;</div><div class="line">    jText = (*env)-&gt;NewStringUTF(env, <span class="string">""</span>); <span class="comment">// 降级到使用NewStringUTF来创建一个""字符串</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>另外一种解决方法是通过 byteArray 来将 utf-8 编码的字符串传送到java层，详情请参考这篇<a href="http://banachowski.com/deprogramming/2012/02/working-around-jni-utf-8-strings/" target="_blank" rel="external">文章</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
     
       
 
@@ -467,6 +579,114 @@
             
               
                 
+                <a class="post-title-link" href="/2016/07/19/2016-04-01-first/" itemprop="url">
+                  RN 对 模块尺寸的处理
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
+              2016-07-19
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/19/2016-04-01-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2016-04-01-first/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>由于容纳 RN view 的外围控件不确定，同时又要与其他view协调好尺寸和布局。<br>所以 RN 对 RootView（包含了一个模块的所有布局）的处理挺有技巧，RN 中有如下调用逻辑:</p>
+<p>ReactActivity.createRootView -&gt; setContentView(mReactRootView)</p>
+<p>ReactRootView.onMeasure()</p>
+<p>ReactInstanceManagerImpl.attachMeasuredRootViewToInstance</p>
+<p>UIManagerModule.addMeasuredRootView </p>
+<p>得到宽高：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">final</span> <span class="keyword">int</span> width;</div><div class="line"><span class="keyword">final</span> <span class="keyword">int</span> height;</div><div class="line"><span class="comment">// If LayoutParams sets size explicitly, we can use that. Otherwise get the size from the view.</span></div><div class="line"><span class="keyword">if</span> (rootView.getLayoutParams() != <span class="keyword">null</span> &amp;&amp;</div><div class="line">    rootView.getLayoutParams().width &gt; <span class="number">0</span> &amp;&amp;</div><div class="line">    rootView.getLayoutParams().height &gt; <span class="number">0</span>) &#123;</div><div class="line">    width = rootView.getLayoutParams().width;</div><div class="line">    height = rootView.getLayoutParams().height;</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">    width = rootView.getWidth();</div><div class="line">    height = rootView.getHeight();</div><div class="line">&#125;   </div><div class="line"></div><div class="line">rootView.setOnSizeChangedListener(</div><div class="line"><span class="keyword">new</span> SizeMonitoringFrameLayout.OnSizeChangedListener() &#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onSizeChanged</span><span class="params">(<span class="keyword">final</span> <span class="keyword">int</span> width, <span class="keyword">final</span> <span class="keyword">int</span> height, <span class="keyword">int</span> oldW, <span class="keyword">int</span> oldH)</span> </span>&#123;</div><div class="line">    getReactApplicationContext().runOnNativeModulesQueueThread(</div><div class="line">        <span class="keyword">new</span> Runnable() &#123;</div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">            updateRootNodeSize(tag, width, height);</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>通过这个 SizeMonitoringFrameLayout.OnSizeChangedListener 将 SizeMonitoringFrameLayout（实际扮演一个容器 ViewGroup 来监听布局的改变）的宽高传递给 css-layout 用于布局各个”盒”节点。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/07/19/2015-01-15-first/" itemprop="url">
                   WebView中支持input type="file"元素
                 </a>
@@ -580,114 +800,6 @@
             
               
                 
-                <a class="post-title-link" href="/2016/07/19/2016-04-01-first/" itemprop="url">
-                  RN 对 模块尺寸的处理
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
-              2016-07-19
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/19/2016-04-01-first/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2016-04-01-first/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>由于容纳 RN view 的外围控件不确定，同时又要与其他view协调好尺寸和布局。<br>所以 RN 对 RootView（包含了一个模块的所有布局）的处理挺有技巧，RN 中有如下调用逻辑:</p>
-<p>ReactActivity.createRootView -&gt; setContentView(mReactRootView)</p>
-<p>ReactRootView.onMeasure()</p>
-<p>ReactInstanceManagerImpl.attachMeasuredRootViewToInstance</p>
-<p>UIManagerModule.addMeasuredRootView </p>
-<p>得到宽高：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">final</span> <span class="keyword">int</span> width;</div><div class="line"><span class="keyword">final</span> <span class="keyword">int</span> height;</div><div class="line"><span class="comment">// If LayoutParams sets size explicitly, we can use that. Otherwise get the size from the view.</span></div><div class="line"><span class="keyword">if</span> (rootView.getLayoutParams() != <span class="keyword">null</span> &amp;&amp;</div><div class="line">    rootView.getLayoutParams().width &gt; <span class="number">0</span> &amp;&amp;</div><div class="line">    rootView.getLayoutParams().height &gt; <span class="number">0</span>) &#123;</div><div class="line">    width = rootView.getLayoutParams().width;</div><div class="line">    height = rootView.getLayoutParams().height;</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">    width = rootView.getWidth();</div><div class="line">    height = rootView.getHeight();</div><div class="line">&#125;   </div><div class="line"></div><div class="line">rootView.setOnSizeChangedListener(</div><div class="line"><span class="keyword">new</span> SizeMonitoringFrameLayout.OnSizeChangedListener() &#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onSizeChanged</span><span class="params">(<span class="keyword">final</span> <span class="keyword">int</span> width, <span class="keyword">final</span> <span class="keyword">int</span> height, <span class="keyword">int</span> oldW, <span class="keyword">int</span> oldH)</span> </span>&#123;</div><div class="line">    getReactApplicationContext().runOnNativeModulesQueueThread(</div><div class="line">        <span class="keyword">new</span> Runnable() &#123;</div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">            updateRootNodeSize(tag, width, height);</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-<p>通过这个 SizeMonitoringFrameLayout.OnSizeChangedListener 将 SizeMonitoringFrameLayout（实际扮演一个容器 ViewGroup 来监听布局的改变）的宽高传递给 css-layout 用于布局各个”盒”节点。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
                 <a class="post-title-link" href="/2016/07/19/2016-04-19-first/" itemprop="url">
                   针对View LayoutParams做动画
                 </a>
@@ -741,118 +853,6 @@
           
             <p>mView是我们期望有动画效果的目标View</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><div class="line">FrameLayout.LayoutParams mParams = ... <span class="comment">// 我们的目标 layout params</span></div><div class="line"><span class="keyword">if</span> (mTransitionTime &gt; <span class="number">0</span>) &#123;</div><div class="line">    ValueAnimator widthAnim = ValueAnimator.ofInt(<span class="number">0</span>, mParams.width); <span class="comment">// 从0变化到期望的宽度</span></div><div class="line">    widthAnim.addUpdateListener(<span class="keyword">new</span> ValueAnimator.AnimatorUpdateListener() &#123;</div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAnimationUpdate</span><span class="params">(ValueAnimator valueAnimator)</span> </span>&#123;</div><div class="line">            <span class="comment">// 在回调里我们踩着节拍来修改 view 的 layout params</span></div><div class="line">            <span class="keyword">int</span> val = (Integer) valueAnimator.getAnimatedValue();</div><div class="line">            mParams.width = val;</div><div class="line">            <span class="keyword">if</span> (mView != <span class="keyword">null</span>) &#123;</div><div class="line">                mView.setLayoutParams(mParams);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line">    widthAnim.setDuration(mTransitionTime);</div><div class="line">    widthAnim.start();</div><div class="line"></div><div class="line">    ValueAnimator heightAnim = ValueAnimator.ofInt(<span class="number">0</span>, mParams.height); <span class="comment">// 从0变化到期望的高度</span></div><div class="line">    heightAnim.addUpdateListener(<span class="keyword">new</span> ValueAnimator.AnimatorUpdateListener() &#123;</div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAnimationUpdate</span><span class="params">(ValueAnimator valueAnimator)</span> </span>&#123;</div><div class="line">            <span class="comment">// 在回调里我们踩着节拍来修改 view 的 layout params</span></div><div class="line">            <span class="keyword">int</span> val = (Integer) valueAnimator.getAnimatedValue();</div><div class="line">            mParams.height = val;</div><div class="line">            <span class="keyword">if</span> (mView != <span class="keyword">null</span>) &#123;</div><div class="line">                mView.setLayoutParams(mParams);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line">    heightAnim.setDuration(mTransitionTime);</div><div class="line">    heightAnim.start();</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">if</span> (mTransformDegree &gt; <span class="number">0</span>) &#123; <span class="comment">// 如果需要，在由小变大的过程中添加旋转效果</span></div><div class="line">    ObjectAnimator.ofFloat(mView, <span class="string">"rotation"</span>, <span class="number">0f</span>, mTransformDegree * <span class="number">1.0f</span>)</div><div class="line">            .setDuration(mTransitionTime &gt; <span class="number">0</span> ? mTransitionTime : <span class="number">0</span>).start();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/19/2016-03-13-first/" itemprop="url">
-                  当四字节UTF-8遇上JNI
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
-              2016-07-19
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/19/2016-03-13-first/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2016-03-13-first/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>android在Java层对 utf 编码是支持得很好了，非常全面；但当你从事一些c/c++工程的开发时可就没有这么幸运了。<br>笔者最近在使用v8 javascript 引擎时便碰到了一个问题：</p>
-<p>有些用户在昵称中使用了 emoji 表情，v8 引擎内部默认会使用utf-16编码，通过 v8 API 取到这个值之后转为utf-8的字符串，进而通过 JNI 的 API JNIEnv-&gt;NewStringUTF 往 Java 传递时会被系统的 checkJNI 给拦截住而<a href="https://code.google.com/p/android/issues/detail?id=81341" target="_blank" rel="external">报错</a>。原因在为了让字符串中不包含任何 null 字节，JNI 以及 Java VM 内部都是使用的<a href="http://docs.oracle.com/javase/7/docs/technotes/guides/jni/spec/types.html" target="_blank" rel="external">Modified UTF-8</a>格式来编码字符串。</p>
-<p>后来找到一个办法可以通过将字符串转为 utf-16 编码后传递给 JNI API JNIEnv-&gt;NewString 解决之：</p>
-<ol>
-<li><p>使用 v8 API 将 utf-8 的字符串转为 utf-16 编码</p>
-<figure class="highlight"><table><tr><td class="code"><pre><div class="line">size_t utf8_to_utf16(const char *src, const uint16_t **dest) &#123;</div><div class="line">    if (src == NULL || dest == NULL) &#123;</div><div class="line">        return 0;</div><div class="line">    &#125;</div><div class="line">    Isolate::Scope scope(Isolate::GetCurrent());</div><div class="line">    HandleScope handle_scope;</div><div class="line">    Local&lt;String&gt; str = String::New(src);</div><div class="line">    String::Value val(str); // String::Value的内部编码是 utf-16</div><div class="line">    const size_t len = (val.length()) * sizeof(uint16_t);</div><div class="line">    uint16_t* target = (uint16_t*)calloc(val.length() + 1, sizeof(uint16_t));</div><div class="line">    if (target == NULL) &#123;</div><div class="line">        return 0;</div><div class="line">    &#125;</div><div class="line">    memcpy(target, *val, len);</div><div class="line">    *dest = target;</div><div class="line">    return val.length();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-<li><p>将生成的 utf-16 字符串通过 JNI 传递到 Java 层</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">uint16_t</span> *utf16_action = <span class="literal">NULL</span>;</div><div class="line"><span class="keyword">size_t</span> len = utf8_to_utf16(action, &amp;utf16_action);</div><div class="line">jstring jText = (*env)-&gt;NewString(env, utf16_action, len);</div><div class="line"><span class="keyword">if</span> (utf16_action != <span class="literal">NULL</span>) &#123;</div><div class="line">    <span class="built_in">free</span>(utf16_action);</div><div class="line">&#125;</div><div class="line"><span class="keyword">if</span> (len == <span class="number">0</span>) &#123;</div><div class="line">    jText = (*env)-&gt;NewStringUTF(env, <span class="string">""</span>); <span class="comment">// 降级到使用NewStringUTF来创建一个""字符串</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>另外一种解决方法是通过 byteArray 来将 utf-8 编码的字符串传送到java层，详情请参考这篇<a href="http://banachowski.com/deprogramming/2012/02/working-around-jni-utf-8-strings/" target="_blank" rel="external">文章</a></p>
 
           
         
@@ -1246,7 +1246,7 @@
 
 
   
-  <script type="text/javascript" src="http://ajax.useso.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
+  <script type="text/javascript" src="http://cdn.css.net/libs/jquery/1.8.0/jquery-1.8.0.min.js"></script>
 
   
   <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
