@@ -687,6 +687,108 @@
             
               
                 
+                <a class="post-title-link" href="/2016/07/19/2016-04-19-first/" itemprop="url">
+                  针对View LayoutParams做动画
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
+              2016-07-19
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/19/2016-04-19-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2016-04-19-first/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>mView是我们期望有动画效果的目标View</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line">FrameLayout.LayoutParams mParams = ... <span class="comment">// 我们的目标 layout params</span></div><div class="line"><span class="keyword">if</span> (mTransitionTime &gt; <span class="number">0</span>) &#123;</div><div class="line">    ValueAnimator widthAnim = ValueAnimator.ofInt(<span class="number">0</span>, mParams.width); <span class="comment">// 从0变化到期望的宽度</span></div><div class="line">    widthAnim.addUpdateListener(<span class="keyword">new</span> ValueAnimator.AnimatorUpdateListener() &#123;</div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAnimationUpdate</span><span class="params">(ValueAnimator valueAnimator)</span> </span>&#123;</div><div class="line">            <span class="comment">// 在回调里我们踩着节拍来修改 view 的 layout params</span></div><div class="line">            <span class="keyword">int</span> val = (Integer) valueAnimator.getAnimatedValue();</div><div class="line">            mParams.width = val;</div><div class="line">            <span class="keyword">if</span> (mView != <span class="keyword">null</span>) &#123;</div><div class="line">                mView.setLayoutParams(mParams);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line">    widthAnim.setDuration(mTransitionTime);</div><div class="line">    widthAnim.start();</div><div class="line"></div><div class="line">    ValueAnimator heightAnim = ValueAnimator.ofInt(<span class="number">0</span>, mParams.height); <span class="comment">// 从0变化到期望的高度</span></div><div class="line">    heightAnim.addUpdateListener(<span class="keyword">new</span> ValueAnimator.AnimatorUpdateListener() &#123;</div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAnimationUpdate</span><span class="params">(ValueAnimator valueAnimator)</span> </span>&#123;</div><div class="line">            <span class="comment">// 在回调里我们踩着节拍来修改 view 的 layout params</span></div><div class="line">            <span class="keyword">int</span> val = (Integer) valueAnimator.getAnimatedValue();</div><div class="line">            mParams.height = val;</div><div class="line">            <span class="keyword">if</span> (mView != <span class="keyword">null</span>) &#123;</div><div class="line">                mView.setLayoutParams(mParams);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line">    heightAnim.setDuration(mTransitionTime);</div><div class="line">    heightAnim.start();</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">if</span> (mTransformDegree &gt; <span class="number">0</span>) &#123; <span class="comment">// 如果需要，在由小变大的过程中添加旋转效果</span></div><div class="line">    ObjectAnimator.ofFloat(mView, <span class="string">"rotation"</span>, <span class="number">0f</span>, mTransformDegree * <span class="number">1.0f</span>)</div><div class="line">            .setDuration(mTransitionTime &gt; <span class="number">0</span> ? mTransitionTime : <span class="number">0</span>).start();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/07/19/2015-01-15-first/" itemprop="url">
                   WebView中支持input type="file"元素
                 </a>
@@ -800,8 +902,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/07/19/2016-04-19-first/" itemprop="url">
-                  针对View LayoutParams做动画
+                <a class="post-title-link" href="/2016/07/19/2015-07-09-second/" itemprop="url">
+                  以UTF-8编码建立postgresql数据库
                 </a>
               
             
@@ -825,8 +927,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/07/19/2016-04-19-first/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2016-04-19-first/" itemprop="commentsCount"></span>
+                <a href="/2016/07/19/2015-07-09-second/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-07-09-second/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -851,8 +953,11 @@
       
         
           
-            <p>mView是我们期望有动画效果的目标View</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><div class="line">FrameLayout.LayoutParams mParams = ... <span class="comment">// 我们的目标 layout params</span></div><div class="line"><span class="keyword">if</span> (mTransitionTime &gt; <span class="number">0</span>) &#123;</div><div class="line">    ValueAnimator widthAnim = ValueAnimator.ofInt(<span class="number">0</span>, mParams.width); <span class="comment">// 从0变化到期望的宽度</span></div><div class="line">    widthAnim.addUpdateListener(<span class="keyword">new</span> ValueAnimator.AnimatorUpdateListener() &#123;</div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAnimationUpdate</span><span class="params">(ValueAnimator valueAnimator)</span> </span>&#123;</div><div class="line">            <span class="comment">// 在回调里我们踩着节拍来修改 view 的 layout params</span></div><div class="line">            <span class="keyword">int</span> val = (Integer) valueAnimator.getAnimatedValue();</div><div class="line">            mParams.width = val;</div><div class="line">            <span class="keyword">if</span> (mView != <span class="keyword">null</span>) &#123;</div><div class="line">                mView.setLayoutParams(mParams);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line">    widthAnim.setDuration(mTransitionTime);</div><div class="line">    widthAnim.start();</div><div class="line"></div><div class="line">    ValueAnimator heightAnim = ValueAnimator.ofInt(<span class="number">0</span>, mParams.height); <span class="comment">// 从0变化到期望的高度</span></div><div class="line">    heightAnim.addUpdateListener(<span class="keyword">new</span> ValueAnimator.AnimatorUpdateListener() &#123;</div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAnimationUpdate</span><span class="params">(ValueAnimator valueAnimator)</span> </span>&#123;</div><div class="line">            <span class="comment">// 在回调里我们踩着节拍来修改 view 的 layout params</span></div><div class="line">            <span class="keyword">int</span> val = (Integer) valueAnimator.getAnimatedValue();</div><div class="line">            mParams.height = val;</div><div class="line">            <span class="keyword">if</span> (mView != <span class="keyword">null</span>) &#123;</div><div class="line">                mView.setLayoutParams(mParams);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line">    heightAnim.setDuration(mTransitionTime);</div><div class="line">    heightAnim.start();</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">if</span> (mTransformDegree &gt; <span class="number">0</span>) &#123; <span class="comment">// 如果需要，在由小变大的过程中添加旋转效果</span></div><div class="line">    ObjectAnimator.ofFloat(mView, <span class="string">"rotation"</span>, <span class="number">0f</span>, mTransformDegree * <span class="number">1.0f</span>)</div><div class="line">            .setDuration(mTransitionTime &gt; <span class="number">0</span> ? mTransitionTime : <span class="number">0</span>).start();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+            <p>因为要与java后端协作，数据库得建成UTF-8编码的。折腾了半天，实在是没有办法，改了locale，重新安装postgresql-server，最终通过命令行指定编码和模板（这点很重要）这样蒙混过关：</p>
+<p>命令行：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">createdb --locale=en_US.utf8 --encoding=UTF8 --template=template0 <span class="built_in">test</span>_db</div></pre></td></tr></table></figure>
+<p>然后确认下：</p>
+<p><img src="/uploads/2015_09_02_01.jpg" alt="psql_result"></p>
 
           
         
@@ -1149,7 +1254,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">38</span>
+              <span class="site-state-item-count">39</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

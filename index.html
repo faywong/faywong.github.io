@@ -248,6 +248,139 @@
             
               
                 
+                <a class="post-title-link" href="/2016/12/19/elixir_lession_1/" itemprop="url">
+                  未命名
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-12-19T11:52:01+08:00" content="2016-12-19">
+              2016-12-19
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/12/19/elixir_lession_1/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/19/elixir_lession_1/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="CentOS-7-上-Elixir-开发之环境配置"><a href="#CentOS-7-上-Elixir-开发之环境配置" class="headerlink" title="CentOS 7 上 Elixir 开发之环境配置"></a>CentOS 7 上 Elixir 开发之环境配置</h2><p>由于 erlang 依赖 wxGTK 等相关基础图形库，后者是维护在 epel 仓库里，所以首先需要安装 epel 软件仓库</p>
+<h3 id="添加-epel-软件仓库"><a href="#添加-epel-软件仓库" class="headerlink" title="添加 epel 软件仓库"></a>添加 epel 软件仓库</h3><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">yum install epel-release</div></pre></td></tr></table></figure>
+<h3 id="安装需要用到的小工具"><a href="#安装需要用到的小工具" class="headerlink" title="安装需要用到的小工具"></a>安装需要用到的小工具</h3><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">yum install unzip wget git vim</div></pre></td></tr></table></figure>
+<h3 id="安装-erlang"><a href="#安装-erlang" class="headerlink" title="安装 erlang"></a>安装 erlang</h3><h3 id="安装-elixir"><a href="#安装-elixir" class="headerlink" title="安装 elixir"></a>安装 elixir</h3><p>注意：由于版本过度，请不要从 CentOS 的中央仓库安装 elixir </p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">git <span class="built_in">clone</span> https://github.com/elixir-lang/elixir.git</div><div class="line"><span class="built_in">cd</span> elixir</div><div class="line"></div><div class="line">ELIXIRLASTREVISION=$(git rev-list --tags --max-count=1)</div><div class="line"></div><div class="line">ELIXIRLASTTAG=$(git describe --tags <span class="variable">$&#123;ELIXIRLASTREVISION&#125;</span>)</div><div class="line"><span class="built_in">cd</span> -</div><div class="line">rm --force --recursive elixir/</div><div class="line">wget --quiet https://github.com/elixir-lang/elixir/releases/download/<span class="variable">$&#123;ELIXIRLASTTAG&#125;</span>/Precompiled.zip</div><div class="line">sudo rm -R /usr/lib/elixir</div><div class="line">sudo unzip Precompiled.zip <span class="_">-d</span> /usr/lib/elixir/</div><div class="line">sudo rm Precompiled.zip</div><div class="line">sudo rm /usr/bin/iex</div><div class="line">sudo rm /usr/bin/elixir</div><div class="line">sudo rm /usr/bin/elixirc</div><div class="line">sudo rm /usr/bin/mix</div><div class="line">sudo ln <span class="_">-s</span> ../lib/elixir/bin/iex /usr/bin/</div><div class="line">sudo ln <span class="_">-s</span> ../lib/elixir/bin/elixir /usr/bin/</div><div class="line">sudo ln <span class="_">-s</span> ../lib/elixir/bin/elixirc /usr/bin/</div><div class="line">sudo ln <span class="_">-s</span> ../lib/elixir/bin/mix /usr/bin/</div></pre></td></tr></table></figure>
+<p>最后确认下 mix 的版本：<br><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">mix --version</div></pre></td></tr></table></figure></p>
+<p>在笔者写作这篇文章时的输出：<br><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">Erlang/OTP 19 [erts-8.2] [<span class="built_in">source</span>-fbd2db2] [64-bit] [async-threads:10] [hipe] [kernel-poll:<span class="literal">false</span>]</div><div class="line"></div><div class="line">Mix 1.4.0-rc.1 (16a14c1)</div></pre></td></tr></table></figure></p>
+<h3 id="安装-hex-postgresql-9-6-及-phoenix-app"><a href="#安装-hex-postgresql-9-6-及-phoenix-app" class="headerlink" title="安装 hex, postgresql-9.6 及 phoenix app"></a>安装 hex, postgresql-9.6 及 phoenix app</h3><p>postgresql 是 phoenix 默认的数据库，若需要的话，遵循如下方式安装最新的 9.6 版本：</p>
+<ul>
+<li><p>添加 postgresql 软件源</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">yum localinstall https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-7-x86_64/pgdg-centos96-9.6-3.noarch.rpm</div></pre></td></tr></table></figure>
+</li>
+<li><p>安装 postgresql-9.6</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">yum install postgresql96</div></pre></td></tr></table></figure>
+</li>
+<li><p>初始化数据库</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">/usr/pgsql-9.6/bin/postgresql96-setup initdb</div></pre></td></tr></table></figure>
+</li>
+<li><p>启动数据库服务</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">systemctl start postgresql-9.6.service</div></pre></td></tr></table></figure>
+</li>
+<li><p>添加为系统自启动服务</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">systemctl <span class="built_in">enable</span> postgresql-9.6.service</div></pre></td></tr></table></figure>
+</li>
+<li><p>为支持 live code reload 安装下 nodejs, inotify-tools</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">yum install inotify-tools</div><div class="line">yum install nodejs</div></pre></td></tr></table></figure>
+</li>
+<li><p>安装 hex 及 phoenix app 框架</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">mix local.hex</div><div class="line">mix archive.install https://github.com/phoenixframework/archives/raw/master/phoenix_new.ez</div></pre></td></tr></table></figure>
+</li>
+<li><p>[可选] 安装 vim elixir 语法高亮插件<br>需要 <a href="https://github.com/VundleVim/Vundle.vim" target="_blank" rel="external">Vundle</a> 支持</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">vim ~/.vimrc</div><div class="line">添加：</div><div class="line">Plugin <span class="string">'elixir-lang/vim-elixir'</span></div></pre></td></tr></table></figure></li>
+</ul>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/07/25/android-studio-jdk7-的bug/" itemprop="url">
                   android studio + jdk7 的bug
                 </a>
@@ -302,111 +435,6 @@
             <p>最近换了 mac book pro，重新安装 jdk 时默认选择了 jdk 8，结果下载 android studio 2.1.2 后没法启动。显示如下 crash 信息：<br><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">java.lang.reflect.InvocationTargetException</div><div class="line">    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)</div><div class="line">    at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)</div><div class="line">    at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)</div><div class="line">    at java.lang.reflect.Method.invoke(Method.java:606)</div><div class="line">    at com.intellij.ide.Bootstrap.main(Bootstrap.java:39)</div><div class="line">    at com.intellij.idea.Main.main(Main.java:103)</div><div class="line">Caused by: java.lang.UnsatisfiedLinkError: /Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home/jre/lib/lwawt/liblwawt.dylib: dlopen(/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home/jre/lib/lwawt/liblwawt.dylib, 1): Library not loaded: @rpath/libosxapp.dylib</div><div class="line">  Referenced from: /Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home/jre/lib/lwawt/liblwawt.dylib</div><div class="line">  Reason: image not found</div></pre></td></tr></table></figure></p>
 <p>后来 google 之，找到一个简单的解决方案（rpath设置不全的原因）：</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><div class="line"><span class="built_in">cd</span> /Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home/jre/lib/</div><div class="line">sudo cp -rf libosxapp.dylib lwawt/</div></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/19/2015-07-09-second/" itemprop="url">
-                  以UTF-8编码建立postgresql数据库
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
-              2016-07-19
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/19/2015-07-09-second/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-07-09-second/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>因为要与java后端协作，数据库得建成UTF-8编码的。折腾了半天，实在是没有办法，改了locale，重新安装postgresql-server，最终通过命令行指定编码和模板（这点很重要）这样蒙混过关：</p>
-<p>命令行：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">createdb --locale=en_US.utf8 --encoding=UTF8 --template=template0 <span class="built_in">test</span>_db</div></pre></td></tr></table></figure>
-<p>然后确认下：</p>
-<p><img src="/uploads/2015_09_02_01.jpg" alt="psql_result"></p>
-
           
         
       
@@ -1322,7 +1350,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">38</span>
+              <span class="site-state-item-count">39</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
