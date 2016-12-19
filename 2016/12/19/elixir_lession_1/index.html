@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="blog of faywong, android, lisp, clojure" />
+  <meta name="keywords" content="Linux,Elixir," />
 
 
 
@@ -84,25 +84,28 @@
 
 
 
-<meta name="description" content="CentOS 7 上 Elixir 开发之环境配置由于 erlang 依赖 wxGTK 等相关基础图形库，后者是维护在 epel 仓库里，所以首先需要安装 epel 软件仓库
+<meta name="description" content="由于 erlang 依赖 wxGTK 等相关基础图形库，后者是维护在 epel 仓库里，所以首先需要安装 epel 软件仓库
 添加 epel 软件仓库yum install epel-release
 安装需要用到的小工具yum install unzip wget git vim
-安装 erlang安装 elixir注意：由于版本过度，请不要从 C">
+安装 erlang安装 elixir注意：由于版本过度，请不要从 CentOS 的中央仓库安装 elixir 
+git">
 <meta property="og:type" content="article">
-<meta property="og:title" content="blog of faywong">
+<meta property="og:title" content="CentOS 7 上 Elixir 开发之环境配置">
 <meta property="og:url" content="http://faywong.github.io/2016/12/19/elixir_lession_1/index.html">
 <meta property="og:site_name" content="blog of faywong">
-<meta property="og:description" content="CentOS 7 上 Elixir 开发之环境配置由于 erlang 依赖 wxGTK 等相关基础图形库，后者是维护在 epel 仓库里，所以首先需要安装 epel 软件仓库
+<meta property="og:description" content="由于 erlang 依赖 wxGTK 等相关基础图形库，后者是维护在 epel 仓库里，所以首先需要安装 epel 软件仓库
 添加 epel 软件仓库yum install epel-release
 安装需要用到的小工具yum install unzip wget git vim
-安装 erlang安装 elixir注意：由于版本过度，请不要从 C">
-<meta property="og:updated_time" content="2016-12-19T03:52:01.000Z">
+安装 erlang安装 elixir注意：由于版本过度，请不要从 CentOS 的中央仓库安装 elixir 
+git">
+<meta property="og:updated_time" content="2016-12-19T03:59:25.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="blog of faywong">
-<meta name="twitter:description" content="CentOS 7 上 Elixir 开发之环境配置由于 erlang 依赖 wxGTK 等相关基础图形库，后者是维护在 epel 仓库里，所以首先需要安装 epel 软件仓库
+<meta name="twitter:title" content="CentOS 7 上 Elixir 开发之环境配置">
+<meta name="twitter:description" content="由于 erlang 依赖 wxGTK 等相关基础图形库，后者是维护在 epel 仓库里，所以首先需要安装 epel 软件仓库
 添加 epel 软件仓库yum install epel-release
 安装需要用到的小工具yum install unzip wget git vim
-安装 erlang安装 elixir注意：由于版本过度，请不要从 C">
+安装 erlang安装 elixir注意：由于版本过度，请不要从 CentOS 的中央仓库安装 elixir 
+git">
 
 
 
@@ -125,7 +128,7 @@
 
   <link rel="canonical" href="http://faywong.github.io/2016/12/19/elixir_lession_1/"/>
 
-  <title>  | blog of faywong </title>
+  <title> CentOS 7 上 Elixir 开发之环境配置 | blog of faywong </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -255,7 +258,7 @@
             
             
               
-                
+                CentOS 7 上 Elixir 开发之环境配置
               
             
           </h1>
@@ -302,7 +305,7 @@
       
 
       
-        <h2 id="CentOS-7-上-Elixir-开发之环境配置"><a href="#CentOS-7-上-Elixir-开发之环境配置" class="headerlink" title="CentOS 7 上 Elixir 开发之环境配置"></a>CentOS 7 上 Elixir 开发之环境配置</h2><p>由于 erlang 依赖 wxGTK 等相关基础图形库，后者是维护在 epel 仓库里，所以首先需要安装 epel 软件仓库</p>
+        <p>由于 erlang 依赖 wxGTK 等相关基础图形库，后者是维护在 epel 仓库里，所以首先需要安装 epel 软件仓库</p>
 <h3 id="添加-epel-软件仓库"><a href="#添加-epel-软件仓库" class="headerlink" title="添加 epel 软件仓库"></a>添加 epel 软件仓库</h3><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">yum install epel-release</div></pre></td></tr></table></figure>
 <h3 id="安装需要用到的小工具"><a href="#安装需要用到的小工具" class="headerlink" title="安装需要用到的小工具"></a>安装需要用到的小工具</h3><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">yum install unzip wget git vim</div></pre></td></tr></table></figure>
 <h3 id="安装-erlang"><a href="#安装-erlang" class="headerlink" title="安装 erlang"></a>安装 erlang</h3><h3 id="安装-elixir"><a href="#安装-elixir" class="headerlink" title="安装 elixir"></a>安装 elixir</h3><p>注意：由于版本过度，请不要从 CentOS 的中央仓库安装 elixir </p>
@@ -355,6 +358,14 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/Linux/" rel="tag">#Linux</a>
+          
+            <a href="/tags/Elixir/" rel="tag">#Elixir</a>
+          
+        </div>
+      
 
       
         <div class="post-nav">
@@ -393,7 +404,7 @@
   <div class="comments" id="comments">
     
       <div class="ds-thread" data-thread-key="2016/12/19/elixir_lession_1/"
-           data-title="" data-url="http://faywong.github.io/2016/12/19/elixir_lession_1/">
+           data-title="CentOS 7 上 Elixir 开发之环境配置" data-url="http://faywong.github.io/2016/12/19/elixir_lession_1/">
       </div>
     
   </div>
@@ -448,7 +459,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-count">13</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -477,7 +488,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#CentOS-7-上-Elixir-开发之环境配置"><span class="nav-number">1.</span> <span class="nav-text">CentOS 7 上 Elixir 开发之环境配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#添加-epel-软件仓库"><span class="nav-number">1.1.</span> <span class="nav-text">添加 epel 软件仓库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装需要用到的小工具"><span class="nav-number">1.2.</span> <span class="nav-text">安装需要用到的小工具</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装-erlang"><span class="nav-number">1.3.</span> <span class="nav-text">安装 erlang</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装-elixir"><span class="nav-number">1.4.</span> <span class="nav-text">安装 elixir</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装-hex-postgresql-9-6-及-phoenix-app"><span class="nav-number">1.5.</span> <span class="nav-text">安装 hex, postgresql-9.6 及 phoenix app</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#添加-epel-软件仓库"><span class="nav-number">1.</span> <span class="nav-text">添加 epel 软件仓库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装需要用到的小工具"><span class="nav-number">2.</span> <span class="nav-text">安装需要用到的小工具</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装-erlang"><span class="nav-number">3.</span> <span class="nav-text">安装 erlang</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装-elixir"><span class="nav-number">4.</span> <span class="nav-text">安装 elixir</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装-hex-postgresql-9-6-及-phoenix-app"><span class="nav-number">5.</span> <span class="nav-text">安装 hex, postgresql-9.6 及 phoenix app</span></a></li></ol></div>
             
           </div>
         </section>

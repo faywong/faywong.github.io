@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="postgresql," />
+  <meta name="keywords" content="blog of faywong, android, lisp, clojure" />
 
 
 
@@ -84,22 +84,15 @@
 
 
 
-<meta name="description" content="比如创建一个用户时只有在不存在的时候才需要插入，查了好久，终于搞明白：
-INSERT INTO users(id, alias, email) SELECT 00001, &apos;faywong&apos;, &apos;wangfei584521@163.com&apos; from users WHERE NOT EXISTS (SELECT * FROM users WHERE id = 00001)
-pqsql在这点上真叫一">
-<meta property="og:type" content="article">
-<meta property="og:title" content="[pgsql]仅当主key不存在时插入记录">
-<meta property="og:url" content="http://faywong.github.io/2016/07/19/2015-06-20-first/index.html">
+<meta name="description" content="blog of faywong, faywong, 王飞">
+<meta property="og:type" content="website">
+<meta property="og:title" content="blog of faywong">
+<meta property="og:url" content="http://faywong.github.io/tags/Elixir/index.html">
 <meta property="og:site_name" content="blog of faywong">
-<meta property="og:description" content="比如创建一个用户时只有在不存在的时候才需要插入，查了好久，终于搞明白：
-INSERT INTO users(id, alias, email) SELECT 00001, &apos;faywong&apos;, &apos;wangfei584521@163.com&apos; from users WHERE NOT EXISTS (SELECT * FROM users WHERE id = 00001)
-pqsql在这点上真叫一">
-<meta property="og:updated_time" content="2016-07-19T03:05:25.000Z">
+<meta property="og:description" content="blog of faywong, faywong, 王飞">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="[pgsql]仅当主key不存在时插入记录">
-<meta name="twitter:description" content="比如创建一个用户时只有在不存在的时候才需要插入，查了好久，终于搞明白：
-INSERT INTO users(id, alias, email) SELECT 00001, &apos;faywong&apos;, &apos;wangfei584521@163.com&apos; from users WHERE NOT EXISTS (SELECT * FROM users WHERE id = 00001)
-pqsql在这点上真叫一">
+<meta name="twitter:title" content="blog of faywong">
+<meta name="twitter:description" content="blog of faywong, faywong, 王飞">
 
 
 
@@ -120,9 +113,9 @@ pqsql在这点上真叫一">
 
 
 
-  <link rel="canonical" href="http://faywong.github.io/2016/07/19/2015-06-20-first/"/>
+  <link rel="canonical" href="http://faywong.github.io/tags/Elixir/"/>
 
-  <title> [pgsql]仅当主key不存在时插入记录 | blog of faywong </title>
+  <title> 标签: Elixir | blog of faywong </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -143,7 +136,7 @@ pqsql在这点上真叫一">
     
   
 
-  <div class="container one-collumn sidebar-position-left page-post-detail ">
+  <div class="container one-collumn sidebar-position-left  ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -231,135 +224,46 @@ pqsql在这点上真叫一">
           <div id="content" class="content">
             
 
-  <div id="posts" class="posts-expand">
-    
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <div id="posts" class="posts-collapse">
+    <div class="collection-title">
+      <h2 >
+        Elixir
+        <small>标签</small>
+      </h2>
+    </div>
 
     
-      <header class="post-header">
+      
 
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      <h1 class="post-title">
         
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
+            <a class="post-title-link" href="/2016/12/19/elixir_lession_1/" itemprop="url">
               
-                [pgsql]仅当主key不存在时插入记录
+                <span itemprop="name">CentOS 7 上 Elixir 开发之环境配置</span>
               
-            
-          </h1>
+            </a>
         
+      </h1>
 
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
-              2016-07-19
-            </time>
-          </span>
+      <div class="post-meta">
+        <time class="post-time" itemprop="dateCreated"
+              datetime="2016-12-19T11:52:01+08:00"
+              content="2016-12-19" >
+          12-19
+        </time>
+      </div>
 
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/19/2015-06-20-first/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-06-20-first/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        <p>比如创建一个用户时只有在不存在的时候才需要插入，查了好久，终于搞明白：</p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><div class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="keyword">users</span>(<span class="keyword">id</span>, <span class="keyword">alias</span>, email) <span class="keyword">SELECT</span> <span class="number">00001</span>, <span class="string">'faywong'</span>, <span class="string">'wangfei584521@163.com'</span> <span class="keyword">from</span> <span class="keyword">users</span> <span class="keyword">WHERE</span> <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> (<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="keyword">users</span> <span class="keyword">WHERE</span> <span class="keyword">id</span> = <span class="number">00001</span>)</div></pre></td></tr></table></figure>
-<p>pqsql在这点上真叫一个繁琐！</p>
-
-      
-    </div>
-
-    <div>
-      
-        
-
-      
-    </div>
-
-    <div>
-      
-        
-
-      
-    </div>
-
-    <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/postgresql/" rel="tag">#postgresql</a>
-          
-        </div>
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2016/07/19/2015-07-09-first/" rel="next" title="Nosql in postgresql">
-                <i class="fa fa-chevron-left"></i> Nosql in postgresql
-              </a>
-            
-          </div>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/07/19/2015-06-29-first/" rel="prev" title="clojure map-indexed使用实例">
-                clojure map-indexed使用实例 <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
-      
-    </footer>
+    </header>
   </article>
 
 
-
-    <div class="post-spread">
-      
-    </div>
+    
   </div>
+
+  
 
 
           </div>
@@ -367,14 +271,6 @@ pqsql在这点上真叫一">
 
 
           
-  <div class="comments" id="comments">
-    
-      <div class="ds-thread" data-thread-key="2016/07/19/2015-06-20-first/"
-           data-title="[pgsql]仅当主key不存在时插入记录" data-url="http://faywong.github.io/2016/07/19/2015-06-20-first/">
-      </div>
-    
-  </div>
-
 
         </div>
         
@@ -394,17 +290,8 @@ pqsql在这点上真叫一">
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview sidebar-panel ">
+      <section class="site-overview sidebar-panel  sidebar-panel-active ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/uploads/avatar.jpeg"
@@ -447,17 +334,6 @@ pqsql在这点上真叫一">
 
       </section>
 
-      
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-            
-              
-            
-            
-              <p class="post-toc-empty">此文章未包含目录</p>
-            
-          </div>
-        </section>
       
 
     </div>
@@ -554,10 +430,6 @@ pqsql在这点上真叫一">
   
 
   
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
-
-
 
   
 
