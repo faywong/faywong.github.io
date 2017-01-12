@@ -248,6 +248,120 @@
             
               
                 
+                <a class="post-title-link" href="/2017/01/12/weixin_xiaochengxu_01/" itemprop="url">
+                  纠正微信小程序的一个认知
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-01-12T09:22:33+08:00" content="2017-01-12">
+              2017-01-12
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/01/12/weixin_xiaochengxu_01/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/12/weixin_xiaochengxu_01/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="小程序是-native-还是-web"><a href="#小程序是-native-还是-web" class="headerlink" title="小程序是 native 还是 web"></a>小程序是 native 还是 web</h4><p>最近关于小程序的新闻和讨论甚嚣尘上，笔者周围各处都充满了溢美之词。</p>
+<p>“哇，这个小程序体验好棒…”。</p>
+<p>作为一个写过 hello world 的程序员，简要纠正一点技术实现上的疑虑：</p>
+<p>目前的微信小程序使用的是 html web 技术来实现的，而不是完全的 native，native 目测 10%不到。<br>至于性能和体验的话，我用眼睛大致测试了下，比最新的 chrome 浏览器要低个 10%以上。</p>
+<p>简单的说，目前的小程序大致等于：专门适配的 html 网页 + native 标题栏/动画 + disable zoom。</p>
+<p>小程序的技术实现，我引用<a href="https://mp.weixin.qq.com/debug/wxadoc/dev/devtools/details.html?t=201715" target="_blank" rel="external">官方文档</a>中的重要部分：</p>
+<p>&gt;</p>
+<blockquote>
+<p>三端的脚本执行环境聚以及用于渲染非原生组件的环境是各不相同的：</p>
+<p>在 iOS 上，小程序的 javascript 代码是运行在 JavaScriptCore 中，是由 WKWebView 来渲染的，环境有 iOS8、iOS9、iOS10<br>在 Android 上，小程序的 javascript 代码是通过 X5 JSCore来解析，是由 X5 基于 Mobile Chrome 37 内核来渲染的<br>在 开发工具上， 小程序的 javascript 代码是运行在 nwjs 中，是由 Chrome Webview 来渲染的</p>
+</blockquote>
+<h4 id="未来是否可能是-native"><a href="#未来是否可能是-native" class="headerlink" title="未来是否可能是 native"></a>未来是否可能是 native</h4><p>完全可能。从组件化、抽象化的 template DSL + 去掉陈旧的浏览器那套 DOM 操作能力来看，小程序面向开发者订立了一套实现可充分扩展的开发者界面。</p>
+<p>基本组件既可以在现在使用 web 技术来实现，也可以在未来升级为使用 native 来实现。</p>
+<h4 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h4><p>诚然，对于小程序来说，技术框架永远不是影响最大的，准入审核机制、 粘性用户基数、开发者生态这些也都是重要的基础能力/资源。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/12/19/elixir_lession_1/" itemprop="url">
                   CentOS 7 上 Elixir 开发之环境配置
                 </a>
@@ -436,112 +550,6 @@
             <p>最近换了 mac book pro，重新安装 jdk 时默认选择了 jdk 8，结果下载 android studio 2.1.2 后没法启动。显示如下 crash 信息：<br><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">java.lang.reflect.InvocationTargetException</div><div class="line">    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)</div><div class="line">    at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)</div><div class="line">    at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)</div><div class="line">    at java.lang.reflect.Method.invoke(Method.java:606)</div><div class="line">    at com.intellij.ide.Bootstrap.main(Bootstrap.java:39)</div><div class="line">    at com.intellij.idea.Main.main(Main.java:103)</div><div class="line">Caused by: java.lang.UnsatisfiedLinkError: /Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home/jre/lib/lwawt/liblwawt.dylib: dlopen(/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home/jre/lib/lwawt/liblwawt.dylib, 1): Library not loaded: @rpath/libosxapp.dylib</div><div class="line">  Referenced from: /Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home/jre/lib/lwawt/liblwawt.dylib</div><div class="line">  Reason: image not found</div></pre></td></tr></table></figure></p>
 <p>后来 google 之，找到一个简单的解决方案（rpath设置不全的原因）：</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><div class="line"><span class="built_in">cd</span> /Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home/jre/lib/</div><div class="line">sudo cp -rf libosxapp.dylib lwawt/</div></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/19/2015-01-15-fourth/" itemprop="url">
-                  Android L上webview crash的问题
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
-              2016-07-19
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/19/2015-01-15-fourth/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-01-15-fourth/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>在android L上测试反馈使用WebApp时会出现如下crash：<br><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">F/libc    ( 7555): Fatal signal 6 (SIGABRT) <span class="keyword">in</span> tid 12577 (RenderThread)</div><div class="line"></div><div class="line">I/DEBUG   (  182): *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***</div><div class="line"></div><div class="line">I/DEBUG   (  182): Build fingerprint: <span class="string">'google/hammerhead/hammerhead:L/LPV79/1236599:user/release-keys'</span></div><div class="line"></div><div class="line">I/DEBUG   (  182): Revision: <span class="string">'11'</span></div><div class="line"></div><div class="line">I/DEBUG   (  182): pid: 7555, tid: 12577, name: RenderThread  &gt;&gt;&gt; com.eg.android.AlipayGphone &lt;&lt;&lt;</div><div class="line"></div><div class="line">I/DEBUG   (  182): signal 6 (SIGABRT), code 0 (SI_USER), fault addr --------</div></pre></td></tr></table></figure></p>
-<p>后来研究发现：</p>
-<p><a href="https://code.google.com/p/android-developer-preview/issues/detail?can=2&amp;start=0&amp;num=100&amp;q=&amp;colspec=ID%20Type%20Status%20Owner%20Summary&amp;groupby=&amp;sort=&amp;id=950" target="_blank" rel="external">https://code.google.com/p/android-developer-preview/issues/detail?can=2&amp;start=0&amp;num=100&amp;q=&amp;colspec=ID%20Type%20Status%20Owner%20Summary&amp;groupby=&amp;sort=&amp;id=950</a></p>
-<p>上有人报告同一问题。</p>
-<p>LPV79这个build为developer preview version.存在一些问题。</p>
-<p>后来在正式版本中验证同一问题，不可复现。</p>
-
           
         
       
@@ -1351,7 +1359,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">39</span>
+              <span class="site-state-item-count">40</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1361,7 +1369,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-count">14</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -1398,7 +1406,7 @@
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2016</span>
+  <span itemprop="copyrightYear">2017</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
