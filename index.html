@@ -63,7 +63,9 @@
 
 
 
-<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+  
+
+<link href="//cdn.staticfile.org/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
 
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
@@ -305,7 +307,6 @@
 <p>目前的微信小程序使用的是 html web 技术来实现的，而不是完全的 native，native 目测 10%不到。<br>至于性能和体验的话，我用眼睛大致测试了下，比最新的 chrome 浏览器要低个 10%以上。</p>
 <p>简单的说，目前的小程序大致等于：专门适配的 html 网页 + native 标题栏/动画 + disable zoom。</p>
 <p>小程序的技术实现，我引用<a href="https://mp.weixin.qq.com/debug/wxadoc/dev/devtools/details.html?t=201715" target="_blank" rel="external">官方文档</a>中的重要部分：</p>
-<p>&gt;</p>
 <blockquote>
 <p>三端的脚本执行环境聚以及用于渲染非原生组件的环境是各不相同的：</p>
 <p>在 iOS 上，小程序的 javascript 代码是运行在 JavaScriptCore 中，是由 WKWebView 来渲染的，环境有 iOS8、iOS9、iOS10<br>在 Android 上，小程序的 javascript 代码是通过 X5 JSCore来解析，是由 X5 基于 Mobile Chrome 37 内核来渲染的<br>在 开发工具上， 小程序的 javascript 代码是运行在 nwjs 中，是由 Chrome Webview 来渲染的</p>
