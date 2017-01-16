@@ -70,7 +70,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="android,webview," />
+  <meta name="keywords" content="小程序," />
 
 
 
@@ -86,22 +86,33 @@
 
 
 
-<meta name="description" content="最近踩了一个坑，有个非全屏的dialog遮住我的WebApp容器时，WebApp容器中JS代码操纵dom对象显示文本（input框中）巨慢（俗话描述就是“软键盘中输入了字，但是上屏很慢”）。
-debug了一天之后发现。在WebView的onPause方法调用后，其内部JS引擎执行JS代码会慢好几倍。所以是否需要跟随Activity的生命周期调用onPause方法需要根据应用场景来区分：
-若是应用中">
+<meta name="description" content="笔者在上一篇纠正对微信小程序的一个认知中提到现在的微信是 h5 做的，那今天呢，接着花十分钟浅谈下 小程序 IDE 中的一些逻辑和线索，既能佐证之前的言论，又可以当做今天半天工作的总结。
+小程序 IDE 的架构没什么好说的，网站上整齐地亮着 windows, mac, linux 三个平台的安装包，90% 的可能性是用的 nwjs。 
+main entry 在哪儿页面启动的入口在哪里呢，我们看下">
 <meta property="og:type" content="article">
-<meta property="og:title" content="调用WebView中onPause方法需要好好权衡">
-<meta property="og:url" content="http://faywong.github.io/2016/07/19/2015-01-15-second/index.html">
+<meta property="og:title" content="浅析微信小程序之 IDE">
+<meta property="og:url" content="http://faywong.github.io/2017/01/12/wxapp_toolchain/index.html">
 <meta property="og:site_name" content="blog of faywong">
-<meta property="og:description" content="最近踩了一个坑，有个非全屏的dialog遮住我的WebApp容器时，WebApp容器中JS代码操纵dom对象显示文本（input框中）巨慢（俗话描述就是“软键盘中输入了字，但是上屏很慢”）。
-debug了一天之后发现。在WebView的onPause方法调用后，其内部JS引擎执行JS代码会慢好几倍。所以是否需要跟随Activity的生命周期调用onPause方法需要根据应用场景来区分：
-若是应用中">
-<meta property="og:updated_time" content="2016-07-19T03:05:25.000Z">
+<meta property="og:description" content="笔者在上一篇纠正对微信小程序的一个认知中提到现在的微信是 h5 做的，那今天呢，接着花十分钟浅谈下 小程序 IDE 中的一些逻辑和线索，既能佐证之前的言论，又可以当做今天半天工作的总结。
+小程序 IDE 的架构没什么好说的，网站上整齐地亮着 windows, mac, linux 三个平台的安装包，90% 的可能性是用的 nwjs。 
+main entry 在哪儿页面启动的入口在哪里呢，我们看下">
+<meta property="og:image" content="http://storage1.imgchr.com/CAoK1.png">
+<meta property="og:image" content="http://storage1.imgchr.com/CAv2d.png">
+<meta property="og:image" content="http://storage1.imgchr.com/CATDx.png">
+<meta property="og:image" content="http://storage1.imgchr.com/CAXPe.png">
+<meta property="og:image" content="http://storage1.imgchr.com/CA7b6.png">
+<meta property="og:image" content="http://storage1.imgchr.com/CAj8H.png">
+<meta property="og:image" content="http://storage1.imgchr.com/CAqUO.png">
+<meta property="og:image" content="http://storage1.imgchr.com/CAL5D.png">
+<meta property="og:image" content="http://storage1.imgchr.com/CAbVK.png">
+<meta property="og:image" content="http://storage1.imgchr.com/CA5vR.png">
+<meta property="og:updated_time" content="2017-01-16T14:31:29.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="调用WebView中onPause方法需要好好权衡">
-<meta name="twitter:description" content="最近踩了一个坑，有个非全屏的dialog遮住我的WebApp容器时，WebApp容器中JS代码操纵dom对象显示文本（input框中）巨慢（俗话描述就是“软键盘中输入了字，但是上屏很慢”）。
-debug了一天之后发现。在WebView的onPause方法调用后，其内部JS引擎执行JS代码会慢好几倍。所以是否需要跟随Activity的生命周期调用onPause方法需要根据应用场景来区分：
-若是应用中">
+<meta name="twitter:title" content="浅析微信小程序之 IDE">
+<meta name="twitter:description" content="笔者在上一篇纠正对微信小程序的一个认知中提到现在的微信是 h5 做的，那今天呢，接着花十分钟浅谈下 小程序 IDE 中的一些逻辑和线索，既能佐证之前的言论，又可以当做今天半天工作的总结。
+小程序 IDE 的架构没什么好说的，网站上整齐地亮着 windows, mac, linux 三个平台的安装包，90% 的可能性是用的 nwjs。 
+main entry 在哪儿页面启动的入口在哪里呢，我们看下">
+<meta name="twitter:image" content="http://storage1.imgchr.com/CAoK1.png">
 
 
 
@@ -122,9 +133,9 @@ debug了一天之后发现。在WebView的onPause方法调用后，其内部JS�
 
 
 
-  <link rel="canonical" href="http://faywong.github.io/2016/07/19/2015-01-15-second/"/>
+  <link rel="canonical" href="http://faywong.github.io/2017/01/12/wxapp_toolchain/"/>
 
-  <title> 调用WebView中onPause方法需要好好权衡 | blog of faywong </title>
+  <title> 浅析微信小程序之 IDE | blog of faywong </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -254,7 +265,7 @@ debug了一天之后发现。在WebView的onPause方法调用后，其内部JS�
             
             
               
-                调用WebView中onPause方法需要好好权衡
+                浅析微信小程序之 IDE
               
             
           </h1>
@@ -266,8 +277,8 @@ debug了一天之后发现。在WebView的onPause方法调用后，其内部JS�
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
-              2016-07-19
+            <time itemprop="dateCreated" datetime="2017-01-12T09:22:33+08:00" content="2017-01-12">
+              2017-01-12
             </time>
           </span>
 
@@ -277,8 +288,8 @@ debug了一天之后发现。在WebView的onPause方法调用后，其内部JS�
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/07/19/2015-01-15-second/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-01-15-second/" itemprop="commentsCount"></span>
+                <a href="/2017/01/12/wxapp_toolchain/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/12/wxapp_toolchain/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -301,9 +312,37 @@ debug了一天之后发现。在WebView的onPause方法调用后，其内部JS�
       
 
       
-        <p>最近踩了一个坑，有个非全屏的dialog遮住我的WebApp容器时，WebApp容器中JS代码操纵dom对象显示文本（input框中）巨慢（俗话描述就是“软键盘中输入了字，但是上屏很慢”）。</p>
-<p>debug了一天之后发现。在WebView的onPause方法调用后，其内部JS引擎执行JS代码会慢好几倍。所以是否需要跟随Activity的生命周期调用onPause方法需要根据应用场景来区分：</p>
-<p>若是应用中严格依赖JS做一些比较紧要的事情，则不应该onPause WebView。否则应该onPause WebView以释放一部分系统资源。</p>
+        <p>笔者在上一篇<a href="http://faywong.github.io/2017/01/12/weixin_xiaochengxu_01/">纠正对微信小程序的一个认知</a>中提到现在的微信是 h5 做的，那今天呢，接着花十分钟浅谈下 小程序 IDE 中的一些逻辑和线索，既能佐证之前的言论，又可以当做今天半天工作的总结。</p>
+<h3 id="小程序-IDE-的架构"><a href="#小程序-IDE-的架构" class="headerlink" title="小程序 IDE 的架构"></a>小程序 IDE 的架构</h3><p>没什么好说的，网站上整齐地亮着 windows, mac, linux 三个平台的安装包，90% 的可能性是用的 <a href="http://nwjs.readthedocs.io/en/latest/" target="_blank" rel="external">nwjs</a>。 </p>
+<h3 id="main-entry-在哪儿"><a href="#main-entry-在哪儿" class="headerlink" title="main entry 在哪儿"></a>main entry 在哪儿</h3><p>页面启动的入口在哪里呢，我们看下 network 面板：</p>
+<p><img src="http://storage1.imgchr.com/CAoK1.png" alt=""></p>
+<p>可见启动流程是 page-frame.html -&gt; appservice 服务下载 asdebug.js 以及其他 js，比如 appservice 的地址为：<a href="http://685122098.appservice.open.weixin.qq.com/asdebug.js" target="_blank" rel="external">http://685122098.appservice.open.weixin.qq.com/asdebug.js</a></p>
+<p>那这是个在线地址吗，no, no, no, 它是个本地代理地址，由 nwjs 后端实现。其中 685122098 是一个 hash，由你的小程序 appId + name hash 生成。</p>
+<p>我们看下这个代理服务器的代理规则：</p>
+<p><img src="http://storage1.imgchr.com/CAv2d.png" alt=""></p>
+<p><img src="http://storage1.imgchr.com/CATDx.png" alt="服务端代理规则的实现"></p>
+<h3 id="梳理下重点"><a href="#梳理下重点" class="headerlink" title="梳理下重点"></a>梳理下重点</h3><p>由于 IDE 整个的代码量巨大，且大量使用了 ES2016 里边的特性 + minify 转换，可读性很差。我取其精华，梳理出一些重点逻辑。</p>
+<ul>
+<li>wxml2html</li>
+</ul>
+<p><img src="http://storage1.imgchr.com/CAXPe.png" alt=""></p>
+<p>这个步骤是把本地 wxml 格式的小程序模板转为 html 格式，纳尼，原来真是 html 啊。为了断了你使用原始 html + Dom 操作，IDE 特意禁止展示原始的 html：</p>
+<p><img src="http://storage1.imgchr.com/CA7b6.png" alt=""></p>
+<ul>
+<li>wxml2js<br><img src="http://storage1.imgchr.com/CAj8H.png" alt=""></li>
+</ul>
+<p>在线上版本（真机环境）中运行的代码由 wxml2js 过程生成，怎么验证呢。好，接下来我们讲下小程序安装包的格式：</p>
+<ul>
+<li>小程序安装包的格式</li>
+</ul>
+<p><img src="http://storage1.imgchr.com/CAqUO.png" alt="小程序格式"><br><img src="http://storage1.imgchr.com/CAL5D.png" alt="小程序格式 html 部分"><br><img src="http://storage1.imgchr.com/CAbVK.png" alt="小程序格式 dom 部分"></p>
+<p>总结下安装包的格式：紧凑型单文件形式 + html 框架/容器部分 + 参考 wxml 模板转换得来的 js（动态生成 dom）</p>
+<ul>
+<li>项目-&gt;预览</li>
+</ul>
+<p>涉及到打包并上传的逻辑，夜已深，只能直抒胸臆了：</p>
+<p><img src="http://storage1.imgchr.com/CA5vR.png" alt=""></p>
+<p>注：转载请注明本文原始出处<a href="http://faywong.github.io/2017/01/12/weixin_xiaochengxu_01/">blog of faywong</a></p>
 
       
     </div>
@@ -326,9 +365,7 @@ debug了一天之后发现。在WebView的onPause方法调用后，其内部JS�
       
         <div class="post-tags">
           
-            <a href="/tags/android/" rel="tag">#android</a>
-          
-            <a href="/tags/webview/" rel="tag">#webview</a>
+            <a href="/tags/小程序/" rel="tag">#小程序</a>
           
         </div>
       
@@ -337,17 +374,13 @@ debug了一天之后发现。在WebView的onPause方法调用后，其内部JS�
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/07/19/2015-11-26-first/" rel="next" title="浅谈NavigationBar高度的获取">
-                <i class="fa fa-chevron-left"></i> 浅谈NavigationBar高度的获取
+              <a href="/2017/01/12/weixin_xiaochengxu_01/" rel="next" title="纠正对微信小程序的一个认知">
+                <i class="fa fa-chevron-left"></i> 纠正对微信小程序的一个认知
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/07/19/2015-07-09-second/" rel="prev" title="以UTF-8编码建立postgresql数据库">
-                以UTF-8编码建立postgresql数据库 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -373,8 +406,8 @@ debug了一天之后发现。在WebView的onPause方法调用后，其内部JS�
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/07/19/2015-01-15-second/"
-           data-title="调用WebView中onPause方法需要好好权衡" data-url="http://faywong.github.io/2016/07/19/2015-01-15-second/">
+      <div class="ds-thread" data-thread-key="2017/01/12/wxapp_toolchain/"
+           data-title="浅析微信小程序之 IDE" data-url="http://faywong.github.io/2017/01/12/wxapp_toolchain/">
       </div>
     
   </div>
@@ -458,7 +491,7 @@ debug了一天之后发现。在WebView的onPause方法调用后，其内部JS�
               
             
             
-              <p class="post-toc-empty">此文章未包含目录</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#小程序-IDE-的架构"><span class="nav-number">1.</span> <span class="nav-text">小程序 IDE 的架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#main-entry-在哪儿"><span class="nav-number">2.</span> <span class="nav-text">main entry 在哪儿</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#梳理下重点"><span class="nav-number">3.</span> <span class="nav-text">梳理下重点</span></a></li></ol></div>
             
           </div>
         </section>

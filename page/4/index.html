@@ -908,6 +908,110 @@
             
               
                 
+                <a class="post-title-link" href="/2016/07/19/2015-01-16-first/" itemprop="url">
+                  WebView getUserAgentString的副作用分析
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
+              2016-07-19
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/19/2015-01-16-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-01-16-first/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>源代码如下(以android 4.0.4为例)：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> String <span class="title">getUserAgentString</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (DESKTOP_USERAGENT.equals(mUserAgent) ||</div><div class="line">        IPHONE_USERAGENT.equals(mUserAgent) ||</div><div class="line">        !mUseDefaultUserAgent) &#123;</div><div class="line">        <span class="keyword">return</span> mUserAgent;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">boolean</span> doPostSync = <span class="keyword">false</span>;</div><div class="line">    <span class="keyword">synchronized</span>(sLockForLocaleSettings) &#123;</div><div class="line">        Locale currentLocale = Locale.getDefault();</div><div class="line">        <span class="keyword">if</span> (!sLocale.equals(currentLocale)) &#123;</div><div class="line">            sLocale = currentLocale;</div><div class="line">            mUserAgent = getCurrentUserAgent();</div><div class="line">            mAcceptLanguage = getCurrentAcceptLanguage();</div><div class="line">            doPostSync = <span class="keyword">true</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (doPostSync) &#123;</div><div class="line">        postSync();</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> mUserAgent;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>其中后半段代码用于将当前locale设定同步到生成的UA中。所以该方法是有副作用的。</p>
+<p>在一个使用了WebView的Activity里实例化完成和系统Configuration改变后都需要调用一次getUserAgentString()来让WebView的UA（前提是不要设置自己的UA，即没有针对此WebView调用过setUserAgentString）中locale分量与系统的设定保持一致。以免在访问多语言网站时出现适配问题。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/07/19/2016-04-19-first/" itemprop="url">
                   针对View LayoutParams做动画
                 </a>
@@ -1209,119 +1313,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/11/git自动补全/" itemprop="url">
-                  git自动补全
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-11T15:31:26+08:00" content="2016-07-11">
-              2016-07-11
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/11/git自动补全/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/11/git自动补全/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>为 git 添加自动补全可以为平时的开发工作提升很多效率。而其方法也非常容易：</p>
-<ol>
-<li><p>下载 git-completion 脚本</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">wget https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash</div></pre></td></tr></table></figure>
-</li>
-<li><p>配置自动加载以上脚本<br>若期望整个系统生效，则在 /etc/profile 中（若为单个用户，则在 ~/.bashrc 中）添加:</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line"><span class="built_in">source</span> &#123;git-completion.bash&#125;</div></pre></td></tr></table></figure></li>
-</ol>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span>
+    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1362,7 +1358,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">40</span>
+              <span class="site-state-item-count">41</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

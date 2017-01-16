@@ -250,6 +250,137 @@
             
               
                 
+                <a class="post-title-link" href="/2017/01/12/wxapp_toolchain/" itemprop="url">
+                  浅析微信小程序之 IDE
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-01-12T09:22:33+08:00" content="2017-01-12">
+              2017-01-12
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/01/12/wxapp_toolchain/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/12/wxapp_toolchain/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>笔者在上一篇<a href="http://faywong.github.io/2017/01/12/weixin_xiaochengxu_01/">纠正对微信小程序的一个认知</a>中提到现在的微信是 h5 做的，那今天呢，接着花十分钟浅谈下 小程序 IDE 中的一些逻辑和线索，既能佐证之前的言论，又可以当做今天半天工作的总结。</p>
+<h3 id="小程序-IDE-的架构"><a href="#小程序-IDE-的架构" class="headerlink" title="小程序 IDE 的架构"></a>小程序 IDE 的架构</h3><p>没什么好说的，网站上整齐地亮着 windows, mac, linux 三个平台的安装包，90% 的可能性是用的 <a href="http://nwjs.readthedocs.io/en/latest/" target="_blank" rel="external">nwjs</a>。 </p>
+<h3 id="main-entry-在哪儿"><a href="#main-entry-在哪儿" class="headerlink" title="main entry 在哪儿"></a>main entry 在哪儿</h3><p>页面启动的入口在哪里呢，我们看下 network 面板：</p>
+<p><img src="http://storage1.imgchr.com/CAoK1.png" alt=""></p>
+<p>可见启动流程是 page-frame.html -&gt; appservice 服务下载 asdebug.js 以及其他 js，比如 appservice 的地址为：<a href="http://685122098.appservice.open.weixin.qq.com/asdebug.js" target="_blank" rel="external">http://685122098.appservice.open.weixin.qq.com/asdebug.js</a></p>
+<p>那这是个在线地址吗，no, no, no, 它是个本地代理地址，由 nwjs 后端实现。其中 685122098 是一个 hash，由你的小程序 appId + name hash 生成。</p>
+<p>我们看下这个代理服务器的代理规则：</p>
+<p><img src="http://storage1.imgchr.com/CAv2d.png" alt=""></p>
+<p><img src="http://storage1.imgchr.com/CATDx.png" alt="服务端代理规则的实现"></p>
+<h3 id="梳理下重点"><a href="#梳理下重点" class="headerlink" title="梳理下重点"></a>梳理下重点</h3><p>由于 IDE 整个的代码量巨大，且大量使用了 ES2016 里边的特性 + minify 转换，可读性很差。我取其精华，梳理出一些重点逻辑。</p>
+<ul>
+<li>wxml2html</li>
+</ul>
+<p><img src="http://storage1.imgchr.com/CAXPe.png" alt=""></p>
+<p>这个步骤是把本地 wxml 格式的小程序模板转为 html 格式，纳尼，原来真是 html 啊。为了断了你使用原始 html + Dom 操作，IDE 特意禁止展示原始的 html：</p>
+<p><img src="http://storage1.imgchr.com/CA7b6.png" alt=""></p>
+<ul>
+<li>wxml2js<br><img src="http://storage1.imgchr.com/CAj8H.png" alt=""></li>
+</ul>
+<p>在线上版本（真机环境）中运行的代码由 wxml2js 过程生成，怎么验证呢。好，接下来我们讲下小程序安装包的格式：</p>
+<ul>
+<li>小程序安装包的格式</li>
+</ul>
+<p><img src="http://storage1.imgchr.com/CAqUO.png" alt="小程序格式"><br><img src="http://storage1.imgchr.com/CAL5D.png" alt="小程序格式 html 部分"><br><img src="http://storage1.imgchr.com/CAbVK.png" alt="小程序格式 dom 部分"></p>
+<p>总结下安装包的格式：紧凑型单文件形式 + html 框架/容器部分 + 参考 wxml 模板转换得来的 js（动态生成 dom）</p>
+<ul>
+<li>项目-&gt;预览</li>
+</ul>
+<p>涉及到打包并上传的逻辑，夜已深，只能直抒胸臆了：</p>
+<p><img src="http://storage1.imgchr.com/CA5vR.png" alt=""></p>
+<p>注：转载请注明本文原始出处<a href="http://faywong.github.io/2017/01/12/weixin_xiaochengxu_01/">blog of faywong</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/01/12/weixin_xiaochengxu_01/" itemprop="url">
                   纠正对微信小程序的一个认知
                 </a>
@@ -552,110 +683,6 @@
             <p>最近换了 mac book pro，重新安装 jdk 时默认选择了 jdk 8，结果下载 android studio 2.1.2 后没法启动。显示如下 crash 信息：<br><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">java.lang.reflect.InvocationTargetException</div><div class="line">    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)</div><div class="line">    at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)</div><div class="line">    at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)</div><div class="line">    at java.lang.reflect.Method.invoke(Method.java:606)</div><div class="line">    at com.intellij.ide.Bootstrap.main(Bootstrap.java:39)</div><div class="line">    at com.intellij.idea.Main.main(Main.java:103)</div><div class="line">Caused by: java.lang.UnsatisfiedLinkError: /Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home/jre/lib/lwawt/liblwawt.dylib: dlopen(/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home/jre/lib/lwawt/liblwawt.dylib, 1): Library not loaded: @rpath/libosxapp.dylib</div><div class="line">  Referenced from: /Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home/jre/lib/lwawt/liblwawt.dylib</div><div class="line">  Reason: image not found</div></pre></td></tr></table></figure></p>
 <p>后来 google 之，找到一个简单的解决方案（rpath设置不全的原因）：</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><div class="line"><span class="built_in">cd</span> /Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home/jre/lib/</div><div class="line">sudo cp -rf libosxapp.dylib lwawt/</div></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/19/2015-01-16-first/" itemprop="url">
-                  WebView getUserAgentString的副作用分析
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
-              2016-07-19
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/19/2015-01-16-first/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-01-16-first/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>源代码如下(以android 4.0.4为例)：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> String <span class="title">getUserAgentString</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (DESKTOP_USERAGENT.equals(mUserAgent) ||</div><div class="line">        IPHONE_USERAGENT.equals(mUserAgent) ||</div><div class="line">        !mUseDefaultUserAgent) &#123;</div><div class="line">        <span class="keyword">return</span> mUserAgent;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">boolean</span> doPostSync = <span class="keyword">false</span>;</div><div class="line">    <span class="keyword">synchronized</span>(sLockForLocaleSettings) &#123;</div><div class="line">        Locale currentLocale = Locale.getDefault();</div><div class="line">        <span class="keyword">if</span> (!sLocale.equals(currentLocale)) &#123;</div><div class="line">            sLocale = currentLocale;</div><div class="line">            mUserAgent = getCurrentUserAgent();</div><div class="line">            mAcceptLanguage = getCurrentAcceptLanguage();</div><div class="line">            doPostSync = <span class="keyword">true</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (doPostSync) &#123;</div><div class="line">        postSync();</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> mUserAgent;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>其中后半段代码用于将当前locale设定同步到生成的UA中。所以该方法是有副作用的。</p>
-<p>在一个使用了WebView的Activity里实例化完成和系统Configuration改变后都需要调用一次getUserAgentString()来让WebView的UA（前提是不要设置自己的UA，即没有针对此WebView调用过setUserAgentString）中locale分量与系统的设定保持一致。以免在访问多语言网站时出现适配问题。</p>
-
           
         
       
@@ -1320,7 +1347,7 @@
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1361,7 +1388,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">40</span>
+              <span class="site-state-item-count">41</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
