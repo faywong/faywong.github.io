@@ -301,8 +301,8 @@
       
         
           
-            <p>笔者在上一篇<a href="http://faywong.github.io/2017/01/12/weixin_xiaochengxu_01/">纠正对微信小程序的一个认知</a>中提到现在的微信是 h5 做的，那今天呢，接着花十分钟浅谈下 小程序 IDE 中的一些逻辑和线索，既能佐证之前的言论，又可以当做今天半天工作的总结。</p>
-<h3 id="小程序-IDE-的架构"><a href="#小程序-IDE-的架构" class="headerlink" title="小程序 IDE 的架构"></a>小程序 IDE 的架构</h3><p>没什么好说的，网站上整齐地亮着 windows, mac, linux 三个平台的安装包，90% 的可能性是用的 <a href="http://nwjs.readthedocs.io/en/latest/" target="_blank" rel="external">nwjs</a>。 </p>
+            <p>我在上一篇<a href="http://www.atatech.org/articles/70296" target="_blank" rel="external">纠正对微信小程序的一个认知</a>中提到现在的微信小程序是 h5 做的，那今天下班前花十分钟浅谈下小程序 IDE 中的一些逻辑和线索，既能佐证之前的言论，又可以当做今天半天工作的总结。</p>
+<h3 id="小程序-IDE-的架构"><a href="#小程序-IDE-的架构" class="headerlink" title="小程序 IDE 的架构"></a>小程序 IDE 的架构</h3><p>没什么好说的，网站上整齐地亮着 windows, mac, linux 三个平台的安装包，90% 的可能性是用的 <a href="http://nwjs.readthedocs.io/en/latest/" target="_blank" rel="external">nwjs</a>，实际用的也是 nwjs。 </p>
 <h3 id="main-entry-在哪儿"><a href="#main-entry-在哪儿" class="headerlink" title="main entry 在哪儿"></a>main entry 在哪儿</h3><p>页面启动的入口在哪里呢，我们看下 network 面板：</p>
 <p><img src="http://storage1.imgchr.com/CAoK1.png" alt=""></p>
 <p>可见启动流程是 page-frame.html -&gt; appservice 服务下载 asdebug.js 以及其他 js，比如 appservice 的地址为：<a href="http://685122098.appservice.open.weixin.qq.com/asdebug.js" target="_blank" rel="external">http://685122098.appservice.open.weixin.qq.com/asdebug.js</a></p>
@@ -310,15 +310,15 @@
 <p>我们看下这个代理服务器的代理规则：</p>
 <p><img src="http://storage1.imgchr.com/CAv2d.png" alt=""></p>
 <p><img src="http://storage1.imgchr.com/CATDx.png" alt="服务端代理规则的实现"></p>
-<h3 id="梳理下重点"><a href="#梳理下重点" class="headerlink" title="梳理下重点"></a>梳理下重点</h3><p>由于 IDE 整个的代码量巨大，且大量使用了 ES2016 里边的特性 + minify 转换，可读性很差。我取其精华，梳理出一些重点逻辑。</p>
+<h3 id="梳理下重点"><a href="#梳理下重点" class="headerlink" title="梳理下重点"></a>梳理下重点</h3><p>由于 IDE 整个的代码量巨大，且大量使用了 ES2015 里边的特性 + minify 转换，可读性很差。我取其精华，梳理出一些重点逻辑。</p>
 <ul>
 <li>wxml2html</li>
 </ul>
 <p><img src="http://storage1.imgchr.com/CAXPe.png" alt=""></p>
-<p>这个步骤是把本地 wxml 格式的小程序模板转为 html 格式，纳尼，原来真是 html 啊。为了断了你使用原始 html + Dom 操作的念想，IDE 特意禁止展示原始的 html：</p>
+<p>这个步骤是把本地 wxml 格式的小程序模板转为 html 格式，纳尼，原来真是 html 啊，不过这里生成的 html 是为了给 IDE 渲染用的（调试开发阶段）。同时开发调试阶段为断了你使用原始 html + Dom 操作的念想，IDE 特意禁止展示原始的 html：</p>
 <p><img src="http://storage1.imgchr.com/CA7b6.png" alt=""></p>
 <p>附上 wxml2html 过程的<a href="https://gist.github.com/faywong/ccf528c9d23fda97d8e60d9861ab15b2" target="_blank" rel="external">输入及输出</a>。</p>
-<p>输出的 html 代码中包含了微信 js api 的实现，前端 weUI 样式，以及 template -&gt; html 元素的对应。<br>记性好的老司机肯定记得我曾经说过，有些组件的实现现在是 h5，未来可以迁移至用 native 来实现，这一点体现在：</p>
+<p>输出的 html 代码中包含了微信 js api 的 bridge 实现，前端公共 weUI 样式，以及 template -&gt; html 元素的对应。<br>记性好的老司机肯定记得我曾经说过，有些组件的实现现在是 h5，未来可以迁移至用 native 来实现，这一点体现在：</p>
 <figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line">       <span class="keyword">var</span> m = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">           <span class="keyword">return</span> &#123;</div><div class="line">               renderingMode: <span class="string">"native"</span>,</div><div class="line">               keepWhiteSpace: !<span class="number">1</span>,</div><div class="line">               parseTextContent: !<span class="number">1</span></div><div class="line">           &#125;</div><div class="line">       &#125;;</div><div class="line">       g._setGlobalOptionsGetter = <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123;</div><div class="line">           m = e</div><div class="line">       &#125;;</div><div class="line"></div><div class="line">       <span class="comment">// 创建元素的构造器</span></div><div class="line">                   g.create = <span class="function"><span class="keyword">function</span>(<span class="params">e, t, n, r</span>) </span>&#123;</div><div class="line">           <span class="keyword">var</span> a = m(),</div><div class="line">               s = r.renderingMode || a.renderingMode,</div><div class="line">               c = k;</div><div class="line">           <span class="string">"native"</span> === s &amp;&amp; (c = E);</div><div class="line">           <span class="keyword">var</span> d = o(e.attributes),</div><div class="line">               u = &#123;</div><div class="line">                   parseTextContent: <span class="keyword">void</span> <span class="number">0</span> !== d[<span class="string">"parse-text-content"</span>] || r.parseTextContent || a.parseTextContent,</div><div class="line">                   keepWhiteSpace: <span class="keyword">void</span> <span class="number">0</span> !== d[<span class="string">"keep-white-space"</span>] || r.keepWhiteSpace || a.keepWhiteSpace</div><div class="line">               &#125;,</div><div class="line">               h = e.content;</div><div class="line">           <span class="keyword">if</span> (<span class="string">"TEMPLATE"</span> !== e.tagName)</div><div class="line">               <span class="keyword">for</span> (h = <span class="built_in">document</span>.createDocumentFragment(); e.childNodes.length;) h.appendChild(e.childNodes[<span class="number">0</span>]);</div><div class="line">           <span class="keyword">var</span> f = !<span class="number">1</span>,</div><div class="line">               v = <span class="function"><span class="keyword">function</span>(<span class="params">e, o, r, a</span>) </span>&#123;</div><div class="line">                   <span class="keyword">for</span> (<span class="keyword">var</span> d = <span class="keyword">void</span> <span class="number">0</span>, u = <span class="number">0</span>; u &lt; o.length; u++) &#123;</div><div class="line">                       <span class="keyword">var</span> h = o[u],</div><div class="line">                           g = r.concat(e.length);</div><div class="line">                       <span class="keyword">if</span> (<span class="number">8</span> !== h.nodeType)</div><div class="line">                           <span class="keyword">if</span> (<span class="number">3</span> !== h.nodeType)</div><div class="line">                               <span class="keyword">if</span> (<span class="string">"WX-CONTENT"</span> !== h.tagName &amp;&amp; <span class="string">"SLOT"</span> !== h.tagName) &#123;</div><div class="line">                                   <span class="keyword">var</span> m = h.tagName.indexOf(<span class="string">"-"</span>) &gt;= <span class="number">0</span> &amp;&amp; <span class="string">"native"</span> !== s,</div><div class="line">                                       k = <span class="literal">null</span>;</div><div class="line">                                   m || (k = <span class="built_in">document</span>.createElement(h.tagName));</div><div class="line">                                   <span class="keyword">var</span> E = <span class="string">""</span>,</div><div class="line">                                       S = h.attributes,</div><div class="line">                                       T = [];</div><div class="line">......</div></pre></td></tr></table></figure>
 <ul>
 <li>wxml2js<br><img src="http://storage1.imgchr.com/CAj8H.png" alt=""></li>
@@ -328,13 +328,12 @@
 <li>小程序安装包的格式</li>
 </ul>
 <p><img src="http://storage1.imgchr.com/CAqUO.png" alt="小程序格式"><br><img src="http://storage1.imgchr.com/CAL5D.png" alt="小程序格式 html 部分"><br><img src="http://storage1.imgchr.com/CAbVK.png" alt="小程序格式 dom 部分"></p>
-<p>总结下安装包的格式：紧凑型单文件形式 + html 框架/容器部分 + 参考 wxml 模板转换得来的 js（动态生成 dom）</p>
+<p>总结下安装包的格式：紧凑型单文件形式 + html 框架/容器部分 + 从 wxml 模板转换得来的 js（动态生成 dom）</p>
 <ul>
 <li>项目-&gt;预览</li>
 </ul>
 <p>涉及到打包并上传的逻辑，夜已深，只能直抒胸臆了：</p>
 <p><img src="http://storage1.imgchr.com/CA5vR.png" alt=""></p>
-<p>注：转载请注明本文原始出处<a href="http://faywong.github.io/2017/01/12/weixin_xiaochengxu_01/">blog of faywong</a></p>
 
           
         
