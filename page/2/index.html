@@ -250,108 +250,6 @@
             
               
                 
-                <a class="post-title-link" href="/2016/07/19/2015-06-11-first/" itemprop="url">
-                  Android L上WebView的行为变得更严格
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
-              2016-07-19
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/19/2015-06-11-first/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-06-11-first/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>android 5.0上WebView开始默认阻止Mixed Content，且不再接受第三方的cookie。所以为了你以往的WebApp里边的内容可以正常访问，需要使用WebSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW) 和CookieManager.setAcceptThirdPartyCookies({your_webview}, true) 来放开这一限制。</p>
-<p>当然最好是让你的页面不再存在mixed content，不再依赖第三方cookie最为完美。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
                 <a class="post-title-link" href="/2016/07/19/2015-01-23-first/" itemprop="url">
                   应用压入后台时由WebView带来的耗电问题
                 </a>
@@ -464,8 +362,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/07/19/2015-01-21-first/" itemprop="url">
-                  通过PackageManager query应用信息时出现java.lang.RuntimeException: Package manager has died
+                <a class="post-title-link" href="/2016/07/19/2015-06-11-first/" itemprop="url">
+                  Android L上WebView的行为变得更严格
                 </a>
               
             
@@ -489,8 +387,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/07/19/2015-01-21-first/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-01-21-first/" itemprop="commentsCount"></span>
+                <a href="/2016/07/19/2015-06-11-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-06-11-first/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -515,20 +413,8 @@
       
         
           
-            <p>这属于android中最常见的TransactionTooLargeException的后果表现之一。</p>
-<p>该问题较多出现在使用PackageManager查询系统的应用的信息，通过Intent来过滤匹配目标应用组件（android四大组件）时，典型堆栈如下：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><div class="line">java.lang.RuntimeException: Package manager has died</div><div class="line">at android.app.ApplicationPackageManager.getPackageInfo(ApplicationPackageManager.java:<span class="number">78</span>)</div><div class="line"></div><div class="line">......</div><div class="line">Caused by: android.os.TransactionTooLargeException</div><div class="line">at android.os.BinderProxy.transact(Native Method)</div><div class="line">at android.content.pm.IPackageManager$Stub$Proxy.getPackageInfo(IPackageManager.java:<span class="number">1393</span>)</div><div class="line">at android.app.ApplicationPackageManager.getPackageInfo(ApplicationPackageManager.java:<span class="number">73</span>)</div><div class="line">... <span class="number">17</span> more</div><div class="line">android.os.TransactionTooLargeException</div><div class="line">at android.os.BinderProxy.transact(Native Method)</div><div class="line">at android.content.pm.IPackageManager$Stub$Proxy.getPackageInfo(IPackageManager.java:<span class="number">1393</span>)</div><div class="line">at android.app.ApplicationPackageManager.getPackageInfo(ApplicationPackageManager.java:<span class="number">73</span>)</div></pre></td></tr></table></figure>
-<p>这是Java层的堆栈，原始抛出异常的地方在于文件frameworks/base/core/jni/android_util_Binder.cpp：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">case</span> FAILED_TRANSACTION:</div><div class="line"> LOGE(<span class="string">"!!! FAILED BINDER TRANSACTION !!!"</span>);</div><div class="line"> <span class="comment">// TransactionTooLargeException is a checked exception, only throw from certain methods.</span></div><div class="line"> <span class="comment">// <span class="doctag">FIXME:</span> Transaction too large is the most common reason for FAILED_TRANSACTION</span></div><div class="line"> <span class="comment">//        but it is not the only one.  The Binder driver can return BR_FAILED_REPLY</span></div><div class="line"> <span class="comment">//        for other reasons also, such as if the transaction is malformed or</span></div><div class="line"> <span class="comment">//        refers to an FD that has been closed.  We should change the driver</span></div><div class="line"> <span class="comment">//        to enable us to distinguish these cases in the future.</span></div><div class="line"> jniThrowException(env, canThrowRemoteException</div><div class="line"> ? <span class="string">"android/os/TransactionTooLargeException"</span></div><div class="line"> : <span class="string">"java/lang/RuntimeException"</span>, <span class="literal">NULL</span>);</div><div class="line"> <span class="keyword">break</span>;</div></pre></td></tr></table></figure>
-<p>该FAILED_TRANSACTION错误码定义于：<br>/bionic/libc/kernel/common/linux/binder.h中的BR_FAILED_REPLY</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">enum</span> BinderDriverReturnProtocol &#123;</div><div class="line">BR_ERROR = <span class="number">_</span>IOR_BAD(<span class="string">'r'</span>, <span class="number">0</span>, <span class="keyword">int</span>),</div><div class="line"></div><div class="line">BR_OK = <span class="number">_</span>IO(<span class="string">'r'</span>, <span class="number">1</span>),</div><div class="line"></div><div class="line">BR_TRANSACTION = <span class="number">_</span>IOR_BAD(<span class="string">'r'</span>, <span class="number">2</span>, <span class="keyword">struct</span> binder_transaction_data),</div><div class="line">BR_REPLY = <span class="number">_</span>IOR_BAD(<span class="string">'r'</span>, <span class="number">3</span>, <span class="keyword">struct</span> binder_transaction_data),</div><div class="line"></div><div class="line">BR_ACQUIRE_RESULT = <span class="number">_</span>IOR_BAD(<span class="string">'r'</span>, <span class="number">4</span>, <span class="keyword">int</span>),</div><div class="line"></div><div class="line">BR_DEAD_REPLY = <span class="number">_</span>IO(<span class="string">'r'</span>, <span class="number">5</span>),</div><div class="line"></div><div class="line">BR_TRANSACTION_COMPLETE = <span class="number">_</span>IO(<span class="string">'r'</span>, <span class="number">6</span>),</div><div class="line"></div><div class="line">BR_INCREFS = <span class="number">_</span>IOR_BAD(<span class="string">'r'</span>, <span class="number">7</span>, <span class="keyword">struct</span> binder_ptr_cookie),</div><div class="line">BR_ACQUIRE = <span class="number">_</span>IOR_BAD(<span class="string">'r'</span>, <span class="number">8</span>, <span class="keyword">struct</span> binder_ptr_cookie),</div><div class="line">BR_RELEASE = <span class="number">_</span>IOR_BAD(<span class="string">'r'</span>, <span class="number">9</span>, <span class="keyword">struct</span> binder_ptr_cookie),</div><div class="line">BR_DECREFS = <span class="number">_</span>IOR_BAD(<span class="string">'r'</span>, <span class="number">10</span>, <span class="keyword">struct</span> binder_ptr_cookie),</div><div class="line"></div><div class="line">BR_ATTEMPT_ACQUIRE = <span class="number">_</span>IOR_BAD(<span class="string">'r'</span>, <span class="number">11</span>, <span class="keyword">struct</span> binder_pri_ptr_cookie),</div><div class="line"></div><div class="line">BR_NOOP = <span class="number">_</span>IO(<span class="string">'r'</span>, <span class="number">12</span>),</div><div class="line"></div><div class="line">BR_SPAWN_LOOPER = <span class="number">_</span>IO(<span class="string">'r'</span>, <span class="number">13</span>),</div><div class="line"></div><div class="line">BR_FINISHED = <span class="number">_</span>IO(<span class="string">'r'</span>, <span class="number">14</span>),</div><div class="line"></div><div class="line">BR_DEAD_BINDER = <span class="number">_</span>IOR_BAD(<span class="string">'r'</span>, <span class="number">15</span>, <span class="keyword">void</span> *),</div><div class="line"></div><div class="line">BR_CLEAR_DEATH_NOTIFICATION_DONE = <span class="number">_</span>IOR_BAD(<span class="string">'r'</span>, <span class="number">16</span>, <span class="keyword">void</span> *),</div><div class="line"></div><div class="line">BR_FAILED_REPLY = <span class="number">_</span>IO(<span class="string">'r'</span>, <span class="number">17</span>),</div><div class="line"></div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-<p>其原因总结如下，首先Android系统对于Binder IPC每进程的事务buffer上限是1M（为所有Binder事务共享，且不区分目标系统的ram配置等因素），在通过PackageManager中获取系统内应用时，比如应用的Icon是个bitmap，且不同应用所制作Icon的品质（像素数）上差异很大。会占用大量内存导致Binder事务内存超过上限。</p>
-<p>Binder事务buffer的尺寸定义在ProcessState.cpp：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">define</span> BINDER_VM_SIZE((1 * 1024 * 1024) - (4096 * 2))</span></div><div class="line">......</div><div class="line">ProcessState::ProcessState(): mDriverFD(open_driver()), mVMStart(MAP_FAILED), mManagesContexts(<span class="literal">false</span>), mBinderContextCheckFunc(<span class="literal">NULL</span>), mBinderContextUserData(<span class="literal">NULL</span>), mThreadPoolStarted(<span class="literal">false</span>), mThreadPoolSeq(<span class="number">1</span>) &#123;</div><div class="line">    <span class="keyword">if</span> (mDriverFD &gt;= <span class="number">0</span>) &#123;</div><div class="line">        <span class="comment">// XXX Ideally, there should be a specific define for whether we</span></div><div class="line">        <span class="comment">// have mmap (or whether we could possibly have the kernel module</span></div><div class="line">        <span class="comment">// availabla).</span></div><div class="line">        <span class="meta">#</span></div><div class="line">        <span class="meta-keyword">if</span> !defined(HAVE_WIN32_IPC)</div><div class="line">            <span class="comment">// mmap the binder, providing a chunk of virtual address space to receive transactions.</span></div><div class="line">        mVMStart = mmap(<span class="number">0</span>, BINDER_VM_SIZE, PROT_READ, MAP_PRIVATE | MAP_NORESERVE, mDriverFD, <span class="number">0</span>);</div><div class="line">        <span class="keyword">if</span> (mVMStart == MAP_FAILED) &#123;</div><div class="line">            <span class="comment">// *sigh*</span></div><div class="line">            LOGE(<span class="string">"Using /dev/binder failed: unable to mmap transaction memory.\n"</span>);</div><div class="line">            close(mDriverFD);</div><div class="line">            mDriverFD = <span class="number">-1</span>;</div><div class="line">        &#125;<span class="meta">#</span></div><div class="line">        <span class="meta-keyword">else</span></div><div class="line">            mDriverFD = <span class="number">-1</span>;<span class="meta">#</span></div><div class="line">        <span class="meta-keyword">endif</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    LOG_ALWAYS_FATAL_IF(mDriverFD &lt; <span class="number">0</span>, <span class="string">"Binder driver could not be opened.  Terminating."</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>App icon对应的数据模型如下：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">AppInfo</span> </span>&#123;</div><div class="line"></div><div class="line">......</div><div class="line"></div><div class="line"><span class="keyword">private</span> BitmapDrawable icon</div><div class="line"></div><div class="line">......</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>该问题是android系统的限制，只能通过上层来捕获该异常来绕过。当然也不仅限于PackageManager，其他系统服务，应用间的Binder调用也可以带来这一问题。</p>
-<p>最后的最后，由于在c++向java层抛出这个异常的场景有多种（见上边c++代码中“FAILED_TRANSACTION”处的注释），所以当你收到了TransactionTooLargeException的时候，不意味着真正的Transaction is Too Large。</p>
+            <p>android 5.0上WebView开始默认阻止Mixed Content，且不再接受第三方的cookie。所以为了你以往的WebApp里边的内容可以正常访问，需要使用WebSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW) 和CookieManager.setAcceptThirdPartyCookies({your_webview}, true) 来放开这一限制。</p>
+<p>当然最好是让你的页面不再存在mixed content，不再依赖第三方cookie最为完美。</p>
 
           
         
@@ -633,6 +519,111 @@
 <p>今天网站中需要做一个小功能，通过restful api请求另外一个内部网站的数据，但是写这个网站的同学给出的数据是[[a b c] [d e f]…]另外还有一个用于代表每一项的链接的links: [link1 link2 link3…]</p>
 <p>需要将之每项对应合并起来，找了下发现map-indexed非常适合这个场景：</p>
 <figure class="highlight"><table><tr><td class="code"><pre><div class="line">(def test1 [['a ] ['b] ['c]])</div><div class="line">(def test2 ['c 'd 'e])</div><div class="line">(defn my-merge [vect1 vect2]</div><div class="line">(into [] (map-indexed</div><div class="line">(fn [idx item] (merge item (vect2 idx))) vect1)))</div><div class="line"></div><div class="line">(my-merge test1 test2)</div><div class="line"></div><div class="line">=&gt;[[a c] [b d] [c e]]</div></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/19/2015-06-18-first/" itemprop="url">
+                  黑暗WebView@HuaweiMediaPad X1 C208B011
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
+              2016-07-19
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/19/2015-06-18-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-06-18-first/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>最近遇到了一位很热心的用户，反映C208B011版本的Huawei X1（想想MediaPad系列本人几年前在华为也曾参与研发）上无法使用一个WebApp。debug后发现在该系统的WebView内的JS里无法使用console.log()导致严重的java-js之间的通信机制缺失。特意为其创建一个BridgePolicy类来维护之，若是该款机器，则切换至window.alert来实现java-js之间的通信，否则则使用console.log()。</p>
+<p>测试发现该机器的C208B009版本的WebView并无此问题（且与硬件，基带是3G或4G均无关）。</p>
+<p>第一次face to face面对我们的用户感触颇多，一个产品对于他们家里的人是如此重要，一个WebApp不能用又如此大程度的影响到他，因为存在这个问题甚至想换掉这部手机。</p>
+<p>用户对于解决问题的意愿极强。他（40岁左右的大叔）多次上Huawei X1论坛与其他用户交流看法和规律，寻求解决方案，为此去了解该机器的CPU，基带，ROM版本……。</p>
+<p>幸运的是，他们使用的是我们这个首屈一指的互联网公司的产品，遇到了我们这样的团队，得以面对面的反映他遇到的问题——没有抱怨，而是尽可能为我们提供他“调查”，“摸索”出来的规律。</p>
+
           
         
       
@@ -851,6 +842,111 @@
 <p>通过包含条件查询之：</p>
 <figure class="highlight sql"><table><tr><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> mobile_analysis <span class="keyword">WHERE</span> datadoc @&gt; <span class="string">'&#123;"a":1&#125;'</span></div></pre></td></tr></table></figure>
 <p>更多的关于json/jsonb类型的函数和操作符的资料请见这里。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/19/2015-07-09-second/" itemprop="url">
+                  以UTF-8编码建立postgresql数据库
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
+              2016-07-19
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/19/2015-07-09-second/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-07-09-second/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>因为要与java后端协作，数据库得建成UTF-8编码的。折腾了半天，实在是没有办法，改了locale，重新安装postgresql-server，最终通过命令行指定编码和模板（这点很重要）这样蒙混过关：</p>
+<p>命令行：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">createdb --locale=en_US.utf8 --encoding=UTF8 --template=template0 <span class="built_in">test</span>_db</div></pre></td></tr></table></figure>
+<p>然后确认下：</p>
+<p><img src="/uploads/2015_09_02_01.jpg" alt="psql_result"></p>
 
           
         
@@ -1206,111 +1302,6 @@
 <p>ERROR: Non-debuggable application installed on the target device.</p>
 <pre><code>Please re-install the debuggable version!
 </code></pre><h4 id="更新"><a href="#更新" class="headerlink" title="更新"></a>更新</h4><p>现在可以结合gradle-experimental插件和ndk中搭载的lldb + android studio 2.0断点native代码了，虽然还不那么完善，bug多多，但是相比过去的ndk-gdb时代还是进步一点了。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/19/2015-07-09-second/" itemprop="url">
-                  以UTF-8编码建立postgresql数据库
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
-              2016-07-19
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/19/2015-07-09-second/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-07-09-second/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>因为要与java后端协作，数据库得建成UTF-8编码的。折腾了半天，实在是没有办法，改了locale，重新安装postgresql-server，最终通过命令行指定编码和模板（这点很重要）这样蒙混过关：</p>
-<p>命令行：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">createdb --locale=en_US.utf8 --encoding=UTF8 --template=template0 <span class="built_in">test</span>_db</div></pre></td></tr></table></figure>
-<p>然后确认下：</p>
-<p><img src="/uploads/2015_09_02_01.jpg" alt="psql_result"></p>
 
           
         

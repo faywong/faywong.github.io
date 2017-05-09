@@ -250,8 +250,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/07/19/2015-09-22-second/" itemprop="url">
-                  fastjson for android名不副实
+                <a class="post-title-link" href="/2016/07/19/2015-09-22-first/" itemprop="url">
+                  Clojure 生产环境中怎么使用environ
                 </a>
               
             
@@ -275,8 +275,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/07/19/2015-09-22-second/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-09-22-second/" itemprop="commentsCount"></span>
+                <a href="/2016/07/19/2015-09-22-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-09-22-first/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -301,12 +301,11 @@
       
         
           
-            <p>今天在尝试优化json的序列化和反序列化。发现一个陷阱：<br>android自带的json比fastjson（fastjson-1.1.43）解析在9k（及以下）大小字符串输入下性能要高10倍，在解析19k大小字符串时性能高3倍。如下图所示：</p>
-<p>三星Note 3:<br><img src="/uploads/2015_09_22_01.png" alt="note 3"></p>
-<p>一加1代：<br><img src="/uploads/2015_09_22_02.png" alt="note 3"></p>
-<p>详细数据如下：<br>json字符串体积: 6k，android终端：三星note3<br><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">09-22 11:42:55.234: D/faywong(7810): org.json.JSONObject consumes: 1ms to parse json</div><div class="line">09-22 11:42:55.254: D/faywong(7810): com.alibaba.fastjson.JSONObject consumes: 15ms to parse json</div><div class="line"> </div><div class="line">json字符串体积: 9k，android终端：三星note3</div><div class="line">09-22 11:11:45.944: D/faywong(26631): org.json.JSONObject consumes: 1ms to parse json</div><div class="line">09-22 11:11:45.954: D/faywong(26631): com.alibaba.fastjson.JSONObject consumes: 15ms to parse json</div><div class="line"> </div><div class="line">json字符串体积: 19k，android终端：三星note3</div><div class="line">09-22 11:48:15.844: D/faywong(11569): org.json.JSONObject consumes: 6ms to parse json</div><div class="line">09-22 11:48:15.864: D/faywong(11569): com.alibaba.fastjson.JSONObject consumes: 19ms to parse json</div><div class="line"> </div><div class="line">json字符串体积: 6k，android终端：一加1代</div><div class="line">09-22 11:39:55.304: D/faywong(12964): org.json.JSONObject consumes: 1ms to parse json</div><div class="line">09-22 11:39:55.315: D/faywong(12964): com.alibaba.fastjson.JSONObject consumes: 11ms to parse json</div><div class="line">json字符串体积: 9k，android终端：一加1代</div><div class="line">09-22 11:30:06.378: D/faywong(11412): org.json.JSONObject consumes: 1ms to parse json</div><div class="line">09-22 11:30:06.395: D/faywong(11412): com.alibaba.fastjson.JSONObject consumes: 17ms to parse json</div><div class="line"> </div><div class="line">json字符串体积: 19k，android终端：一加1代</div><div class="line">09-22 11:53:30.551: D/faywong(14248): org.json.JSONObject consumes: 3ms to parse json</div><div class="line">09-22 11:53:30.564: D/faywong(14248): com.alibaba.fastjson.JSONObject consumes: 13ms to parse json</div></pre></td></tr></table></figure></p>
-<p>总结下json序列化和反序列化的使用经验：<br>在能控制json序列化和反序列化的整个闭环中（比如服务端+客户端）使用fastjson之类的方案是有优势的；如果你只是在其中的一环，并不知道前边的json是谁以怎样的方式序列化/反序列化得来，建议你使用org.json版本，这样性能不至于很差。</p>
-
+            <p><a href="https://github.com/weavejester/environ" target="_blank" rel="external">environ</a>可以很方便帮我们管理项目中的各种配置，但是最近在使用的时候遇到了一个问题，就是我在dev, test profile下配置的database-uri到打出uberjar之后就访问不到了。最后看了下源码，在生产环境下，需要通过进程环境变量或Java系统属性来完成这一目的：</p>
+<p>进程环境变量：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">DATABASE_URL=jdbc:postgres://localhost/prod java -jar standalone.jar</div></pre></td></tr></table></figure>
+<p>Java系统属性：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">java -Ddatabase.url=jdbc:postgres://localhost/prod -jar standalone.jar</div></pre></td></tr></table></figure>
           
         
       
@@ -410,224 +409,6 @@
 <p>debug了一天之后发现。在WebView的onPause方法调用后，其内部JS引擎执行JS代码会慢好几倍。所以是否需要跟随Activity的生命周期调用onPause方法需要根据应用场景来区分：</p>
 <p>若是应用中严格依赖JS做一些比较紧要的事情，则不应该onPause WebView。否则应该onPause WebView以释放一部分系统资源。</p>
 
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/19/2015-12-09-first/" itemprop="url">
-                  常见js引擎在Android上性能对比
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
-              2016-07-19
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/19/2015-12-09-first/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-12-09-first/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>以如下裴波那契数列为测试代码：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">fibonacci</span>(<span class="params">n</span>)</span></div><div class="line">&#123;</div><div class="line">       <span class="keyword">if</span> (n &lt; <span class="number">2</span>) <span class="keyword">return</span> n;</div><div class="line">       <span class="keyword">return</span> fibonacci(n - <span class="number">1</span>) + fibonacci(n - <span class="number">2</span>);</div><div class="line">&#125;</div><div class="line">print(<span class="string">'fibonacci(20):'</span> + fibonacci(<span class="number">20</span>));</div></pre></td></tr></table></figure>
-<p>当输入为10时的结果（单位：ms）：</p>
-<p>27 12-09 14:13:04.371  4816  4816 E BirdNest: fibonacci(10):55</p>
-<p>29 12-09 14:13:04.371  4816  4816 I faywong : benchmark(v8): 537</p>
-<p>31 12-09 14:13:04.391  4816  4816 I BirdNest: fibonacci(10):55</p>
-<p>32 12-09 14:13:04.391  4816  4816 I faywong : benchmark(duktape): 2336</p>
-<p>当输入为20时的结果：</p>
-<p>59 12-09 14:15:38.621  9196  9196 E BirdNest: fibonacci(20):6765</p>
-<p>61 12-09 14:15:38.621  9196  9196 I faywong : benchmark(v8): 1583</p>
-<p>63 12-09 14:15:38.841  9196  9196 I BirdNest: fibonacci(20):6765</p>
-<p>64 12-09 14:15:38.841  9196  9196 I faywong : benchmark(duktape): 189211</p>
-<p>大致汇总下：在输入为10时，v8性能是duktape的4倍；</p>
-<p>在输入为20时，v8性能是duktape的119倍，jsc是duktape的接近100倍</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/19/2015-09-22-first/" itemprop="url">
-                  Clojure 生产环境中怎么使用environ
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
-              2016-07-19
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/19/2015-09-22-first/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-09-22-first/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><a href="https://github.com/weavejester/environ" target="_blank" rel="external">environ</a>可以很方便帮我们管理项目中的各种配置，但是最近在使用的时候遇到了一个问题，就是我在dev, test profile下配置的database-uri到打出uberjar之后就访问不到了。最后看了下源码，在生产环境下，需要通过进程环境变量或Java系统属性来完成这一目的：</p>
-<p>进程环境变量：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">DATABASE_URL=jdbc:postgres://localhost/prod java -jar standalone.jar</div></pre></td></tr></table></figure>
-<p>Java系统属性：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">java -Ddatabase.url=jdbc:postgres://localhost/prod -jar standalone.jar</div></pre></td></tr></table></figure>
           
         
       
@@ -781,8 +562,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/07/19/2015-12-03-first/" itemprop="url">
-                  CheckBox on HM NOTE 1W,4.4.2,WIFI
+                <a class="post-title-link" href="/2016/07/19/2015-12-09-first/" itemprop="url">
+                  常见js引擎在Android上性能对比
                 </a>
               
             
@@ -806,8 +587,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/07/19/2015-12-03-first/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-12-03-first/" itemprop="commentsCount"></span>
+                <a href="/2016/07/19/2015-12-09-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-12-09-first/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -832,119 +613,20 @@
       
         
           
-            <p>这台红米Note1W上会有系统资源（res/drawable/btn_check_holo_light.xml）找不到的问题。备忘下。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">0x10800de</div><div class="line">java.lang.NullPointerException</div><div class="line">at android.graphics.drawable.DrawableContainer<span class="variable">$DrawableContainerState</span>.addChild(DrawableContainer.java:584)</div><div class="line">at android.graphics.drawable.StateListDrawable<span class="variable">$StateListState</span>.addStateSet(StateListDrawable.java:291)</div><div class="line">at android.graphics.drawable.StateListDrawable.inflate(StateListDrawable.java:189)</div><div class="line">at android.graphics.drawable.Drawable.createFromXmlInner(Drawable.java:937)</div><div class="line">at android.graphics.drawable.Drawable.createFromXml(Drawable.java:877)</div><div class="line">at android.content.res.Resources.createFromXml(Resources.java:2821)</div><div class="line">at android.content.res.Resources.loadDrawable(Resources.java:2191)</div><div class="line">at android.content.res.Resources.loadDrawable(Resources.java:2103)</div><div class="line">at android.content.res.TypedArray.getDrawable(TypedArray.java:602)</div><div class="line">at android.widget.CompoundButton.&lt;init&gt;(CompoundButton.java:74)</div><div class="line">at android.widget.CheckBox.&lt;init&gt;(CheckBox.java:68)</div><div class="line">at android.widget.CheckBox.&lt;init&gt;(CheckBox.java:64)</div><div class="line">at android.widget.CheckBox.&lt;init&gt;(CheckBox.java:60)</div></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/19/2016-01-19-first/" itemprop="url">
-                  那些年一起撸过的js引擎
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
-              2016-07-19
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/19/2016-01-19-first/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2016-01-19-first/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="v8"><a href="#v8" class="headerlink" title="v8"></a><a href="https://developers.google.com/v8/" target="_blank" rel="external">v8</a></h3><p>支持jit，性能好，生态大，sdk 支持面向对象编程，上手容易，代码能够保持优雅；调试协议能被 chrome 支持；同时由于 <a href="https://en.wikipedia.org/wiki/Just-in-time_compilation" target="_blank" rel="external">JIT</a> 会在运行时生成额外的代码段，在iOS平台上发布时容易受限</p>
-<h3 id="Duktape"><a href="#Duktape" class="headerlink" title="Duktape"></a><a href="http://duktape.org/" target="_blank" rel="external">Duktape</a></h3><p>性能一般，但代码体积小，使用标准c开发，方便集成和嵌入其他项目；支持ES5.1的标准，文档和社区不错，开发起来经常需要掰着手指在那里计算堆栈入了多少次，出了多少次，刚开始会有点折磨；其作者对于开发和维护非常积极，基本上要求的特性只要社区呼声较高，他都会考虑添加进去，个人开发能力极强</p>
-<p>Duktape 使用方面的其他文章请见标签 <a href="/tags/Duktape.html">Duktape</a></p>
-<h3 id="v7"><a href="#v7" class="headerlink" title="v7"></a><a href="https://github.com/cesanta/v7" target="_blank" rel="external">v7</a></h3><p>v7 性能是 non-JIT 引擎中较好的，但是对于ES规范的覆盖上不够，成熟度一般</p>
-<h3 id="Rhino"><a href="#Rhino" class="headerlink" title="Rhino"></a><a href="https://www.mozilla.org/rhino/" target="_blank" rel="external">Rhino</a></h3><p>rhino的爹是Mozilla，用java编写，可以在android上不用写JNI代码，容易集成，性能也不错，项目历史很悠久，成熟度很高（访问不了其官网的，请前往 <a href="https://github.com/mozilla/rhino" target="_blank" rel="external">Github</a>），但是存在很多不适合在线上环境中使用的特点：</p>
-<ul>
-<li><p>在实际开发中，只要在java层bridge实现掉document、window之类对象后，这种对象的属性读写和方法调用都全部落到了java层，就在js域连document.xxx = yyy;这样的写法都不支持了，查完它的官方maillist都没办法实现。</p>
-</li>
-<li><p>在js侧用toString, print, JSON.stringify之类的方法容易将java层所有的方法和字段给反射出来，会有安全隐患</p>
-</li>
-</ul>
-<h3 id="没事为什么要撸那么多js引擎"><a href="#没事为什么要撸那么多js引擎" class="headerlink" title="没事为什么要撸那么多js引擎"></a>没事为什么要撸那么多js引擎</h3><p>移动互联网年代客户端开发最痛苦的在于动态性，需求总有要变的时候，这时候一门灵活、能通过网络下载到客户端就地执行的语言就很重要了。而目前最合适的那门语言便是javascript。</p>
+            <p>以如下裴波那契数列为测试代码：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">fibonacci</span>(<span class="params">n</span>)</span></div><div class="line">&#123;</div><div class="line">       <span class="keyword">if</span> (n &lt; <span class="number">2</span>) <span class="keyword">return</span> n;</div><div class="line">       <span class="keyword">return</span> fibonacci(n - <span class="number">1</span>) + fibonacci(n - <span class="number">2</span>);</div><div class="line">&#125;</div><div class="line">print(<span class="string">'fibonacci(20):'</span> + fibonacci(<span class="number">20</span>));</div></pre></td></tr></table></figure>
+<p>当输入为10时的结果（单位：ms）：</p>
+<p>27 12-09 14:13:04.371  4816  4816 E BirdNest: fibonacci(10):55</p>
+<p>29 12-09 14:13:04.371  4816  4816 I faywong : benchmark(v8): 537</p>
+<p>31 12-09 14:13:04.391  4816  4816 I BirdNest: fibonacci(10):55</p>
+<p>32 12-09 14:13:04.391  4816  4816 I faywong : benchmark(duktape): 2336</p>
+<p>当输入为20时的结果：</p>
+<p>59 12-09 14:15:38.621  9196  9196 E BirdNest: fibonacci(20):6765</p>
+<p>61 12-09 14:15:38.621  9196  9196 I faywong : benchmark(v8): 1583</p>
+<p>63 12-09 14:15:38.841  9196  9196 I BirdNest: fibonacci(20):6765</p>
+<p>64 12-09 14:15:38.841  9196  9196 I faywong : benchmark(duktape): 189211</p>
+<p>大致汇总下：在输入为10时，v8性能是duktape的4倍；</p>
+<p>在输入为20时，v8性能是duktape的119倍，jsc是duktape的接近100倍</p>
 
           
         
@@ -1206,6 +888,219 @@
             
               
                 
+                <a class="post-title-link" href="/2016/07/19/2016-01-19-first/" itemprop="url">
+                  那些年一起撸过的js引擎
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
+              2016-07-19
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/19/2016-01-19-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2016-01-19-first/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="v8"><a href="#v8" class="headerlink" title="v8"></a><a href="https://developers.google.com/v8/" target="_blank" rel="external">v8</a></h3><p>支持jit，性能好，生态大，sdk 支持面向对象编程，上手容易，代码能够保持优雅；调试协议能被 chrome 支持；同时由于 <a href="https://en.wikipedia.org/wiki/Just-in-time_compilation" target="_blank" rel="external">JIT</a> 会在运行时生成额外的代码段，在iOS平台上发布时容易受限</p>
+<h3 id="Duktape"><a href="#Duktape" class="headerlink" title="Duktape"></a><a href="http://duktape.org/" target="_blank" rel="external">Duktape</a></h3><p>性能一般，但代码体积小，使用标准c开发，方便集成和嵌入其他项目；支持ES5.1的标准，文档和社区不错，开发起来经常需要掰着手指在那里计算堆栈入了多少次，出了多少次，刚开始会有点折磨；其作者对于开发和维护非常积极，基本上要求的特性只要社区呼声较高，他都会考虑添加进去，个人开发能力极强</p>
+<p>Duktape 使用方面的其他文章请见标签 <a href="/tags/Duktape.html">Duktape</a></p>
+<h3 id="v7"><a href="#v7" class="headerlink" title="v7"></a><a href="https://github.com/cesanta/v7" target="_blank" rel="external">v7</a></h3><p>v7 性能是 non-JIT 引擎中较好的，但是对于ES规范的覆盖上不够，成熟度一般</p>
+<h3 id="Rhino"><a href="#Rhino" class="headerlink" title="Rhino"></a><a href="https://www.mozilla.org/rhino/" target="_blank" rel="external">Rhino</a></h3><p>rhino的爹是Mozilla，用java编写，可以在android上不用写JNI代码，容易集成，性能也不错，项目历史很悠久，成熟度很高（访问不了其官网的，请前往 <a href="https://github.com/mozilla/rhino" target="_blank" rel="external">Github</a>），但是存在很多不适合在线上环境中使用的特点：</p>
+<ul>
+<li><p>在实际开发中，只要在java层bridge实现掉document、window之类对象后，这种对象的属性读写和方法调用都全部落到了java层，就在js域连document.xxx = yyy;这样的写法都不支持了，查完它的官方maillist都没办法实现。</p>
+</li>
+<li><p>在js侧用toString, print, JSON.stringify之类的方法容易将java层所有的方法和字段给反射出来，会有安全隐患</p>
+</li>
+</ul>
+<h3 id="没事为什么要撸那么多js引擎"><a href="#没事为什么要撸那么多js引擎" class="headerlink" title="没事为什么要撸那么多js引擎"></a>没事为什么要撸那么多js引擎</h3><p>移动互联网年代客户端开发最痛苦的在于动态性，需求总有要变的时候，这时候一门灵活、能通过网络下载到客户端就地执行的语言就很重要了。而目前最合适的那门语言便是javascript。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/19/2015-12-03-first/" itemprop="url">
+                  CheckBox on HM NOTE 1W,4.4.2,WIFI
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
+              2016-07-19
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/19/2015-12-03-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-12-03-first/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>这台红米Note1W上会有系统资源（res/drawable/btn_check_holo_light.xml）找不到的问题。备忘下。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">0x10800de</div><div class="line">java.lang.NullPointerException</div><div class="line">at android.graphics.drawable.DrawableContainer<span class="variable">$DrawableContainerState</span>.addChild(DrawableContainer.java:584)</div><div class="line">at android.graphics.drawable.StateListDrawable<span class="variable">$StateListState</span>.addStateSet(StateListDrawable.java:291)</div><div class="line">at android.graphics.drawable.StateListDrawable.inflate(StateListDrawable.java:189)</div><div class="line">at android.graphics.drawable.Drawable.createFromXmlInner(Drawable.java:937)</div><div class="line">at android.graphics.drawable.Drawable.createFromXml(Drawable.java:877)</div><div class="line">at android.content.res.Resources.createFromXml(Resources.java:2821)</div><div class="line">at android.content.res.Resources.loadDrawable(Resources.java:2191)</div><div class="line">at android.content.res.Resources.loadDrawable(Resources.java:2103)</div><div class="line">at android.content.res.TypedArray.getDrawable(TypedArray.java:602)</div><div class="line">at android.widget.CompoundButton.&lt;init&gt;(CompoundButton.java:74)</div><div class="line">at android.widget.CheckBox.&lt;init&gt;(CheckBox.java:68)</div><div class="line">at android.widget.CheckBox.&lt;init&gt;(CheckBox.java:64)</div><div class="line">at android.widget.CheckBox.&lt;init&gt;(CheckBox.java:60)</div></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/07/19/2016-01-21-first/" itemprop="url">
                   git pull --rebase
                 </a>
@@ -1266,6 +1161,118 @@
 <p>如果你的角色是scm，代码集成者，多个分支隔离开发很长时间之后的合并建议使用merge；每天持续开发中的数量不多的提交都最好使用rebase，这样可以让提交记录尽量保持线性和整洁，进而方便代码的集成和追踪。</p>
 </blockquote>
 <p><img src="/uploads/2016_01_21_01.png" alt=""></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/19/2016-03-13-first/" itemprop="url">
+                  当四字节UTF-8遇上JNI
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
+              2016-07-19
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/19/2016-03-13-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2016-03-13-first/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>android在Java层对 utf 编码是支持得很好了，非常全面；但当你从事一些c/c++工程的开发时可就没有这么幸运了。<br>笔者最近在使用v8 javascript 引擎时便碰到了一个问题：</p>
+<p>有些用户在昵称中使用了 emoji 表情，v8 引擎内部默认会使用utf-16编码，通过 v8 API 取到这个值之后转为utf-8的字符串，进而通过 JNI 的 API JNIEnv-&gt;NewStringUTF 往 Java 传递时会被系统的 checkJNI 给拦截住而<a href="https://code.google.com/p/android/issues/detail?id=81341" target="_blank" rel="external">报错</a>。原因在为了让字符串中不包含任何 null 字节，JNI 以及 Java VM 内部都是使用的<a href="http://docs.oracle.com/javase/7/docs/technotes/guides/jni/spec/types.html" target="_blank" rel="external">Modified UTF-8</a>格式来编码字符串。</p>
+<p>后来找到一个办法可以通过将字符串转为 utf-16 编码后传递给 JNI API JNIEnv-&gt;NewString 解决之：</p>
+<ol>
+<li><p>使用 v8 API 将 utf-8 的字符串转为 utf-16 编码</p>
+<figure class="highlight"><table><tr><td class="code"><pre><div class="line">size_t utf8_to_utf16(const char *src, const uint16_t **dest) &#123;</div><div class="line">    if (src == NULL || dest == NULL) &#123;</div><div class="line">        return 0;</div><div class="line">    &#125;</div><div class="line">    Isolate::Scope scope(Isolate::GetCurrent());</div><div class="line">    HandleScope handle_scope;</div><div class="line">    Local&lt;String&gt; str = String::New(src);</div><div class="line">    String::Value val(str); // String::Value的内部编码是 utf-16</div><div class="line">    const size_t len = (val.length()) * sizeof(uint16_t);</div><div class="line">    uint16_t* target = (uint16_t*)calloc(val.length() + 1, sizeof(uint16_t));</div><div class="line">    if (target == NULL) &#123;</div><div class="line">        return 0;</div><div class="line">    &#125;</div><div class="line">    memcpy(target, *val, len);</div><div class="line">    *dest = target;</div><div class="line">    return val.length();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>将生成的 utf-16 字符串通过 JNI 传递到 Java 层</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">uint16_t</span> *utf16_action = <span class="literal">NULL</span>;</div><div class="line"><span class="keyword">size_t</span> len = utf8_to_utf16(action, &amp;utf16_action);</div><div class="line">jstring jText = (*env)-&gt;NewString(env, utf16_action, len);</div><div class="line"><span class="keyword">if</span> (utf16_action != <span class="literal">NULL</span>) &#123;</div><div class="line">    <span class="built_in">free</span>(utf16_action);</div><div class="line">&#125;</div><div class="line"><span class="keyword">if</span> (len == <span class="number">0</span>) &#123;</div><div class="line">    jText = (*env)-&gt;NewStringUTF(env, <span class="string">""</span>); <span class="comment">// 降级到使用NewStringUTF来创建一个""字符串</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>另外一种解决方法是通过 byteArray 来将 utf-8 编码的字符串传送到java层，详情请参考这篇<a href="http://banachowski.com/deprogramming/2012/02/working-around-jni-utf-8-strings/" target="_blank" rel="external">文章</a></p>
 
           
         

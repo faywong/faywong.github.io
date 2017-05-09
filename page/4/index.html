@@ -250,8 +250,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/07/19/2016-03-13-first/" itemprop="url">
-                  当四字节UTF-8遇上JNI
+                <a class="post-title-link" href="/2016/07/19/2016-01-25-first/" itemprop="url">
+                  android开发中ConditionVariable的典型用法
                 </a>
               
             
@@ -275,8 +275,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/07/19/2016-03-13-first/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2016-03-13-first/" itemprop="commentsCount"></span>
+                <a href="/2016/07/19/2016-01-25-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2016-01-25-first/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -301,18 +301,435 @@
       
         
           
-            <p>android在Java层对 utf 编码是支持得很好了，非常全面；但当你从事一些c/c++工程的开发时可就没有这么幸运了。<br>笔者最近在使用v8 javascript 引擎时便碰到了一个问题：</p>
-<p>有些用户在昵称中使用了 emoji 表情，v8 引擎内部默认会使用utf-16编码，通过 v8 API 取到这个值之后转为utf-8的字符串，进而通过 JNI 的 API JNIEnv-&gt;NewStringUTF 往 Java 传递时会被系统的 checkJNI 给拦截住而<a href="https://code.google.com/p/android/issues/detail?id=81341" target="_blank" rel="external">报错</a>。原因在为了让字符串中不包含任何 null 字节，JNI 以及 Java VM 内部都是使用的<a href="http://docs.oracle.com/javase/7/docs/technotes/guides/jni/spec/types.html" target="_blank" rel="external">Modified UTF-8</a>格式来编码字符串。</p>
-<p>后来找到一个办法可以通过将字符串转为 utf-16 编码后传递给 JNI API JNIEnv-&gt;NewString 解决之：</p>
-<ol>
-<li><p>使用 v8 API 将 utf-8 的字符串转为 utf-16 编码</p>
-<figure class="highlight"><table><tr><td class="code"><pre><div class="line">size_t utf8_to_utf16(const char *src, const uint16_t **dest) &#123;</div><div class="line">    if (src == NULL || dest == NULL) &#123;</div><div class="line">        return 0;</div><div class="line">    &#125;</div><div class="line">    Isolate::Scope scope(Isolate::GetCurrent());</div><div class="line">    HandleScope handle_scope;</div><div class="line">    Local&lt;String&gt; str = String::New(src);</div><div class="line">    String::Value val(str); // String::Value的内部编码是 utf-16</div><div class="line">    const size_t len = (val.length()) * sizeof(uint16_t);</div><div class="line">    uint16_t* target = (uint16_t*)calloc(val.length() + 1, sizeof(uint16_t));</div><div class="line">    if (target == NULL) &#123;</div><div class="line">        return 0;</div><div class="line">    &#125;</div><div class="line">    memcpy(target, *val, len);</div><div class="line">    *dest = target;</div><div class="line">    return val.length();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-<li><p>将生成的 utf-16 字符串通过 JNI 传递到 Java 层</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">uint16_t</span> *utf16_action = <span class="literal">NULL</span>;</div><div class="line"><span class="keyword">size_t</span> len = utf8_to_utf16(action, &amp;utf16_action);</div><div class="line">jstring jText = (*env)-&gt;NewString(env, utf16_action, len);</div><div class="line"><span class="keyword">if</span> (utf16_action != <span class="literal">NULL</span>) &#123;</div><div class="line">    <span class="built_in">free</span>(utf16_action);</div><div class="line">&#125;</div><div class="line"><span class="keyword">if</span> (len == <span class="number">0</span>) &#123;</div><div class="line">    jText = (*env)-&gt;NewStringUTF(env, <span class="string">""</span>); <span class="comment">// 降级到使用NewStringUTF来创建一个""字符串</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>另外一种解决方法是通过 byteArray 来将 utf-8 编码的字符串传送到java层，详情请参考这篇<a href="http://banachowski.com/deprogramming/2012/02/working-around-jni-utf-8-strings/" target="_blank" rel="external">文章</a></p>
+            <p>尽管现在诞生的高级语言里边有了什么STM，协程，绿程的概念，但写代码总会遇到现实（商业级平台都不会用很新的东西）的多线程的问题。</p>
+<p>比如有时候你需要同步的获取在另一个线程执行的代码的结果，在android里这种场景下ConditionVariable就非常好用了。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">if</span> (Looper.myLooper() != Looper.getMainLooper()) &#123;</div><div class="line"></div><div class="line">    <span class="keyword">final</span> ConditionVariable completed = <span class="keyword">new</span> ConditionVariable(); <span class="comment">// 构造一个条件变量</span></div><div class="line"></div><div class="line">    view.runOnUiThread(<span class="keyword">new</span> Runnable() &#123;</div><div class="line"></div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                doSomeThingInUiThread(); <span class="comment">// 将期望在另外线程做的事post出去</span></div><div class="line">            &#125; <span class="keyword">finally</span> &#123; <span class="comment">// finally很重要，防止运行时异常远跳转将ConditionVariable忘了open</span></div><div class="line">                completed.open(); <span class="comment">// 事情办完了，notify到另外线程</span></div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line">    completed.block(TIMEOUT_WAIT_UI); <span class="comment">// 等着另外线程做的事完成，同时支持设置超时</span></div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">    doSomeThingInUiThread();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>当然了以上是很简单的一个场景，使用ConditionVariable非常方便且够用。对于复杂的多线程之间的协同还是使用标准的条件变量结合lock + while 循环检查。</p>
+<p>在一些新语言中有非常丰富的并发编程原语（future, delay, promise），特别是协程让我们用代码自主的确定代码流之间的协作关系而不是被动的作为OS调度器的奴隶，来支撑一些并行需求。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/19/2016-04-19-first/" itemprop="url">
+                  针对View LayoutParams做动画
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
+              2016-07-19
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/19/2016-04-19-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2016-04-19-first/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>mView是我们期望有动画效果的目标View</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line">FrameLayout.LayoutParams mParams = ... <span class="comment">// 我们的目标 layout params</span></div><div class="line"><span class="keyword">if</span> (mTransitionTime &gt; <span class="number">0</span>) &#123;</div><div class="line">    ValueAnimator widthAnim = ValueAnimator.ofInt(<span class="number">0</span>, mParams.width); <span class="comment">// 从0变化到期望的宽度</span></div><div class="line">    widthAnim.addUpdateListener(<span class="keyword">new</span> ValueAnimator.AnimatorUpdateListener() &#123;</div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAnimationUpdate</span><span class="params">(ValueAnimator valueAnimator)</span> </span>&#123;</div><div class="line">            <span class="comment">// 在回调里我们踩着节拍来修改 view 的 layout params</span></div><div class="line">            <span class="keyword">int</span> val = (Integer) valueAnimator.getAnimatedValue();</div><div class="line">            mParams.width = val;</div><div class="line">            <span class="keyword">if</span> (mView != <span class="keyword">null</span>) &#123;</div><div class="line">                mView.setLayoutParams(mParams);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line">    widthAnim.setDuration(mTransitionTime);</div><div class="line">    widthAnim.start();</div><div class="line"></div><div class="line">    ValueAnimator heightAnim = ValueAnimator.ofInt(<span class="number">0</span>, mParams.height); <span class="comment">// 从0变化到期望的高度</span></div><div class="line">    heightAnim.addUpdateListener(<span class="keyword">new</span> ValueAnimator.AnimatorUpdateListener() &#123;</div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAnimationUpdate</span><span class="params">(ValueAnimator valueAnimator)</span> </span>&#123;</div><div class="line">            <span class="comment">// 在回调里我们踩着节拍来修改 view 的 layout params</span></div><div class="line">            <span class="keyword">int</span> val = (Integer) valueAnimator.getAnimatedValue();</div><div class="line">            mParams.height = val;</div><div class="line">            <span class="keyword">if</span> (mView != <span class="keyword">null</span>) &#123;</div><div class="line">                mView.setLayoutParams(mParams);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line">    heightAnim.setDuration(mTransitionTime);</div><div class="line">    heightAnim.start();</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">if</span> (mTransformDegree &gt; <span class="number">0</span>) &#123; <span class="comment">// 如果需要，在由小变大的过程中添加旋转效果</span></div><div class="line">    ObjectAnimator.ofFloat(mView, <span class="string">"rotation"</span>, <span class="number">0f</span>, mTransformDegree * <span class="number">1.0f</span>)</div><div class="line">            .setDuration(mTransitionTime &gt; <span class="number">0</span> ? mTransitionTime : <span class="number">0</span>).start();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/19/2015-01-15-first/" itemprop="url">
+                  WebView中支持input type="file"元素
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
+              2016-07-19
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/19/2015-01-15-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-01-15-first/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>方法如下：</p>
+<p>在自定义的WebChromeClient中实现如下方法（主要是为了保证不同android版本上的兼容性）：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">openFileChooser</span><span class="params">(<span class="keyword">final</span> ValueCallback&lt;Uri&gt; uploadMsg)</span></span></div><div class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">openFileChooser</span><span class="params">(ValueCallback uploadMsg, String acceptType)</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">openFileChooser</span><span class="params">(ValueCallback&lt;Uri&gt; uploadMsg, String acceptType, String capture)</span></div></pre></td></tr></table></figure>
+<p>并配置proguard保证其不被混淆掉。</p>
+<p>在openFileChooser中使用如下Intent调用系统文件浏览器：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> Intent <span class="title">createDefaultOpenableIntent</span><span class="params">(<span class="keyword">final</span> Context ctx)</span> </span>&#123;</div><div class="line"><span class="comment">// Create and return a chooser with the default OPENABLE</span></div><div class="line"><span class="comment">// actions including the camera, camcorder and sound</span></div><div class="line"><span class="comment">// recorder where available.</span></div><div class="line">Intent i = <span class="keyword">new</span> Intent(Intent.ACTION_GET_CONTENT);</div><div class="line">i.addCategory(Intent.CATEGORY_OPENABLE);</div><div class="line">i.setType(<span class="string">"*/*"</span>);</div><div class="line"></div><div class="line">Intent chooser = createChooserIntent(ctx, createCameraIntent(), createCamcorderIntent(),</div><div class="line">createSoundRecorderIntent());</div><div class="line">chooser.putExtra(Intent.EXTRA_INTENT, i);</div><div class="line"><span class="keyword">return</span> chooser;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>然后：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"></div><div class="line">startActivityForResult()</div></pre></td></tr></table></figure>
+<p>在主Activity的onActivityResult()中</p>
+<p>调用ValueCallback<uri>对象的onReceiveValue()方法中将选择文件的Uri传回。</uri></p>
+<p>但是问题还是来了，这样做了之后在4.4系统上WebView不会回调openFileChooser方法导致没法显示出选择文件的Activity。</p>
+<p>另外对于选择文件的应用也不能假定所有的Android系统上都有。</p>
+<p>所以终极解决方案就是拥有自主可控的WebView。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/19/2015-11-26-first/" itemprop="url">
+                  浅谈NavigationBar高度的获取
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
+              2016-07-19
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/19/2015-11-26-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-11-26-first/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>由于MEIZU手机的特殊性，对于NavigationBar的获取有特殊的讲究，有三个方面的因素：</p>
+<p>1）MEIZU早期的系统（flyme os 5以下）存在smartbar，且可以设置智能隐藏；flyme os 5及以后smartbar被废弃，而使用android的NavigationBar</p>
+<p>2）flymeos 5以下的系统有些存在系统dimen资源用于获取smartbar高度，有些则不再存在</p>
+<p>3）是否智能隐藏SmartBar的开关并不与Android是否显示NavigationBar的开关为同一个</p>
+<p>所以我今天研究了下，封装了一个方法：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">getNavigationBarHeight</span><span class="params">(Context context)</span> </span>&#123;</div><div class="line">    <span class="keyword">final</span> <span class="keyword">boolean</span> isMeiZu = Build.MANUFACTURER.equals(<span class="string">"Meizu"</span>);</div><div class="line"></div><div class="line">    <span class="keyword">final</span> <span class="keyword">boolean</span> autoHideSmartBar = Settings.System.getInt(context.getContentResolver(),</div><div class="line">            <span class="string">"mz_smartbar_auto_hide"</span>, <span class="number">0</span>) == <span class="number">1</span>;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (isMeiZu) &#123;</div><div class="line">        <span class="keyword">if</span> (autoHideSmartBar) &#123;</div><div class="line">            <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                Class c = Class.forName(<span class="string">"com.android.internal.R$dimen"</span>);</div><div class="line">                Object obj = c.newInstance();</div><div class="line">                Field field = c.getField(<span class="string">"mz_action_button_min_height"</span>);</div><div class="line">                <span class="keyword">int</span> height = Integer.parseInt(field.get(obj).toString());</div><div class="line">                <span class="keyword">return</span> context.getResources().getDimensionPixelSize(height);</div><div class="line">            &#125; <span class="keyword">catch</span> (Throwable e) &#123; <span class="comment">// 不自动隐藏smartbar同时又没有smartbar高度字段供访问，取系统navigationbar的高度</span></div><div class="line">                <span class="keyword">return</span> getNormalNavigationBarHeight(context);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">return</span> getNormalNavigationBarHeight(context);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">getNormalNavigationBarHeight</span><span class="params">(<span class="keyword">final</span> Context ctx)</span> </span>&#123;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        <span class="keyword">final</span> Resources res = ctx.getResources();</div><div class="line">        <span class="keyword">int</span> rid = res.getIdentifier(<span class="string">"config_showNavigationBar"</span>, <span class="string">"bool"</span>, <span class="string">"android"</span>);</div><div class="line">        <span class="keyword">if</span> (rid &gt; <span class="number">0</span>) &#123;</div><div class="line">            <span class="keyword">boolean</span> flag = res.getBoolean(rid);</div><div class="line">            <span class="keyword">if</span> (flag) &#123;</div><div class="line">                <span class="keyword">int</span> resourceId = res.getIdentifier(<span class="string">"navigation_bar_height"</span>, <span class="string">"dimen"</span>, <span class="string">"android"</span>);</div><div class="line">                <span class="keyword">if</span> (resourceId &gt; <span class="number">0</span>) &#123;</div><div class="line">                    <span class="keyword">return</span> res.getDimensionPixelSize(resourceId);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125; <span class="keyword">catch</span> (Throwable e) &#123;</div><div class="line">        LogCatLog.d(<span class="string">"FBTools"</span>, <span class="string">"getNormalNavigationBarHeight() exception:"</span> + e.getMessage());</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/19/2015-01-16-first/" itemprop="url">
+                  WebView getUserAgentString的副作用分析
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
+              2016-07-19
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/19/2015-01-16-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-01-16-first/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>源代码如下(以android 4.0.4为例)：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> String <span class="title">getUserAgentString</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (DESKTOP_USERAGENT.equals(mUserAgent) ||</div><div class="line">        IPHONE_USERAGENT.equals(mUserAgent) ||</div><div class="line">        !mUseDefaultUserAgent) &#123;</div><div class="line">        <span class="keyword">return</span> mUserAgent;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">boolean</span> doPostSync = <span class="keyword">false</span>;</div><div class="line">    <span class="keyword">synchronized</span>(sLockForLocaleSettings) &#123;</div><div class="line">        Locale currentLocale = Locale.getDefault();</div><div class="line">        <span class="keyword">if</span> (!sLocale.equals(currentLocale)) &#123;</div><div class="line">            sLocale = currentLocale;</div><div class="line">            mUserAgent = getCurrentUserAgent();</div><div class="line">            mAcceptLanguage = getCurrentAcceptLanguage();</div><div class="line">            doPostSync = <span class="keyword">true</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (doPostSync) &#123;</div><div class="line">        postSync();</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> mUserAgent;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>其中后半段代码用于将当前locale设定同步到生成的UA中。所以该方法是有副作用的。</p>
+<p>在一个使用了WebView的Activity里实例化完成和系统Configuration改变后都需要调用一次getUserAgentString()来让WebView的UA（前提是不要设置自己的UA，即没有针对此WebView调用过setUserAgentString）中locale分量与系统的设定保持一致。以免在访问多语言网站时出现适配问题。</p>
 
           
         
@@ -476,8 +893,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/07/19/2016-01-25-first/" itemprop="url">
-                  android开发中ConditionVariable的典型用法
+                <a class="post-title-link" href="/2016/07/19/2015-01-15-fourth/" itemprop="url">
+                  Android L上webview crash的问题
                 </a>
               
             
@@ -501,8 +918,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/07/19/2016-01-25-first/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2016-01-25-first/" itemprop="commentsCount"></span>
+                <a href="/2016/07/19/2015-01-15-fourth/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-01-15-fourth/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -527,11 +944,116 @@
       
         
           
-            <p>尽管现在诞生的高级语言里边有了什么STM，协程，绿程的概念，但写代码总会遇到现实（商业级平台都不会用很新的东西）的多线程的问题。</p>
-<p>比如有时候你需要同步的获取在另一个线程执行的代码的结果，在android里这种场景下ConditionVariable就非常好用了。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">if</span> (Looper.myLooper() != Looper.getMainLooper()) &#123;</div><div class="line"></div><div class="line">    <span class="keyword">final</span> ConditionVariable completed = <span class="keyword">new</span> ConditionVariable(); <span class="comment">// 构造一个条件变量</span></div><div class="line"></div><div class="line">    view.runOnUiThread(<span class="keyword">new</span> Runnable() &#123;</div><div class="line"></div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                doSomeThingInUiThread(); <span class="comment">// 将期望在另外线程做的事post出去</span></div><div class="line">            &#125; <span class="keyword">finally</span> &#123; <span class="comment">// finally很重要，防止运行时异常远跳转将ConditionVariable忘了open</span></div><div class="line">                completed.open(); <span class="comment">// 事情办完了，notify到另外线程</span></div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line">    completed.block(TIMEOUT_WAIT_UI); <span class="comment">// 等着另外线程做的事完成，同时支持设置超时</span></div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">    doSomeThingInUiThread();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>当然了以上是很简单的一个场景，使用ConditionVariable非常方便且够用。对于复杂的多线程之间的协同还是使用标准的条件变量结合lock + while 循环检查。</p>
-<p>在一些新语言中有非常丰富的并发编程原语（future, delay, promise），特别是协程让我们用代码自主的确定代码流之间的协作关系而不是被动的作为OS调度器的奴隶，来支撑一些并行需求。</p>
+            <p>在android L上测试反馈使用WebApp时会出现如下crash：<br><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">F/libc    ( 7555): Fatal signal 6 (SIGABRT) <span class="keyword">in</span> tid 12577 (RenderThread)</div><div class="line"></div><div class="line">I/DEBUG   (  182): *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***</div><div class="line"></div><div class="line">I/DEBUG   (  182): Build fingerprint: <span class="string">'google/hammerhead/hammerhead:L/LPV79/1236599:user/release-keys'</span></div><div class="line"></div><div class="line">I/DEBUG   (  182): Revision: <span class="string">'11'</span></div><div class="line"></div><div class="line">I/DEBUG   (  182): pid: 7555, tid: 12577, name: RenderThread  &gt;&gt;&gt; com.eg.android.AlipayGphone &lt;&lt;&lt;</div><div class="line"></div><div class="line">I/DEBUG   (  182): signal 6 (SIGABRT), code 0 (SI_USER), fault addr --------</div></pre></td></tr></table></figure></p>
+<p>后来研究发现：</p>
+<p><a href="https://code.google.com/p/android-developer-preview/issues/detail?can=2&amp;start=0&amp;num=100&amp;q=&amp;colspec=ID%20Type%20Status%20Owner%20Summary&amp;groupby=&amp;sort=&amp;id=950" target="_blank" rel="external">https://code.google.com/p/android-developer-preview/issues/detail?can=2&amp;start=0&amp;num=100&amp;q=&amp;colspec=ID%20Type%20Status%20Owner%20Summary&amp;groupby=&amp;sort=&amp;id=950</a></p>
+<p>上有人报告同一问题。</p>
+<p>LPV79这个build为developer preview version.存在一些问题。</p>
+<p>后来在正式版本中验证同一问题，不可复现。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/19/2015-01-19-first/" itemprop="url">
+                  android4.1上WebView页面加载成功时出现IllegalArgumentException
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
+              2016-07-19
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/19/2015-01-19-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-01-19-first/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>异常的堆栈如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line">java.lang.IllegalArgumentException: bad parameter</div><div class="line">   at org.apache.http.client.utils.URLEncodedUtils.parse(URLEncodedUtils.java:<span class="number">139</span>)</div><div class="line">   at org.apache.http.client.utils.URLEncodedUtils.parse(URLEncodedUtils.java:<span class="number">76</span>)</div><div class="line">   at android.webkit.AccessibilityInjector.getAxsUrlParameterValue(AccessibilityInjector.java:<span class="number">412</span>)</div><div class="line">   at android.webkit.AccessibilityInjector.shouldInjectJavaScript(AccessibilityInjector.java:<span class="number">327</span>)</div><div class="line">   at android.webkit.AccessibilityInjector.onPageFinished(AccessibilityInjector.java:<span class="number">286</span>)</div><div class="line">   at android.webkit.WebViewClassic.onPageFinished(WebViewClassic.java:<span class="number">4088</span>)</div><div class="line">   at android.webkit.CallbackProxy.handleMessage(CallbackProxy.java:<span class="number">332</span>)</div><div class="line">   at android.os.Handler.dispatchMessage(Handler.java:<span class="number">99</span>)</div><div class="line">   at android.os.Looper.loop(Looper.java:<span class="number">137</span>)</div><div class="line">   at android.app.ActivityThread.main(ActivityThread.java:<span class="number">4829</span>)</div><div class="line">   at java.lang.reflect.Method.invokeNative(Native Method)</div><div class="line">   at java.lang.reflect.Method.invoke(Method.java:<span class="number">511</span>)</div><div class="line">   at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:<span class="number">841</span>)</div><div class="line">   at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:<span class="number">608</span>)</div><div class="line">   at dalvik.system.NativeStart.main(Native Method)</div></pre></td></tr></table></figure>
+<p>相关的google code android project里边的issue中论述如下：</p>
+<p>“<br>A customer of mine running 4.1.2 just informed me that the issue is still<br>present! After this issue crashes my app, I have to pop up a dialog<br>telling them to disable all accessibility services.<br>Worst user experience ever, but what else can I do.<br>……<br>Fixed in an internal build, to be released in the next major release.<br>……<br>The bug doesn’t occur here in 4.2.1 (Galaxy Nexus, JOP40D).<br>“</p>
 
           
         
@@ -689,536 +1211,7 @@
             
               
                 
-                <a class="post-title-link" href="/2016/07/19/2015-01-15-first/" itemprop="url">
-                  WebView中支持input type="file"元素
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
-              2016-07-19
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/19/2015-01-15-first/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-01-15-first/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>方法如下：</p>
-<p>在自定义的WebChromeClient中实现如下方法（主要是为了保证不同android版本上的兼容性）：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">openFileChooser</span><span class="params">(<span class="keyword">final</span> ValueCallback&lt;Uri&gt; uploadMsg)</span></span></div><div class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">openFileChooser</span><span class="params">(ValueCallback uploadMsg, String acceptType)</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">openFileChooser</span><span class="params">(ValueCallback&lt;Uri&gt; uploadMsg, String acceptType, String capture)</span></div></pre></td></tr></table></figure>
-<p>并配置proguard保证其不被混淆掉。</p>
-<p>在openFileChooser中使用如下Intent调用系统文件浏览器：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> Intent <span class="title">createDefaultOpenableIntent</span><span class="params">(<span class="keyword">final</span> Context ctx)</span> </span>&#123;</div><div class="line"><span class="comment">// Create and return a chooser with the default OPENABLE</span></div><div class="line"><span class="comment">// actions including the camera, camcorder and sound</span></div><div class="line"><span class="comment">// recorder where available.</span></div><div class="line">Intent i = <span class="keyword">new</span> Intent(Intent.ACTION_GET_CONTENT);</div><div class="line">i.addCategory(Intent.CATEGORY_OPENABLE);</div><div class="line">i.setType(<span class="string">"*/*"</span>);</div><div class="line"></div><div class="line">Intent chooser = createChooserIntent(ctx, createCameraIntent(), createCamcorderIntent(),</div><div class="line">createSoundRecorderIntent());</div><div class="line">chooser.putExtra(Intent.EXTRA_INTENT, i);</div><div class="line"><span class="keyword">return</span> chooser;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>然后：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"></div><div class="line">startActivityForResult()</div></pre></td></tr></table></figure>
-<p>在主Activity的onActivityResult()中</p>
-<p>调用ValueCallback<uri>对象的onReceiveValue()方法中将选择文件的Uri传回。</uri></p>
-<p>但是问题还是来了，这样做了之后在4.4系统上WebView不会回调openFileChooser方法导致没法显示出选择文件的Activity。</p>
-<p>另外对于选择文件的应用也不能假定所有的Android系统上都有。</p>
-<p>所以终极解决方案就是拥有自主可控的WebView。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/19/2015-01-15-fourth/" itemprop="url">
-                  Android L上webview crash的问题
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
-              2016-07-19
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/19/2015-01-15-fourth/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-01-15-fourth/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>在android L上测试反馈使用WebApp时会出现如下crash：<br><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">F/libc    ( 7555): Fatal signal 6 (SIGABRT) <span class="keyword">in</span> tid 12577 (RenderThread)</div><div class="line"></div><div class="line">I/DEBUG   (  182): *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***</div><div class="line"></div><div class="line">I/DEBUG   (  182): Build fingerprint: <span class="string">'google/hammerhead/hammerhead:L/LPV79/1236599:user/release-keys'</span></div><div class="line"></div><div class="line">I/DEBUG   (  182): Revision: <span class="string">'11'</span></div><div class="line"></div><div class="line">I/DEBUG   (  182): pid: 7555, tid: 12577, name: RenderThread  &gt;&gt;&gt; com.eg.android.AlipayGphone &lt;&lt;&lt;</div><div class="line"></div><div class="line">I/DEBUG   (  182): signal 6 (SIGABRT), code 0 (SI_USER), fault addr --------</div></pre></td></tr></table></figure></p>
-<p>后来研究发现：</p>
-<p><a href="https://code.google.com/p/android-developer-preview/issues/detail?can=2&amp;start=0&amp;num=100&amp;q=&amp;colspec=ID%20Type%20Status%20Owner%20Summary&amp;groupby=&amp;sort=&amp;id=950" target="_blank" rel="external">https://code.google.com/p/android-developer-preview/issues/detail?can=2&amp;start=0&amp;num=100&amp;q=&amp;colspec=ID%20Type%20Status%20Owner%20Summary&amp;groupby=&amp;sort=&amp;id=950</a></p>
-<p>上有人报告同一问题。</p>
-<p>LPV79这个build为developer preview version.存在一些问题。</p>
-<p>后来在正式版本中验证同一问题，不可复现。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/19/2015-01-16-first/" itemprop="url">
-                  WebView getUserAgentString的副作用分析
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
-              2016-07-19
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/19/2015-01-16-first/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-01-16-first/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>源代码如下(以android 4.0.4为例)：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> String <span class="title">getUserAgentString</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (DESKTOP_USERAGENT.equals(mUserAgent) ||</div><div class="line">        IPHONE_USERAGENT.equals(mUserAgent) ||</div><div class="line">        !mUseDefaultUserAgent) &#123;</div><div class="line">        <span class="keyword">return</span> mUserAgent;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">boolean</span> doPostSync = <span class="keyword">false</span>;</div><div class="line">    <span class="keyword">synchronized</span>(sLockForLocaleSettings) &#123;</div><div class="line">        Locale currentLocale = Locale.getDefault();</div><div class="line">        <span class="keyword">if</span> (!sLocale.equals(currentLocale)) &#123;</div><div class="line">            sLocale = currentLocale;</div><div class="line">            mUserAgent = getCurrentUserAgent();</div><div class="line">            mAcceptLanguage = getCurrentAcceptLanguage();</div><div class="line">            doPostSync = <span class="keyword">true</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (doPostSync) &#123;</div><div class="line">        postSync();</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> mUserAgent;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>其中后半段代码用于将当前locale设定同步到生成的UA中。所以该方法是有副作用的。</p>
-<p>在一个使用了WebView的Activity里实例化完成和系统Configuration改变后都需要调用一次getUserAgentString()来让WebView的UA（前提是不要设置自己的UA，即没有针对此WebView调用过setUserAgentString）中locale分量与系统的设定保持一致。以免在访问多语言网站时出现适配问题。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/19/2016-04-19-first/" itemprop="url">
-                  针对View LayoutParams做动画
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
-              2016-07-19
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/19/2016-04-19-first/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2016-04-19-first/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>mView是我们期望有动画效果的目标View</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><div class="line">FrameLayout.LayoutParams mParams = ... <span class="comment">// 我们的目标 layout params</span></div><div class="line"><span class="keyword">if</span> (mTransitionTime &gt; <span class="number">0</span>) &#123;</div><div class="line">    ValueAnimator widthAnim = ValueAnimator.ofInt(<span class="number">0</span>, mParams.width); <span class="comment">// 从0变化到期望的宽度</span></div><div class="line">    widthAnim.addUpdateListener(<span class="keyword">new</span> ValueAnimator.AnimatorUpdateListener() &#123;</div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAnimationUpdate</span><span class="params">(ValueAnimator valueAnimator)</span> </span>&#123;</div><div class="line">            <span class="comment">// 在回调里我们踩着节拍来修改 view 的 layout params</span></div><div class="line">            <span class="keyword">int</span> val = (Integer) valueAnimator.getAnimatedValue();</div><div class="line">            mParams.width = val;</div><div class="line">            <span class="keyword">if</span> (mView != <span class="keyword">null</span>) &#123;</div><div class="line">                mView.setLayoutParams(mParams);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line">    widthAnim.setDuration(mTransitionTime);</div><div class="line">    widthAnim.start();</div><div class="line"></div><div class="line">    ValueAnimator heightAnim = ValueAnimator.ofInt(<span class="number">0</span>, mParams.height); <span class="comment">// 从0变化到期望的高度</span></div><div class="line">    heightAnim.addUpdateListener(<span class="keyword">new</span> ValueAnimator.AnimatorUpdateListener() &#123;</div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAnimationUpdate</span><span class="params">(ValueAnimator valueAnimator)</span> </span>&#123;</div><div class="line">            <span class="comment">// 在回调里我们踩着节拍来修改 view 的 layout params</span></div><div class="line">            <span class="keyword">int</span> val = (Integer) valueAnimator.getAnimatedValue();</div><div class="line">            mParams.height = val;</div><div class="line">            <span class="keyword">if</span> (mView != <span class="keyword">null</span>) &#123;</div><div class="line">                mView.setLayoutParams(mParams);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line">    heightAnim.setDuration(mTransitionTime);</div><div class="line">    heightAnim.start();</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">if</span> (mTransformDegree &gt; <span class="number">0</span>) &#123; <span class="comment">// 如果需要，在由小变大的过程中添加旋转效果</span></div><div class="line">    ObjectAnimator.ofFloat(mView, <span class="string">"rotation"</span>, <span class="number">0f</span>, mTransformDegree * <span class="number">1.0f</span>)</div><div class="line">            .setDuration(mTransitionTime &gt; <span class="number">0</span> ? mTransitionTime : <span class="number">0</span>).start();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/19/2015-01-19-first/" itemprop="url">
-                  android4.1上WebView页面加载成功时出现IllegalArgumentException
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
-              2016-07-19
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/19/2015-01-19-first/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-01-19-first/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>异常的堆栈如下：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><div class="line">java.lang.IllegalArgumentException: bad parameter</div><div class="line">   at org.apache.http.client.utils.URLEncodedUtils.parse(URLEncodedUtils.java:<span class="number">139</span>)</div><div class="line">   at org.apache.http.client.utils.URLEncodedUtils.parse(URLEncodedUtils.java:<span class="number">76</span>)</div><div class="line">   at android.webkit.AccessibilityInjector.getAxsUrlParameterValue(AccessibilityInjector.java:<span class="number">412</span>)</div><div class="line">   at android.webkit.AccessibilityInjector.shouldInjectJavaScript(AccessibilityInjector.java:<span class="number">327</span>)</div><div class="line">   at android.webkit.AccessibilityInjector.onPageFinished(AccessibilityInjector.java:<span class="number">286</span>)</div><div class="line">   at android.webkit.WebViewClassic.onPageFinished(WebViewClassic.java:<span class="number">4088</span>)</div><div class="line">   at android.webkit.CallbackProxy.handleMessage(CallbackProxy.java:<span class="number">332</span>)</div><div class="line">   at android.os.Handler.dispatchMessage(Handler.java:<span class="number">99</span>)</div><div class="line">   at android.os.Looper.loop(Looper.java:<span class="number">137</span>)</div><div class="line">   at android.app.ActivityThread.main(ActivityThread.java:<span class="number">4829</span>)</div><div class="line">   at java.lang.reflect.Method.invokeNative(Native Method)</div><div class="line">   at java.lang.reflect.Method.invoke(Method.java:<span class="number">511</span>)</div><div class="line">   at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:<span class="number">841</span>)</div><div class="line">   at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:<span class="number">608</span>)</div><div class="line">   at dalvik.system.NativeStart.main(Native Method)</div></pre></td></tr></table></figure>
-<p>相关的google code android project里边的issue中论述如下：</p>
-<p>“<br>A customer of mine running 4.1.2 just informed me that the issue is still<br>present! After this issue crashes my app, I have to pop up a dialog<br>telling them to disable all accessibility services.<br>Worst user experience ever, but what else can I do.<br>……<br>Fixed in an internal build, to be released in the next major release.<br>……<br>The bug doesn’t occur here in 4.2.1 (Galaxy Nexus, JOP40D).<br>“</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/19/2016-05-9-first/" itemprop="url">
+                <a class="post-title-link" href="/2016/07/19/2017-05-9-first/" itemprop="url">
                   android 代码风格指南
                 </a>
               
@@ -1243,8 +1236,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/07/19/2016-05-9-first/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2016-05-9-first/" itemprop="commentsCount"></span>
+                <a href="/2016/07/19/2017-05-9-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2017-05-9-first/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
