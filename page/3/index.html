@@ -250,8 +250,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/07/19/2015-09-22-first/" itemprop="url">
-                  Clojure 生产环境中怎么使用environ
+                <a class="post-title-link" href="/2016/07/19/2015-09-22-second/" itemprop="url">
+                  fastjson for android名不副实
                 </a>
               
             
@@ -275,8 +275,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/07/19/2015-09-22-first/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-09-22-first/" itemprop="commentsCount"></span>
+                <a href="/2016/07/19/2015-09-22-second/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-09-22-second/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -301,11 +301,12 @@
       
         
           
-            <p><a href="https://github.com/weavejester/environ" target="_blank" rel="external">environ</a>可以很方便帮我们管理项目中的各种配置，但是最近在使用的时候遇到了一个问题，就是我在dev, test profile下配置的database-uri到打出uberjar之后就访问不到了。最后看了下源码，在生产环境下，需要通过进程环境变量或Java系统属性来完成这一目的：</p>
-<p>进程环境变量：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">DATABASE_URL=jdbc:postgres://localhost/prod java -jar standalone.jar</div></pre></td></tr></table></figure>
-<p>Java系统属性：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">java -Ddatabase.url=jdbc:postgres://localhost/prod -jar standalone.jar</div></pre></td></tr></table></figure>
+            <p>今天在尝试优化json的序列化和反序列化。发现一个陷阱：<br>android自带的json比fastjson（fastjson-1.1.43）解析在9k（及以下）大小字符串输入下性能要高10倍，在解析19k大小字符串时性能高3倍。如下图所示：</p>
+<p>三星Note 3:<br><img src="/uploads/2015_09_22_01.png" alt="note 3"></p>
+<p>一加1代：<br><img src="/uploads/2015_09_22_02.png" alt="note 3"></p>
+<p>详细数据如下：<br>json字符串体积: 6k，android终端：三星note3<br><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">09-22 11:42:55.234: D/faywong(7810): org.json.JSONObject consumes: 1ms to parse json</div><div class="line">09-22 11:42:55.254: D/faywong(7810): com.alibaba.fastjson.JSONObject consumes: 15ms to parse json</div><div class="line"> </div><div class="line">json字符串体积: 9k，android终端：三星note3</div><div class="line">09-22 11:11:45.944: D/faywong(26631): org.json.JSONObject consumes: 1ms to parse json</div><div class="line">09-22 11:11:45.954: D/faywong(26631): com.alibaba.fastjson.JSONObject consumes: 15ms to parse json</div><div class="line"> </div><div class="line">json字符串体积: 19k，android终端：三星note3</div><div class="line">09-22 11:48:15.844: D/faywong(11569): org.json.JSONObject consumes: 6ms to parse json</div><div class="line">09-22 11:48:15.864: D/faywong(11569): com.alibaba.fastjson.JSONObject consumes: 19ms to parse json</div><div class="line"> </div><div class="line">json字符串体积: 6k，android终端：一加1代</div><div class="line">09-22 11:39:55.304: D/faywong(12964): org.json.JSONObject consumes: 1ms to parse json</div><div class="line">09-22 11:39:55.315: D/faywong(12964): com.alibaba.fastjson.JSONObject consumes: 11ms to parse json</div><div class="line">json字符串体积: 9k，android终端：一加1代</div><div class="line">09-22 11:30:06.378: D/faywong(11412): org.json.JSONObject consumes: 1ms to parse json</div><div class="line">09-22 11:30:06.395: D/faywong(11412): com.alibaba.fastjson.JSONObject consumes: 17ms to parse json</div><div class="line"> </div><div class="line">json字符串体积: 19k，android终端：一加1代</div><div class="line">09-22 11:53:30.551: D/faywong(14248): org.json.JSONObject consumes: 3ms to parse json</div><div class="line">09-22 11:53:30.564: D/faywong(14248): com.alibaba.fastjson.JSONObject consumes: 13ms to parse json</div></pre></td></tr></table></figure></p>
+<p>总结下json序列化和反序列化的使用经验：<br>在能控制json序列化和反序列化的整个闭环中（比如服务端+客户端）使用fastjson之类的方案是有优势的；如果你只是在其中的一环，并不知道前边的json是谁以怎样的方式序列化/反序列化得来，建议你使用org.json版本，这样性能不至于很差。</p>
+
           
         
       
@@ -354,8 +355,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/07/19/2015-01-15-second/" itemprop="url">
-                  调用WebView中onPause方法需要好好权衡
+                <a class="post-title-link" href="/2016/07/19/2015-01-15-first/" itemprop="url">
+                  WebView中支持input type="file"元素
                 </a>
               
             
@@ -379,8 +380,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/07/19/2015-01-15-second/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-01-15-second/" itemprop="commentsCount"></span>
+                <a href="/2016/07/19/2015-01-15-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-01-15-first/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -405,9 +406,19 @@
       
         
           
-            <p>最近踩了一个坑，有个非全屏的dialog遮住我的WebApp容器时，WebApp容器中JS代码操纵dom对象显示文本（input框中）巨慢（俗话描述就是“软键盘中输入了字，但是上屏很慢”）。</p>
-<p>debug了一天之后发现。在WebView的onPause方法调用后，其内部JS引擎执行JS代码会慢好几倍。所以是否需要跟随Activity的生命周期调用onPause方法需要根据应用场景来区分：</p>
-<p>若是应用中严格依赖JS做一些比较紧要的事情，则不应该onPause WebView。否则应该onPause WebView以释放一部分系统资源。</p>
+            <p>方法如下：</p>
+<p>在自定义的WebChromeClient中实现如下方法（主要是为了保证不同android版本上的兼容性）：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">openFileChooser</span><span class="params">(<span class="keyword">final</span> ValueCallback&lt;Uri&gt; uploadMsg)</span></span></div><div class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">openFileChooser</span><span class="params">(ValueCallback uploadMsg, String acceptType)</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">openFileChooser</span><span class="params">(ValueCallback&lt;Uri&gt; uploadMsg, String acceptType, String capture)</span></div></pre></td></tr></table></figure>
+<p>并配置proguard保证其不被混淆掉。</p>
+<p>在openFileChooser中使用如下Intent调用系统文件浏览器：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> Intent <span class="title">createDefaultOpenableIntent</span><span class="params">(<span class="keyword">final</span> Context ctx)</span> </span>&#123;</div><div class="line"><span class="comment">// Create and return a chooser with the default OPENABLE</span></div><div class="line"><span class="comment">// actions including the camera, camcorder and sound</span></div><div class="line"><span class="comment">// recorder where available.</span></div><div class="line">Intent i = <span class="keyword">new</span> Intent(Intent.ACTION_GET_CONTENT);</div><div class="line">i.addCategory(Intent.CATEGORY_OPENABLE);</div><div class="line">i.setType(<span class="string">"*/*"</span>);</div><div class="line"></div><div class="line">Intent chooser = createChooserIntent(ctx, createCameraIntent(), createCamcorderIntent(),</div><div class="line">createSoundRecorderIntent());</div><div class="line">chooser.putExtra(Intent.EXTRA_INTENT, i);</div><div class="line"><span class="keyword">return</span> chooser;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>然后：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"></div><div class="line">startActivityForResult()</div></pre></td></tr></table></figure>
+<p>在主Activity的onActivityResult()中</p>
+<p>调用ValueCallback<uri>对象的onReceiveValue()方法中将选择文件的Uri传回。</uri></p>
+<p>但是问题还是来了，这样做了之后在4.4系统上WebView不会回调openFileChooser方法导致没法显示出选择文件的Activity。</p>
+<p>另外对于选择文件的应用也不能假定所有的Android系统上都有。</p>
+<p>所以终极解决方案就是拥有自主可控的WebView。</p>
 
           
         
@@ -513,6 +524,424 @@
 <p>所以只能自己编译最新的master分支代码并deploy。注意一点编译时需要1.8的jdk，tomcat server也需要1.8jdk来运行方能不出错。</p>
 <p>在服务的url后边加上json?freetext=ThreadPoolExecutor之类的参数（其他参数请见我在Opengrok项目上的回复）便可查询到结果了。</p>
 <p>针对这个问题本人贡献了一遍详细点的<a href="https://github.com/OpenGrok/OpenGrok/wiki/OpenGrok-web-services" target="_blank" rel="external">文档</a>，请参阅。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/19/2015-11-26-first/" itemprop="url">
+                  浅谈NavigationBar高度的获取
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
+              2016-07-19
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/19/2015-11-26-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-11-26-first/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>由于MEIZU手机的特殊性，对于NavigationBar的获取有特殊的讲究，有三个方面的因素：</p>
+<p>1）MEIZU早期的系统（flyme os 5以下）存在smartbar，且可以设置智能隐藏；flyme os 5及以后smartbar被废弃，而使用android的NavigationBar</p>
+<p>2）flymeos 5以下的系统有些存在系统dimen资源用于获取smartbar高度，有些则不再存在</p>
+<p>3）是否智能隐藏SmartBar的开关并不与Android是否显示NavigationBar的开关为同一个</p>
+<p>所以我今天研究了下，封装了一个方法：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">getNavigationBarHeight</span><span class="params">(Context context)</span> </span>&#123;</div><div class="line">    <span class="keyword">final</span> <span class="keyword">boolean</span> isMeiZu = Build.MANUFACTURER.equals(<span class="string">"Meizu"</span>);</div><div class="line"></div><div class="line">    <span class="keyword">final</span> <span class="keyword">boolean</span> autoHideSmartBar = Settings.System.getInt(context.getContentResolver(),</div><div class="line">            <span class="string">"mz_smartbar_auto_hide"</span>, <span class="number">0</span>) == <span class="number">1</span>;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (isMeiZu) &#123;</div><div class="line">        <span class="keyword">if</span> (autoHideSmartBar) &#123;</div><div class="line">            <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                Class c = Class.forName(<span class="string">"com.android.internal.R$dimen"</span>);</div><div class="line">                Object obj = c.newInstance();</div><div class="line">                Field field = c.getField(<span class="string">"mz_action_button_min_height"</span>);</div><div class="line">                <span class="keyword">int</span> height = Integer.parseInt(field.get(obj).toString());</div><div class="line">                <span class="keyword">return</span> context.getResources().getDimensionPixelSize(height);</div><div class="line">            &#125; <span class="keyword">catch</span> (Throwable e) &#123; <span class="comment">// 不自动隐藏smartbar同时又没有smartbar高度字段供访问，取系统navigationbar的高度</span></div><div class="line">                <span class="keyword">return</span> getNormalNavigationBarHeight(context);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">return</span> getNormalNavigationBarHeight(context);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">getNormalNavigationBarHeight</span><span class="params">(<span class="keyword">final</span> Context ctx)</span> </span>&#123;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        <span class="keyword">final</span> Resources res = ctx.getResources();</div><div class="line">        <span class="keyword">int</span> rid = res.getIdentifier(<span class="string">"config_showNavigationBar"</span>, <span class="string">"bool"</span>, <span class="string">"android"</span>);</div><div class="line">        <span class="keyword">if</span> (rid &gt; <span class="number">0</span>) &#123;</div><div class="line">            <span class="keyword">boolean</span> flag = res.getBoolean(rid);</div><div class="line">            <span class="keyword">if</span> (flag) &#123;</div><div class="line">                <span class="keyword">int</span> resourceId = res.getIdentifier(<span class="string">"navigation_bar_height"</span>, <span class="string">"dimen"</span>, <span class="string">"android"</span>);</div><div class="line">                <span class="keyword">if</span> (resourceId &gt; <span class="number">0</span>) &#123;</div><div class="line">                    <span class="keyword">return</span> res.getDimensionPixelSize(resourceId);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125; <span class="keyword">catch</span> (Throwable e) &#123;</div><div class="line">        LogCatLog.d(<span class="string">"FBTools"</span>, <span class="string">"getNormalNavigationBarHeight() exception:"</span> + e.getMessage());</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/19/2015-12-03-first/" itemprop="url">
+                  CheckBox on HM NOTE 1W,4.4.2,WIFI
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
+              2016-07-19
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/19/2015-12-03-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-12-03-first/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>这台红米Note1W上会有系统资源（res/drawable/btn_check_holo_light.xml）找不到的问题。备忘下。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">0x10800de</div><div class="line">java.lang.NullPointerException</div><div class="line">at android.graphics.drawable.DrawableContainer<span class="variable">$DrawableContainerState</span>.addChild(DrawableContainer.java:584)</div><div class="line">at android.graphics.drawable.StateListDrawable<span class="variable">$StateListState</span>.addStateSet(StateListDrawable.java:291)</div><div class="line">at android.graphics.drawable.StateListDrawable.inflate(StateListDrawable.java:189)</div><div class="line">at android.graphics.drawable.Drawable.createFromXmlInner(Drawable.java:937)</div><div class="line">at android.graphics.drawable.Drawable.createFromXml(Drawable.java:877)</div><div class="line">at android.content.res.Resources.createFromXml(Resources.java:2821)</div><div class="line">at android.content.res.Resources.loadDrawable(Resources.java:2191)</div><div class="line">at android.content.res.Resources.loadDrawable(Resources.java:2103)</div><div class="line">at android.content.res.TypedArray.getDrawable(TypedArray.java:602)</div><div class="line">at android.widget.CompoundButton.&lt;init&gt;(CompoundButton.java:74)</div><div class="line">at android.widget.CheckBox.&lt;init&gt;(CheckBox.java:68)</div><div class="line">at android.widget.CheckBox.&lt;init&gt;(CheckBox.java:64)</div><div class="line">at android.widget.CheckBox.&lt;init&gt;(CheckBox.java:60)</div></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/19/2016-01-14-first/" itemprop="url">
+                  Java JNI打印Java层异常
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
+              2016-07-19
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/19/2016-01-14-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2016-01-14-first/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>在一些复杂的JNI调用中，比如JNI调用Java层的对象、Java层又调native方法，嵌套过多了，某一次调用产生的异常会在下一次调用JNI时被check出来，<br>这时候会产生如下日志：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">01-13 21:22:43.247 24613-24613/com.somepkg A/art: art/runtime/check_jni.cc:65] JNI DETECTED ERROR IN APPLICATION: JNI NewByteArray called with pending exception <span class="string">'java.lang.NullPointerException'</span> thrown <span class="keyword">in</span> unknown throw location</div><div class="line">01-13 21:22:43.247 24613-24613/com.somepkg A/art: art/runtime/check_jni.cc:65]     <span class="keyword">in</span> call to NewByteArray</div></pre></td></tr></table></figure>
+<p>这种问题都是在Java代码中产生了异常，但是并不是所有case下都能一眼通过逻辑判断是哪行，这时候有个JNIEnv的方法能帮上我们大忙：<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line">jthrowable thr = (*env)-&gt;ExceptionOccurred(env);</div><div class="line"></div><div class="line"><span class="keyword">if</span> (thr) &#123;</div><div class="line">    (*env)-&gt;ExceptionDescribe(env);</div><div class="line">    (*env)-&gt;ExceptionClear(env);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>c++版本：<br><figure class="highlight c++"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">CheckException</span><span class="params">(JNIEnv* env)</span> </span>&#123;</div><div class="line">  <span class="keyword">if</span> (!HasException(env)) <span class="keyword">return</span>;</div><div class="line"></div><div class="line">  <span class="comment">// Exception has been found, might as well tell breakpad about it.</span></div><div class="line">  jthrowable java_throwable = env-&gt;ExceptionOccurred();</div><div class="line">  <span class="keyword">if</span> (!java_throwable) &#123;</div><div class="line">    <span class="comment">// Do nothing but return false.</span></div><div class="line">    CHECK(<span class="literal">false</span>);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="comment">// Clear the pending exception, since a local reference is now held.</span></div><div class="line">  env-&gt;ExceptionDescribe();</div><div class="line">  env-&gt;ExceptionClear();</div><div class="line"></div><div class="line">  <span class="comment">// Set the exception_string in BuildInfo so that breakpad can read it.</span></div><div class="line">  <span class="comment">// RVO should avoid any extra copies of the exception string.</span></div><div class="line">  base::android::BuildInfo::GetInstance()-&gt;set_java_exception_info(</div><div class="line">      GetJavaExceptionInfo(env, java_throwable));</div><div class="line"></div><div class="line">  <span class="comment">// Now, feel good about it and die.</span></div><div class="line">  CHECK(<span class="literal">false</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>在被checkjni侦测到异常的代码（比如上例中是NewByteArray）之前加上如上代码就可以将Java层的异常信息给优雅地打印出来，从而精准定位问题。</p>
+<p>另一种定位此类问题的方式是打开Android设备的CheckJni功能。但是一般production设备上都不太容易实现。所以强力推荐以上方法。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/19/2016-01-13-first/" itemprop="url">
+                  Java JNI方法签名void类型
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
+              2016-07-19
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/19/2016-01-13-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2016-01-13-first/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>在Java中经常会遇到通过外部语言扩展Java本身的需要，此时就需要使用到JNI这门技术（规范）。<br>在c/c++中，java层的数据类型需要转化成类型签名，如在google中被收录在最前边的<a href="https://docs.oracle.com/javase/1.5.0/docs/guide/jni/spec/types.html" target="_blank" rel="external">官方文档</a>中<a href="https://docs.oracle.com/javase/1.5.0/docs/guide/jni/spec/types.html#wp276" target="_blank" rel="external">Table 3-2</a>所示。</p>
+<p>问题来了，那么void类型在c/c++用什么来映射呢。这份表格里边是没有的(对应java 7的<a href="http://docs.oracle.com/javase/7/docs/technotes/guides/jni/spec/types.html#wp16432" target="_blank" rel="external">JNI规范里</a>边也没有)。今天在<a href="http://www.rgagnon.com/javadetails/java-0286.html" target="_blank" rel="external">其他文档</a>里边间接查到void类型的类型签名是V：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">Type     Chararacter</div><div class="line">boolean      Z </div><div class="line">byte         B </div><div class="line">char         C </div><div class="line">double       D </div><div class="line"><span class="built_in">float</span>        F </div><div class="line">int          I </div><div class="line">long         J </div><div class="line">object       L </div><div class="line">short        S </div><div class="line">void         V</div><div class="line">array        [</div></pre></td></tr></table></figure>
+<p>比如Java方法：<br><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">jsDebugDetachCallback</span><span class="params">(<span class="keyword">long</span> udata)</span></span></div></pre></td></tr></table></figure></p>
+<p>的类型签名为(其中返回值类型V不可省略)：<br><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="string">"(J)V"</span></div></pre></td></tr></table></figure></p>
+<p>在c中获取该方法id的方式为：<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line">jsDebugDetachCallbackMethod = (*env)-&gt;GetStaticMethodID(env, someClz, <span class="string">"jsDebugDetachCallback"</span>, <span class="string">"(J)V"</span>);</div></pre></td></tr></table></figure></p>
 
           
         
@@ -676,218 +1105,6 @@
             
               
                 
-                <a class="post-title-link" href="/2016/07/19/2016-01-13-first/" itemprop="url">
-                  Java JNI方法签名void类型
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
-              2016-07-19
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/19/2016-01-13-first/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2016-01-13-first/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>在Java中经常会遇到通过外部语言扩展Java本身的需要，此时就需要使用到JNI这门技术（规范）。<br>在c/c++中，java层的数据类型需要转化成类型签名，如在google中被收录在最前边的<a href="https://docs.oracle.com/javase/1.5.0/docs/guide/jni/spec/types.html" target="_blank" rel="external">官方文档</a>中<a href="https://docs.oracle.com/javase/1.5.0/docs/guide/jni/spec/types.html#wp276" target="_blank" rel="external">Table 3-2</a>所示。</p>
-<p>问题来了，那么void类型在c/c++用什么来映射呢。这份表格里边是没有的(对应java 7的<a href="http://docs.oracle.com/javase/7/docs/technotes/guides/jni/spec/types.html#wp16432" target="_blank" rel="external">JNI规范里</a>边也没有)。今天在<a href="http://www.rgagnon.com/javadetails/java-0286.html" target="_blank" rel="external">其他文档</a>里边间接查到void类型的类型签名是V：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">Type     Chararacter</div><div class="line">boolean      Z </div><div class="line">byte         B </div><div class="line">char         C </div><div class="line">double       D </div><div class="line"><span class="built_in">float</span>        F </div><div class="line">int          I </div><div class="line">long         J </div><div class="line">object       L </div><div class="line">short        S </div><div class="line">void         V</div><div class="line">array        [</div></pre></td></tr></table></figure>
-<p>比如Java方法：<br><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">jsDebugDetachCallback</span><span class="params">(<span class="keyword">long</span> udata)</span></span></div></pre></td></tr></table></figure></p>
-<p>的类型签名为(其中返回值类型V不可省略)：<br><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="string">"(J)V"</span></div></pre></td></tr></table></figure></p>
-<p>在c中获取该方法id的方式为：<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line">jsDebugDetachCallbackMethod = (*env)-&gt;GetStaticMethodID(env, someClz, <span class="string">"jsDebugDetachCallback"</span>, <span class="string">"(J)V"</span>);</div></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/19/2016-01-14-first/" itemprop="url">
-                  Java JNI打印Java层异常
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
-              2016-07-19
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/19/2016-01-14-first/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2016-01-14-first/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>在一些复杂的JNI调用中，比如JNI调用Java层的对象、Java层又调native方法，嵌套过多了，某一次调用产生的异常会在下一次调用JNI时被check出来，<br>这时候会产生如下日志：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">01-13 21:22:43.247 24613-24613/com.somepkg A/art: art/runtime/check_jni.cc:65] JNI DETECTED ERROR IN APPLICATION: JNI NewByteArray called with pending exception <span class="string">'java.lang.NullPointerException'</span> thrown <span class="keyword">in</span> unknown throw location</div><div class="line">01-13 21:22:43.247 24613-24613/com.somepkg A/art: art/runtime/check_jni.cc:65]     <span class="keyword">in</span> call to NewByteArray</div></pre></td></tr></table></figure>
-<p>这种问题都是在Java代码中产生了异常，但是并不是所有case下都能一眼通过逻辑判断是哪行，这时候有个JNIEnv的方法能帮上我们大忙：<br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line">jthrowable thr = (*env)-&gt;ExceptionOccurred(env);</div><div class="line"></div><div class="line"><span class="keyword">if</span> (thr) &#123;</div><div class="line">    (*env)-&gt;ExceptionDescribe(env);</div><div class="line">    (*env)-&gt;ExceptionClear(env);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>c++版本：<br><figure class="highlight c++"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">CheckException</span><span class="params">(JNIEnv* env)</span> </span>&#123;</div><div class="line">  <span class="keyword">if</span> (!HasException(env)) <span class="keyword">return</span>;</div><div class="line"></div><div class="line">  <span class="comment">// Exception has been found, might as well tell breakpad about it.</span></div><div class="line">  jthrowable java_throwable = env-&gt;ExceptionOccurred();</div><div class="line">  <span class="keyword">if</span> (!java_throwable) &#123;</div><div class="line">    <span class="comment">// Do nothing but return false.</span></div><div class="line">    CHECK(<span class="literal">false</span>);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="comment">// Clear the pending exception, since a local reference is now held.</span></div><div class="line">  env-&gt;ExceptionDescribe();</div><div class="line">  env-&gt;ExceptionClear();</div><div class="line"></div><div class="line">  <span class="comment">// Set the exception_string in BuildInfo so that breakpad can read it.</span></div><div class="line">  <span class="comment">// RVO should avoid any extra copies of the exception string.</span></div><div class="line">  base::android::BuildInfo::GetInstance()-&gt;set_java_exception_info(</div><div class="line">      GetJavaExceptionInfo(env, java_throwable));</div><div class="line"></div><div class="line">  <span class="comment">// Now, feel good about it and die.</span></div><div class="line">  CHECK(<span class="literal">false</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>在被checkjni侦测到异常的代码（比如上例中是NewByteArray）之前加上如上代码就可以将Java层的异常信息给优雅地打印出来，从而精准定位问题。</p>
-<p>另一种定位此类问题的方式是打开Android设备的CheckJni功能。但是一般production设备上都不太容易实现。所以强力推荐以上方法。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
                 <a class="post-title-link" href="/2016/07/19/2016-01-19-first/" itemprop="url">
                   那些年一起撸过的js引擎
                 </a>
@@ -1000,107 +1217,6 @@
             
               
                 
-                <a class="post-title-link" href="/2016/07/19/2015-12-03-first/" itemprop="url">
-                  CheckBox on HM NOTE 1W,4.4.2,WIFI
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
-              2016-07-19
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/19/2015-12-03-first/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-12-03-first/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>这台红米Note1W上会有系统资源（res/drawable/btn_check_holo_light.xml）找不到的问题。备忘下。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">0x10800de</div><div class="line">java.lang.NullPointerException</div><div class="line">at android.graphics.drawable.DrawableContainer<span class="variable">$DrawableContainerState</span>.addChild(DrawableContainer.java:584)</div><div class="line">at android.graphics.drawable.StateListDrawable<span class="variable">$StateListState</span>.addStateSet(StateListDrawable.java:291)</div><div class="line">at android.graphics.drawable.StateListDrawable.inflate(StateListDrawable.java:189)</div><div class="line">at android.graphics.drawable.Drawable.createFromXmlInner(Drawable.java:937)</div><div class="line">at android.graphics.drawable.Drawable.createFromXml(Drawable.java:877)</div><div class="line">at android.content.res.Resources.createFromXml(Resources.java:2821)</div><div class="line">at android.content.res.Resources.loadDrawable(Resources.java:2191)</div><div class="line">at android.content.res.Resources.loadDrawable(Resources.java:2103)</div><div class="line">at android.content.res.TypedArray.getDrawable(TypedArray.java:602)</div><div class="line">at android.widget.CompoundButton.&lt;init&gt;(CompoundButton.java:74)</div><div class="line">at android.widget.CheckBox.&lt;init&gt;(CheckBox.java:68)</div><div class="line">at android.widget.CheckBox.&lt;init&gt;(CheckBox.java:64)</div><div class="line">at android.widget.CheckBox.&lt;init&gt;(CheckBox.java:60)</div></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
                 <a class="post-title-link" href="/2016/07/19/2016-01-21-first/" itemprop="url">
                   git pull --rebase
                 </a>
@@ -1161,118 +1277,6 @@
 <p>如果你的角色是scm，代码集成者，多个分支隔离开发很长时间之后的合并建议使用merge；每天持续开发中的数量不多的提交都最好使用rebase，这样可以让提交记录尽量保持线性和整洁，进而方便代码的集成和追踪。</p>
 </blockquote>
 <p><img src="/uploads/2016_01_21_01.png" alt=""></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/19/2016-03-13-first/" itemprop="url">
-                  当四字节UTF-8遇上JNI
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
-              2016-07-19
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/19/2016-03-13-first/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2016-03-13-first/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>android在Java层对 utf 编码是支持得很好了，非常全面；但当你从事一些c/c++工程的开发时可就没有这么幸运了。<br>笔者最近在使用v8 javascript 引擎时便碰到了一个问题：</p>
-<p>有些用户在昵称中使用了 emoji 表情，v8 引擎内部默认会使用utf-16编码，通过 v8 API 取到这个值之后转为utf-8的字符串，进而通过 JNI 的 API JNIEnv-&gt;NewStringUTF 往 Java 传递时会被系统的 checkJNI 给拦截住而<a href="https://code.google.com/p/android/issues/detail?id=81341" target="_blank" rel="external">报错</a>。原因在为了让字符串中不包含任何 null 字节，JNI 以及 Java VM 内部都是使用的<a href="http://docs.oracle.com/javase/7/docs/technotes/guides/jni/spec/types.html" target="_blank" rel="external">Modified UTF-8</a>格式来编码字符串。</p>
-<p>后来找到一个办法可以通过将字符串转为 utf-16 编码后传递给 JNI API JNIEnv-&gt;NewString 解决之：</p>
-<ol>
-<li><p>使用 v8 API 将 utf-8 的字符串转为 utf-16 编码</p>
-<figure class="highlight"><table><tr><td class="code"><pre><div class="line">size_t utf8_to_utf16(const char *src, const uint16_t **dest) &#123;</div><div class="line">    if (src == NULL || dest == NULL) &#123;</div><div class="line">        return 0;</div><div class="line">    &#125;</div><div class="line">    Isolate::Scope scope(Isolate::GetCurrent());</div><div class="line">    HandleScope handle_scope;</div><div class="line">    Local&lt;String&gt; str = String::New(src);</div><div class="line">    String::Value val(str); // String::Value的内部编码是 utf-16</div><div class="line">    const size_t len = (val.length()) * sizeof(uint16_t);</div><div class="line">    uint16_t* target = (uint16_t*)calloc(val.length() + 1, sizeof(uint16_t));</div><div class="line">    if (target == NULL) &#123;</div><div class="line">        return 0;</div><div class="line">    &#125;</div><div class="line">    memcpy(target, *val, len);</div><div class="line">    *dest = target;</div><div class="line">    return val.length();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-<li><p>将生成的 utf-16 字符串通过 JNI 传递到 Java 层</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">uint16_t</span> *utf16_action = <span class="literal">NULL</span>;</div><div class="line"><span class="keyword">size_t</span> len = utf8_to_utf16(action, &amp;utf16_action);</div><div class="line">jstring jText = (*env)-&gt;NewString(env, utf16_action, len);</div><div class="line"><span class="keyword">if</span> (utf16_action != <span class="literal">NULL</span>) &#123;</div><div class="line">    <span class="built_in">free</span>(utf16_action);</div><div class="line">&#125;</div><div class="line"><span class="keyword">if</span> (len == <span class="number">0</span>) &#123;</div><div class="line">    jText = (*env)-&gt;NewStringUTF(env, <span class="string">""</span>); <span class="comment">// 降级到使用NewStringUTF来创建一个""字符串</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>另外一种解决方法是通过 byteArray 来将 utf-8 编码的字符串传送到java层，详情请参考这篇<a href="http://banachowski.com/deprogramming/2012/02/working-around-jni-utf-8-strings/" target="_blank" rel="external">文章</a></p>
 
           
         

@@ -250,6 +250,303 @@
             
               
                 
+                <a class="post-title-link" href="/2017/05/09/2017-5-9-01/" itemprop="url">
+                  android 代码风格指南
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-05-09T15:38:56+08:00" content="2017-05-09">
+              2017-05-09
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/05/09/2017-5-9-01/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/05/09/2017-5-9-01/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h3><p>本文档简述了推荐的 android 平台开发代码风格指南</p>
+<h3 id="源代码文件"><a href="#源代码文件" class="headerlink" title="源代码文件"></a>源代码文件</h3><h4 id="文件命名"><a href="#文件命名" class="headerlink" title="文件命名"></a>文件命名</h4><p>以本文件中最顶级class名加上.java后缀命名，且大小写敏感</p>
+<h4 id="文件编码"><a href="#文件编码" class="headerlink" title="文件编码"></a>文件编码</h4><p>UTF-8</p>
+<h4 id="特殊字符"><a href="#特殊字符" class="headerlink" title="特殊字符"></a>特殊字符</h4><h4 id="空白字符"><a href="#空白字符" class="headerlink" title="空白字符"></a>空白字符</h4><p>只允许ascii水平空白符(0x20)</p>
+<h4 id="文件组织"><a href="#文件组织" class="headerlink" title="文件组织"></a>文件组织</h4><p>一般，一份源代码文件按照如下结构组织：</p>
+<ul>
+<li>授权、版权信息，如果有</li>
+<li>包声明</li>
+<li>导入声明</li>
+<li>只包含一个顶级类</li>
+</ul>
+<p>并以一个空白行分隔以上每部分</p>
+<ol>
+<li><p>包声明<br>包声明不要进行行截断(见段4.5)，每行最多100列的限制不会施加于包声明</p>
+</li>
+<li><p>导入声明<br> 导入声明不要进行行截断（见段4.5），每行最多100列的限制不会施加于导入声明<br> 导入声明按以下规则分组：</p>
+<p> 所有static导入为一组</p>
+<p> 第三方的，按照顶级包的字母序排列，例如：android, com, junit, org, sun<br> java， javax打头的</p>
+<p> 组内按照字母序排序<br> 不要使用通配符式导入，而是使用完全限定名称的类<br> 推荐：<code>import foo.Bar;</code>（优点是显式指定了特定的类）<br> 不推荐：<code>import foo.*;</code>（优点是少写import声明，但是可读性差，且给维护者带来了代价）</p>
+</li>
+<li><p>类声明</p>
+<ul>
+<li>每源代码有且仅有一个顶级类</li>
+<li>成员函数的排列顺序  <br><br>一般应该按照逻辑集中的规则来排列（例如操作同一数据的方法尽量放在一起），而不要是新近添加的方法总是放在最后</li>
+<li>重载的多个函数应该连续排列</li>
+</ul>
+</li>
+</ol>
+<h3 id="格式"><a href="#格式" class="headerlink" title="格式"></a>格式</h3><p>术语：块级结构指：类、方法、构造方法体（若数组以语句块的形式初始化，也视为块级结构）</p>
+<ol>
+<li><p>花括号  <br><br> 花括号应该与if, else, for, do, while语句一起使用，即便其内容为空或只包含单行语句</p>
+</li>
+<li><p>非空语句块采用K&amp;R风格  <br><br>  对于非空语句块，花括号遵循K&amp;R风格<br></p>
+<ul>
+<li>左括号前不换行</li>
+<li>左括号后换行</li>
+<li>右括号前换行</li>
+<li>如果右括号结束一个语句块或者函数体、构造函数体或者有命名的类体，则需要换行。但当右括号后面接else或者逗号时，不应该换行, 例如：</li>
+</ul>
+</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">return</span> <span class="keyword">new</span> MyClass() &#123;</div><div class="line">  <span class="meta">@Override</span> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">method</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (condition()) &#123;</div><div class="line">      <span class="keyword">try</span> &#123;</div><div class="line">        something();</div><div class="line">      &#125; <span class="keyword">catch</span> (ProblemException e) &#123;</div><div class="line">        recover();</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<ol>
+<li>空白块级结构使用场景  <br><br>方法体为空，或空的构造方法(一个空的语句块，可以在左花括号之后直接接右花括号，中间不需要空格或换行，使代码更简洁),例如：</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">doNothing</span><span class="params">()</span> </span>&#123;&#125;</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">EmptyConstruct</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">EmptyConstruct</span><span class="params">()</span> </span>&#123;&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ol>
+<li><p>块级缩进  <br><br>4个空白字符（同时适用于代码和注释）</p>
+</li>
+<li><p>一条语句占一行</p>
+</li>
+<li><p>列数限制  <br><br>超出100列长度的行应该进行断行（见下一段）  <br><br>例外：  <br></p>
+<ul>
+<li>没法遵循以上限制，比如JavaDoc中很长的URL，或一个很长的<a href="http://www.gwtproject.org/doc/latest/DevGuideCodingBasicsJSNI.html" target="_blank" rel="external">JSNI</a>方法引用</li>
+<li>包声明，导入声明</li>
+<li>可以被直接拷贝粘贴到shell中的命令</li>
+</ul>
+</li>
+<li><p>断行  <br><br>术语说明：当一行代码按照其他规范都合法，只是为了避免超出行长度限制而换行时，称为长行断行</p>
+<ul>
+<li>在何处进行断行  <br><br> 一个原则：尽可能选择在更高的句法级别上进断行，且：<pre><code>1. 若遇到非赋值操作符，则在该符号前截断。这条规则同样适用于点操作符的.，类型组合符（&lt;T extends Foo &amp; Bar&gt;），catch块中的管道线（catch (FooException | BarException e)）
+2. 若遇到赋值操作符，则在该符号后截断。这条规则同样适用于类赋值操作符（foreach 语句中的:），例如：
+</code></pre></li>
+</ul>
+</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line">IAccessibilityServiceConnection connection =</div><div class="line">    AccessibilityInteractionClient.getInstance().getConnection(mConnectionId);</div><div class="line">IAccessibilityServiceConnection connection = AccessibilityInteractionClient</div><div class="line">        .getInstance().getConnection(mConnectionId);</div></pre></td></tr></table></figure>
+<pre><code>    3. 方法名或构造方法名与跟随其后的开括号保持连续
+    4. `,`紧跟它之前的符号
+
+* 缩进后续行最低4个空白字符（建议8个空白字符）  &lt;br /&gt;
+    截断后的后续行（即不包含第一行）相对原始行最低缩进4个（建议8个）空白字符，多个后续行的情形下，若他们属于同一层的句法元素，则应保持相同的缩进级别
+
+* 空白字符
+   1. 垂直空白
+      单行空行在以下情况使用：
+</code></pre><p>a、类成员间需要空行隔开：例如成员变量、构造函数、成员函数、内部类、静态初始化语句块（static initializers）、实例初始化语句块（instance initializers）。<strong>例外：成员变量之间的空白行不是必需的。</strong> 一般多个成员变量中间的空行，是为了对成员变量做逻辑上的分组。</p>
+<p>b、在函数内部，根据代码逻辑分组的需要，设置空白行作为间隔。</p>
+<p>c、类的第一个成员之前，或者最后一个成员结束之后，用空行间隔。（可选）</p>
+<p>d、本文档中其他部分介绍的需要空行的情况。（例如 3.3节中的import语句）<br>单空行时使用多行空行是允许的，但是不要求也不鼓励。</p>
+<pre><code>2. 水平空白
+除了语法、其他规则、词语分隔、注释和javadoc外，水平的ASCII空格只在以下情况出现：
+</code></pre><p>a、所有保留的关键字与紧接它之后的位于同一行的左括号之间需要用空格隔开。（例如if、for、catch）</p>
+<p>b、所有保留的关键字与在它之前的右花括号之间需要空格隔开。（例如else、catch）</p>
+<p>c、在左花括号之前都需要空格隔开。只有两种例外：<br>    @SomeAnnotation({a, b})<br>  String[][] x = foo;</p>
+<p>d、所有的二元运算符和三元运算符的两边，都需要空格隔开。<br>e、逗号、冒号、分号和右括号之后，需要空格隔开。</p>
+<p>f、// 双斜线开始一行注释时。双斜线两边都应该用空格隔开。并且可使用多个空格，但是不做强制要求。</p>
+<p>g、变量声明时，变量类型和变量名之间需要用空格隔开。</p>
+<p>h、初始化一个数组时，花括号之间可以用空格隔开，也可以不使用。（例如：new int[] {5, 6} 和 new int[] { 5, 6 } 都可以）</p>
+<p>注意：这一原则不影响一行开始或者结束时的空格。只针对行内部字符之间的隔开。</p>
+<ol>
+<li>特殊结构<ol>
+<li>修饰符<pre><code>若存在，类和方法的修饰符应该按照以下顺序排列：
+</code></pre><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">protected</span> <span class="keyword">private</span> <span class="keyword">abstract</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">transient</span> <span class="keyword">volatile</span> <span class="keyword">synchronized</span> <span class="keyword">native</span> <span class="keyword">strictfp</span></div></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+</ol>
+<h3 id="命名"><a href="#命名" class="headerlink" title="命名"></a>命名</h3><ol>
+<li><p>类名<br>大写打头的驼峰风格</p>
+</li>
+<li><p>方法名<br>小写打头的驼峰风格<br>最好以动词，或动宾短语命名  <br><br>唯一建议使用下划线的地方是在JUnit中用于为多个测试方法进行逻辑分组，一个典型的模式：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line">test&lt;MethodUnderTest&gt;_&lt;state&gt;</div><div class="line">testPop_emptyStack <span class="comment">// example</span></div></pre></td></tr></table></figure>
+<p>缩略词当做单词对待，而不要保持全大写（比如推荐命名为getUrl, 而不是getURL）</p>
+</li>
+<li><p>常量名<br>所有字母大写，单词之间以下划线分割<br>例如：</p>
+</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="comment">// Constants</span></div><div class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> NUMBER = <span class="number">5</span>;</div><div class="line"><span class="keyword">static</span> <span class="keyword">final</span> ImmutableList&lt;String&gt; NAMES = ImmutableList.of(<span class="string">"Ed"</span>, <span class="string">"Ann"</span>);</div><div class="line"><span class="keyword">static</span> <span class="keyword">final</span> Joiner COMMA_JOINER = Joiner.on(<span class="string">','</span>);  <span class="comment">// because Joiner is immutable</span></div><div class="line"><span class="keyword">static</span> <span class="keyword">final</span> SomeMutableType[] EMPTY_ARRAY = &#123;&#125;;</div><div class="line"><span class="keyword">enum</span> SomeEnum &#123; ENUM_CONSTANT &#125;</div><div class="line"><span class="comment">// Not constants</span></div><div class="line"><span class="keyword">static</span> String nonFinal = <span class="string">"non-final"</span>;</div><div class="line"><span class="keyword">final</span> String nonStatic = <span class="string">"non-static"</span>;</div><div class="line"><span class="keyword">static</span> <span class="keyword">final</span> Set&lt;String&gt; mutableCollection = <span class="keyword">new</span> HashSet&lt;String&gt;();</div><div class="line"><span class="keyword">static</span> <span class="keyword">final</span> ImmutableSet&lt;SomeMutableType&gt; mutableElements = ImmutableSet.of(mutable);</div><div class="line"><span class="keyword">static</span> <span class="keyword">final</span> Logger logger = Logger.getLogger(MyClass.getName());</div><div class="line"><span class="keyword">static</span> <span class="keyword">final</span> String[] nonEmptyArray = &#123;<span class="string">"these"</span>, <span class="string">"can"</span>, <span class="string">"change"</span>&#125;;</div></pre></td></tr></table></figure>
+<ol>
+<li>驼峰规则<br> 如何将英文词汇转换为符合驼峰规则的标识符</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>语义</th>
+<th>推荐</th>
+<th>不建议</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>“XML HTTP request”</td>
+<td>XmlHttpRequest</td>
+<td>XMLHTTPRequest</td>
+</tr>
+<tr>
+<td>“new customer ID”</td>
+<td>newCustomerId</td>
+<td>newCustomerID</td>
+</tr>
+<tr>
+<td>“inner stopwatch”</td>
+<td>innerStopwatch</td>
+<td>innerStopWatch</td>
+</tr>
+<tr>
+<td>“supports IPv6 on iOS?”</td>
+<td>supportsIpv6OnIos</td>
+<td>supportsIPv6OnIOS</td>
+</tr>
+<tr>
+<td>“YouTube importer”</td>
+<td>YouTubeImporter</td>
+<td>YoutubeImporter</td>
+</tr>
+</tbody>
+</table>
+<p>可接受但不推荐的情形:  <br><br>  “nonempty”和”non-empty”都是合法的英文单词, 所以checkNonempty和checkNonEmpty都可以认为正确</p>
+<p>注意：请命名时一定准备一本英文词典在附近，不要出现基本的英文拼写错误，目前已经发现的案例有：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line">behaviour/behavor, pool/poll, request/reqeust, <span class="keyword">continue</span>, external, prerference</div></pre></td></tr></table></figure>
+<h3 id="编程实践"><a href="#编程实践" class="headerlink" title="编程实践"></a>编程实践</h3><p>尽量使用@Override(不管是扩展重写方法还是实现接口)来避免直到运行时才可以发现的错误<br><br><br>例如以下打字错误只有在运行时才能发现</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">oncreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>而采用以下写法错误在编译时就能被发现</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">oncreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>不要完全忽略异常，尽管这非常诱人</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">try</span> &#123;</div><div class="line">  <span class="keyword">int</span> i = Integer.parseInt(response);</div><div class="line">  <span class="keyword">return</span> handleNumericResponse(i);</div><div class="line">&#125; <span class="keyword">catch</span> (NumberFormatException ok) &#123;</div><div class="line">  <span class="comment">// it's not numeric; that's fine, just continue</span></div><div class="line">&#125;</div><div class="line"><span class="keyword">return</span> handleTextResponse(response);</div></pre></td></tr></table></figure>
+<p>绝对不要这么做。也许你会认为：<br>你的代码永远不会碰到这种出错的情况，或者处理异常并不重要，<br>可类似上述忽略异常的代码将会在代码中埋下一颗地雷，说不定哪天它就会炸到某个人了。<br>你必须在代码中以某种规矩来处理所有的异常。根据情况的不同，处理的方式也会不一样。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">无论何时，空的catch语句都会让人感到不寒而栗。</div><div class="line">然很多情况下确实是一切正常，但至少你不得不去忧虑它。在Java中你无法逃离这种恐惧感。&quot;</div><div class="line">                                -James Gosling</div></pre></td></tr></table></figure>
+<p>可接受的替代方案包括（按照推荐顺序）:</p>
+<p>1) 向方法的调用者抛出异常</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">setServerPort</span><span class="params">(String value)</span> <span class="keyword">throws</span> NumberFormatException </span>&#123;</div><div class="line">    serverPort = Integer.parseInt(value);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>2) 根据抽象级别抛出新的异常<br><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">setServerPort</span><span class="params">(String value)</span> <span class="keyword">throws</span> ConfigurationException </span>&#123;</div><div class="line">   <span class="keyword">try</span> &#123;</div><div class="line">       serverPort = Integer.parseInt(value);</div><div class="line">   &#125; <span class="keyword">catch</span> (NumberFormatException e) &#123;</div><div class="line">       <span class="keyword">throw</span> <span class="keyword">new</span> ConfigurationException(<span class="string">"Port "</span> + value + <span class="string">" is not valid."</span>);</div><div class="line">   &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>3) 默默地处理错误并在catch {}语句块中替换为合适的值</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">setServerPort</span><span class="params">(String value)</span> </span>&#123;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        serverPort = Integer.parseInt(value);</div><div class="line">    &#125; <span class="keyword">catch</span> (NumberFormatException e) &#123;</div><div class="line">        serverPort = <span class="number">80</span>;  <span class="comment">// default port for server</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>4) 捕获异常并抛出一个新的RuntimeException。这种做法比较危险：只有确信发生该错误时最合适的做法就是崩溃，才会这么做<br><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">setServerPort</span><span class="params">(String value)</span> </span>&#123;</div><div class="line">   <span class="keyword">try</span> &#123;</div><div class="line">       serverPort = Integer.parseInt(value);</div><div class="line">   &#125; <span class="keyword">catch</span> (NumberFormatException e) &#123;</div><div class="line">       <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"port "</span> + value <span class="string">" is invalid, "</span>, e);</div><div class="line">   &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>5) 如果确信忽略异常比较合适，那就忽略吧，但必须把合理的原因注释出来<br><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">setServerPort</span><span class="params">(String value)</span> </span>&#123;</div><div class="line">      <span class="keyword">try</span> &#123;</div><div class="line">          serverPort = Integer.parseInt(value);</div><div class="line">      &#125; <span class="keyword">catch</span> (NumberFormatException e) &#123;</div><div class="line">          <span class="comment">// Method is documented to just ignore invalid user input.</span></div><div class="line">          <span class="comment">// serverPort will just be unchanged.</span></div><div class="line">      &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>例外：在测试用例中一个期望发生的异常<br><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">try</span> &#123;</div><div class="line">    emptyStack.pop();</div><div class="line">    fail();</div><div class="line">&#125; <span class="keyword">catch</span> (NoSuchElementException expected) &#123;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>尽量不要因为想偷懒而要捕获顶级的Exception<br><br><br><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">try</span> &#123;</div><div class="line">    someComplicatedIOFunction();        <span class="comment">// may throw IOException</span></div><div class="line">    someComplicatedParsingFunction();   <span class="comment">// may throw ParsingException</span></div><div class="line">    someComplicatedSecurityFunction();  <span class="comment">// may throw SecurityException</span></div><div class="line">                                        <span class="comment">// phew, made it all the way</span></div><div class="line">&#125; <span class="keyword">catch</span> (Exception e) &#123;                 <span class="comment">// I'll just catch all exceptions</span></div><div class="line">    handleError();                      <span class="comment">// with one generic handler!</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>不要这么做。绝大部分情况下，捕获顶级的Exception或Throwable都是不合适的，Throwable更不合适，因为它还包含了Error异常。这种捕获非常危险。<br><br>这意味着本来不必考虑的Exception（包括类似ClassCastException的RuntimeException）被卷入到应用程序级的错误处理中来。<br><br>这会让代码运行的错误变得模糊不清。这意味着，假如别人在你调用的代码中加入了新的异常，编译器将无法帮助你识别出各种不同的错误类型。<br><br>绝大部分情况下，无论如何你都不应该用同一种方式来处理各种不同类型的异常。<br></p>
+<p>当你执意想这样做：<br><br>在开始之前，你应该非常仔细地考虑一下，并在注释中解释清楚为什么这么做是安全的<br></p>
+<p>比捕获顶级Exception更好的方案：<br></p>
+<p>分开捕获每一种异常，在一条try语句后面跟随多个catch语句块。<br><br>这样可能会有点别扭，但总比捕获所有Exception要好些。请小心别在catch语句块中重复执行大量的代码。</p>
+<p>重新组织一下代码，使用多个try块，使错误处理的粒度更细一些。把IO从解析内容的代码中分离出来，根据各自的情况进行单独的错误处理。<br></p>
+<p>再次抛出异常。很多时候在你这个级别根本就没必要捕获这个异常，只要让方法抛出该异常即可。<br></p>
+<p>请建立一个观点：异常是你的朋友！当编译器指出你没有捕获某个异常时，请不要皱眉头。而应该微笑：编译器帮助你找到了代码中的运行时（runtime）问题。<br></p>
+<p>静态成员：通过类名来限定</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line">Foo aFoo = ...;</div><div class="line">Foo.aStaticMethod(); <span class="comment">// good</span></div><div class="line">aFoo.aStaticMethod(); <span class="comment">// bad</span></div></pre></td></tr></table></figure>
+<p>永远不要重载finalize方法，除非：<br><br><br>你需要在JNI方法中在Java对象被GC回收时释放native层资源</p>
+<p>尽量限制变量的作用域</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="comment">// GOOD</span></div><div class="line"><span class="keyword">if</span> (…) &#123;</div><div class="line">    <span class="keyword">double</span> d = someCalculation(…);</div><div class="line">    doSomethingWith(d);</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">    <span class="comment">// No use of d</span></div><div class="line">&#125;</div><div class="line"><span class="comment">// BAD</span></div><div class="line"><span class="keyword">double</span> d = <span class="number">0</span>;</div><div class="line"><span class="keyword">if</span> (…) &#123; … &#125; <span class="keyword">else</span> &#123; … &#125;</div></pre></td></tr></table></figure>
+<p>为临时性/不完美代码使用TODO注释<br><br><br>TODO注释的格式为：<br><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="comment">// <span class="doctag">TODO:</span> &#123;your_comments_here&#125;</span></div></pre></td></tr></table></figure></p>
+<p>类和方法前的概述段一般是名词或动词短语，而不要是一整句话，比如：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="comment">// BAD</span></div><div class="line">A &#123;<span class="meta">@code</span> Foo&#125; is a...</div><div class="line"><span class="comment">// BAD too</span></div><div class="line">This method returns...</div></pre></td></tr></table></figure>
+<p>也不要是一个祈使句：<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">Save the record..</div></pre></td></tr></table></figure></p>
+<p>然而需要注意的是：概述段需要想完整的一句话一样打头字母大写，添加合适的标点等等</p>
+<p>正确的注释，例如android AOSP项目中类<em>MediaCodecInfo</em>：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * Provides information about a given media codec available on the device. You can</div><div class="line"> * iterate through all codecs available by querying &#123;<span class="doctag">@link</span> MediaCodecList&#125;...</div><div class="line"> */</div><div class="line"> <span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">MediaCodecInfo</span> </span>&#123;</div><div class="line"> ......</div></pre></td></tr></table></figure>
+<p>每个类和自建的public方法必须包含Javadoc注释<br><br><br>注释至少要包含描述该类或方法用途的语句。并且该语句应该用第三人称的动词形式来开头</p>
+<p>组织方法的原则</p>
+<ul>
+<li>简短(对方法的代码长度并没有硬性的限制，但通常如果方法代码超过了40行，就该考虑是否可以在不损害程序结构的前提下进行分拆)</li>
+<li>专注于完成单一功能</li>
+<li>可重用</li>
+<li>易于测试</li>
+</ul>
+<p><strong> 版权归 faywong 所有，转载请注明出处 </strong></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/01/12/wxapp_toolchain/" itemprop="url">
                   浅析微信小程序之 IDE
                 </a>
@@ -733,8 +1030,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/07/19/2015-09-22-second/" itemprop="url">
-                  fastjson for android名不副实
+                <a class="post-title-link" href="/2016/07/19/2015-01-19-first/" itemprop="url">
+                  android4.1上WebView页面加载成功时出现IllegalArgumentException
                 </a>
               
             
@@ -758,8 +1055,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/07/19/2015-09-22-second/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-09-22-second/" itemprop="commentsCount"></span>
+                <a href="/2016/07/19/2015-01-19-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-01-19-first/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -784,11 +1081,10 @@
       
         
           
-            <p>今天在尝试优化json的序列化和反序列化。发现一个陷阱：<br>android自带的json比fastjson（fastjson-1.1.43）解析在9k（及以下）大小字符串输入下性能要高10倍，在解析19k大小字符串时性能高3倍。如下图所示：</p>
-<p>三星Note 3:<br><img src="/uploads/2015_09_22_01.png" alt="note 3"></p>
-<p>一加1代：<br><img src="/uploads/2015_09_22_02.png" alt="note 3"></p>
-<p>详细数据如下：<br>json字符串体积: 6k，android终端：三星note3<br><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">09-22 11:42:55.234: D/faywong(7810): org.json.JSONObject consumes: 1ms to parse json</div><div class="line">09-22 11:42:55.254: D/faywong(7810): com.alibaba.fastjson.JSONObject consumes: 15ms to parse json</div><div class="line"> </div><div class="line">json字符串体积: 9k，android终端：三星note3</div><div class="line">09-22 11:11:45.944: D/faywong(26631): org.json.JSONObject consumes: 1ms to parse json</div><div class="line">09-22 11:11:45.954: D/faywong(26631): com.alibaba.fastjson.JSONObject consumes: 15ms to parse json</div><div class="line"> </div><div class="line">json字符串体积: 19k，android终端：三星note3</div><div class="line">09-22 11:48:15.844: D/faywong(11569): org.json.JSONObject consumes: 6ms to parse json</div><div class="line">09-22 11:48:15.864: D/faywong(11569): com.alibaba.fastjson.JSONObject consumes: 19ms to parse json</div><div class="line"> </div><div class="line">json字符串体积: 6k，android终端：一加1代</div><div class="line">09-22 11:39:55.304: D/faywong(12964): org.json.JSONObject consumes: 1ms to parse json</div><div class="line">09-22 11:39:55.315: D/faywong(12964): com.alibaba.fastjson.JSONObject consumes: 11ms to parse json</div><div class="line">json字符串体积: 9k，android终端：一加1代</div><div class="line">09-22 11:30:06.378: D/faywong(11412): org.json.JSONObject consumes: 1ms to parse json</div><div class="line">09-22 11:30:06.395: D/faywong(11412): com.alibaba.fastjson.JSONObject consumes: 17ms to parse json</div><div class="line"> </div><div class="line">json字符串体积: 19k，android终端：一加1代</div><div class="line">09-22 11:53:30.551: D/faywong(14248): org.json.JSONObject consumes: 3ms to parse json</div><div class="line">09-22 11:53:30.564: D/faywong(14248): com.alibaba.fastjson.JSONObject consumes: 13ms to parse json</div></pre></td></tr></table></figure></p>
-<p>总结下json序列化和反序列化的使用经验：<br>在能控制json序列化和反序列化的整个闭环中（比如服务端+客户端）使用fastjson之类的方案是有优势的；如果你只是在其中的一环，并不知道前边的json是谁以怎样的方式序列化/反序列化得来，建议你使用org.json版本，这样性能不至于很差。</p>
+            <p>异常的堆栈如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line">java.lang.IllegalArgumentException: bad parameter</div><div class="line">   at org.apache.http.client.utils.URLEncodedUtils.parse(URLEncodedUtils.java:<span class="number">139</span>)</div><div class="line">   at org.apache.http.client.utils.URLEncodedUtils.parse(URLEncodedUtils.java:<span class="number">76</span>)</div><div class="line">   at android.webkit.AccessibilityInjector.getAxsUrlParameterValue(AccessibilityInjector.java:<span class="number">412</span>)</div><div class="line">   at android.webkit.AccessibilityInjector.shouldInjectJavaScript(AccessibilityInjector.java:<span class="number">327</span>)</div><div class="line">   at android.webkit.AccessibilityInjector.onPageFinished(AccessibilityInjector.java:<span class="number">286</span>)</div><div class="line">   at android.webkit.WebViewClassic.onPageFinished(WebViewClassic.java:<span class="number">4088</span>)</div><div class="line">   at android.webkit.CallbackProxy.handleMessage(CallbackProxy.java:<span class="number">332</span>)</div><div class="line">   at android.os.Handler.dispatchMessage(Handler.java:<span class="number">99</span>)</div><div class="line">   at android.os.Looper.loop(Looper.java:<span class="number">137</span>)</div><div class="line">   at android.app.ActivityThread.main(ActivityThread.java:<span class="number">4829</span>)</div><div class="line">   at java.lang.reflect.Method.invokeNative(Native Method)</div><div class="line">   at java.lang.reflect.Method.invoke(Method.java:<span class="number">511</span>)</div><div class="line">   at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:<span class="number">841</span>)</div><div class="line">   at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:<span class="number">608</span>)</div><div class="line">   at dalvik.system.NativeStart.main(Native Method)</div></pre></td></tr></table></figure>
+<p>相关的google code android project里边的issue中论述如下：</p>
+<p>“<br>A customer of mine running 4.1.2 just informed me that the issue is still<br>present! After this issue crashes my app, I have to pop up a dialog<br>telling them to disable all accessibility services.<br>Worst user experience ever, but what else can I do.<br>……<br>Fixed in an internal build, to be released in the next major release.<br>……<br>The bug doesn’t occur here in 4.2.1 (Galaxy Nexus, JOP40D).<br>“</p>
 
           
         
@@ -1058,221 +1354,6 @@
             
               
                 
-                <a class="post-title-link" href="/2016/07/19/2015-01-15-third/" itemprop="url">
-                  三星GS4(android 4.3)上webview crash问题
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
-              2016-07-19
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/19/2015-01-15-third/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-01-15-third/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>最近发现客户端中android4.3上GS4手机上的WebApp应用特别容易crash。分析了源代码之后发现，在ActivityThread中回收内存时会调用EGLImpl里边去，回收RenderThread，进而调用到计算CPU FPS的逻辑，进而crash：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">java.lang.Error: signal 11 (Address not mapped to object) at address 0xbe59dff0 [at libPowerStretch.so:0x2d4c (_ZN11LucidConfig13calcTargetFPSEi+0x1b)]</div><div class="line"></div><div class="line">at system.lib.libPowerStretch_so.0x2d4c(LucidConfig::calcTargetFPS(int):0x1b:0)</div><div class="line"></div><div class="line">at system.lib.libPowerStretch_so.0x2f23(LucidConfig::isLucidActive(bool):0x86:0)</div></pre></td></tr></table></figure>
-<p>因为在问题出在系统层而android应用回收内存这个message是ActivityManager发出，为正常且必要的行为，无法规避。最终选择如下方式将其绕过：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">H5WebViewRenderPolicy</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">shouldDisableHardwareRenderInLayer</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// case 1: samsung GS4 on android 4.3 is know to cause crashes at libPowerStretch.so:0x2d4c</span></div><div class="line">        <span class="comment">// use GT-I95xx to match more GS4 series devices though GT-I9500 is the typical device</span></div><div class="line">        <span class="keyword">final</span> <span class="keyword">boolean</span> isSamsungGs4 = android.os.Build.MODEL != <span class="keyword">null</span> &amp;&amp; android.os.Build.MODEL.contains(<span class="string">"GT-I95"</span>) &amp;&amp; android.os.Build.MANUFACTURER != <span class="keyword">null</span> &amp;&amp; android.os.Build.MANUFACTURER.equals(<span class="string">"samsung"</span>);</div><div class="line">        <span class="keyword">final</span> <span class="keyword">boolean</span> isJbMr2 = Build.VERSION.SDK_INT == Build.VERSION_CODES.JELLY_BEAN_MR2;</div><div class="line">        <span class="keyword">if</span> (isSamsungGs4 &amp;&amp; isJbMr2) &#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>以上定义一个渲染策略类（方便以后维护），针对GS4 + android 4.3这种组合在WebView layer层面关闭硬件加速（这样就不会存在RenderThread，自然也就没法触发上文的crash）。</p>
-<p>之后在自定义WebView中利用上以上渲染策略类：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">final</span> <span class="keyword">boolean</span> meetApiLevel11 = Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.HONEYCOMB;</div><div class="line"><span class="keyword">if</span> (H5WebViewRenderPolicy.shouldDisableHardwareRenderInLayer() &amp;&amp; meetApiLevel11) &#123;</div><div class="line">    <span class="keyword">final</span> View underlyingWebView = webView.getUnderlyingWebView();</div><div class="line">    <span class="keyword">if</span> (underlyingWebView != <span class="keyword">null</span> &amp;&amp; webView.getType().equals(WebViewType.SYSTEM_BUILD_IN)) &#123;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            underlyingWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, <span class="keyword">null</span>);</div><div class="line">        &#125; <span class="keyword">catch</span> (Exception globalException) &#123;</div><div class="line">            globalException.printStackTrace();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="更新-2015-2-1"><a href="#更新-2015-2-1" class="headerlink" title="更新 2015/2/1"></a>更新 2015/2/1</h2><p>该现象表现在多款三星制造的搭载android 4.3系统的手机上，不仅限于GS4</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/19/2015-02-01-first/" itemprop="url">
-                  android库ShowcaseView
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
-              2016-07-19
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/19/2015-02-01-first/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-02-01-first/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>一个非常适合用于对用户进行第一次使用进行指导的库ShowcaseView，截图示例如下：</p>
-<p><img src="/uploads/2015-02-01-01.png" alt="showcase view 1"></p>
-<p><img src="/uploads/2015-02-01-02.png" alt="showcase view 2"></p>
-<p>下面给出一个实例，需要瞄定一个特殊的View(id为R.id.answers)，在其上显示一个ShowCaseView：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">new</span> ShowcaseView.Builder(getActivity()).setTarget(<span class="keyword">new</span> ActionItemTarget(getActivity(), R.id.answers)) </div><div class="line"><span class="comment">//Here is where you supply the id of the action bar item you want to display </span></div><div class="line">.setContentTitle(<span class="string">"Title"</span>).setContentText(<span class="string">"Description"</span>).hideOnTouchOutside().build();</div></pre></td></tr></table></figure>
-<p>项目主页位于：<a href="https://github.com/amlcurran/ShowcaseView，从其commit数和release数来看，应该非常靠谱。" target="_blank" rel="external">https://github.com/amlcurran/ShowcaseView，从其commit数和release数来看，应该非常靠谱。</a></p>
-<p>接下来打算在项目中使用起来，后续补上使用感受。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
                 <a class="post-title-link" href="/2016/07/19/2015-02-06-first/" itemprop="url">
                   Android 4.2.2上WebView.loadUrl带来软键盘自动收起的问题
                 </a>
@@ -1327,6 +1408,118 @@
             <p>今天由测试同学反映两款手机（红米，三星GS4，均搭载Android 4.2.2）存在WebApp中收到回调后软键盘自动收起。</p>
 <p>经过一段时间的研究，发现在Android 4.2.2上WebView.loadUrl()被调用后WebView会认为新的一个页面即将打开，而将软键盘收起。</p>
 <p>android填坑之旅还要继续……</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/19/2015-01-23-first/" itemprop="url">
+                  应用压入后台时由WebView带来的耗电问题
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
+              2016-07-19
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/19/2015-01-23-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-01-23-first/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>最近遇到一个应用打开WebApp后，将应用压入后台，出现比较耗电的问题。集合众多同学的智慧之后定位到原因：</p>
+<p>在WebKit的内核中会引用从各个平台(android, linux pc, mac)注入的自己的服务比如：</p>
+<ul>
+<li>DeviceOrientationService</li>
+<li>DeviceMotionService</li>
+</ul>
+<p>而这两个Service在android平台上的实现皆通过注册侦听器到SensorManager来获知来自于加速度器，磁力计的方位、手机姿势数据。</p>
+<p>Sensor的使用是极其浪费电力的一件事情，所以就出现了上文所述问题。</p>
+<p>解决方法：</p>
+<p>1) 在Activity的onPause(), onResume()时调用WebView.onPause(), WebView.onResume()以尽量将JS执行线程以及其他WebCore中的线程给停住</p>
+<p>2) 在onStop()时将WebView中当前load的url记住，然后让WebView.loadUrl(“about:blank”)，在onStart()时WebView.loadUrl({your_previous_url})</p>
+<p>更新：<br>[2015/11]在最近的工作中还发现一种前端页面带来的耗电问题：当页面加载一些gif或者通过其他方式创建的动画效果，当webview变得不可见后这些动画如果没有被显式关掉，就会导致很严重的耗电问题。同时在桌面浏览器里边我也注意到页面里边持续运行的动画也会导致内存占用增大。</p>
 
           
         

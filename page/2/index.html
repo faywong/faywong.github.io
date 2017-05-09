@@ -250,8 +250,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/07/19/2015-01-23-first/" itemprop="url">
-                  应用压入后台时由WebView带来的耗电问题
+                <a class="post-title-link" href="/2016/07/19/2015-02-01-first/" itemprop="url">
+                  android库ShowcaseView
                 </a>
               
             
@@ -275,8 +275,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/07/19/2015-01-23-first/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-01-23-first/" itemprop="commentsCount"></span>
+                <a href="/2016/07/19/2015-02-01-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-02-01-first/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -301,18 +301,13 @@
       
         
           
-            <p>最近遇到一个应用打开WebApp后，将应用压入后台，出现比较耗电的问题。集合众多同学的智慧之后定位到原因：</p>
-<p>在WebKit的内核中会引用从各个平台(android, linux pc, mac)注入的自己的服务比如：</p>
-<ul>
-<li>DeviceOrientationService</li>
-<li>DeviceMotionService</li>
-</ul>
-<p>而这两个Service在android平台上的实现皆通过注册侦听器到SensorManager来获知来自于加速度器，磁力计的方位、手机姿势数据。</p>
-<p>Sensor的使用是极其浪费电力的一件事情，所以就出现了上文所述问题。</p>
-<p>解决方法：</p>
-<p>1) 在Activity的onPause(), onResume()时调用WebView.onPause(), WebView.onResume()以尽量将JS执行线程以及其他WebCore中的线程给停住</p>
-<p>2) 在onStop()时将WebView中当前load的url记住，然后让WebView.loadUrl(“about:blank”)，在onStart()时WebView.loadUrl({your_previous_url})</p>
-<p>更新：<br>[2015/11]在最近的工作中还发现一种前端页面带来的耗电问题：当页面加载一些gif或者通过其他方式创建的动画效果，当webview变得不可见后这些动画如果没有被显式关掉，就会导致很严重的耗电问题。同时在桌面浏览器里边我也注意到页面里边持续运行的动画也会导致内存占用增大。</p>
+            <p>一个非常适合用于对用户进行第一次使用进行指导的库ShowcaseView，截图示例如下：</p>
+<p><img src="/uploads/2015-02-01-01.png" alt="showcase view 1"></p>
+<p><img src="/uploads/2015-02-01-02.png" alt="showcase view 2"></p>
+<p>下面给出一个实例，需要瞄定一个特殊的View(id为R.id.answers)，在其上显示一个ShowCaseView：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">new</span> ShowcaseView.Builder(getActivity()).setTarget(<span class="keyword">new</span> ActionItemTarget(getActivity(), R.id.answers)) </div><div class="line"><span class="comment">//Here is where you supply the id of the action bar item you want to display </span></div><div class="line">.setContentTitle(<span class="string">"Title"</span>).setContentText(<span class="string">"Description"</span>).hideOnTouchOutside().build();</div></pre></td></tr></table></figure>
+<p>项目主页位于：<a href="https://github.com/amlcurran/ShowcaseView，从其commit数和release数来看，应该非常靠谱。" target="_blank" rel="external">https://github.com/amlcurran/ShowcaseView，从其commit数和release数来看，应该非常靠谱。</a></p>
+<p>接下来打算在项目中使用起来，后续补上使用感受。</p>
 
           
         
@@ -464,109 +459,6 @@
             
               
                 
-                <a class="post-title-link" href="/2016/07/19/2015-06-29-first/" itemprop="url">
-                  clojure map-indexed使用实例
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
-              2016-07-19
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/19/2015-06-29-first/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-06-29-first/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>用了clojure，才发现北方有一座高山……</p>
-<p>今天网站中需要做一个小功能，通过restful api请求另外一个内部网站的数据，但是写这个网站的同学给出的数据是[[a b c] [d e f]…]另外还有一个用于代表每一项的链接的links: [link1 link2 link3…]</p>
-<p>需要将之每项对应合并起来，找了下发现map-indexed非常适合这个场景：</p>
-<figure class="highlight"><table><tr><td class="code"><pre><div class="line">(def test1 [['a ] ['b] ['c]])</div><div class="line">(def test2 ['c 'd 'e])</div><div class="line">(defn my-merge [vect1 vect2]</div><div class="line">(into [] (map-indexed</div><div class="line">(fn [idx item] (merge item (vect2 idx))) vect1)))</div><div class="line"></div><div class="line">(my-merge test1 test2)</div><div class="line"></div><div class="line">=&gt;[[a c] [b d] [c e]]</div></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
                 <a class="post-title-link" href="/2016/07/19/2015-06-18-first/" itemprop="url">
                   黑暗WebView@HuaweiMediaPad X1 C208B011
                 </a>
@@ -624,6 +516,109 @@
 <p>用户对于解决问题的意愿极强。他（40岁左右的大叔）多次上Huawei X1论坛与其他用户交流看法和规律，寻求解决方案，为此去了解该机器的CPU，基带，ROM版本……。</p>
 <p>幸运的是，他们使用的是我们这个首屈一指的互联网公司的产品，遇到了我们这样的团队，得以面对面的反映他遇到的问题——没有抱怨，而是尽可能为我们提供他“调查”，“摸索”出来的规律。</p>
 
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/19/2015-06-29-first/" itemprop="url">
+                  clojure map-indexed使用实例
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
+              2016-07-19
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/19/2015-06-29-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-06-29-first/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>用了clojure，才发现北方有一座高山……</p>
+<p>今天网站中需要做一个小功能，通过restful api请求另外一个内部网站的数据，但是写这个网站的同学给出的数据是[[a b c] [d e f]…]另外还有一个用于代表每一项的链接的links: [link1 link2 link3…]</p>
+<p>需要将之每项对应合并起来，找了下发现map-indexed非常适合这个场景：</p>
+<figure class="highlight"><table><tr><td class="code"><pre><div class="line">(def test1 [['a ] ['b] ['c]])</div><div class="line">(def test2 ['c 'd 'e])</div><div class="line">(defn my-merge [vect1 vect2]</div><div class="line">(into [] (map-indexed</div><div class="line">(fn [idx item] (merge item (vect2 idx))) vect1)))</div><div class="line"></div><div class="line">(my-merge test1 test2)</div><div class="line"></div><div class="line">=&gt;[[a c] [b d] [c e]]</div></pre></td></tr></table></figure>
           
         
       
@@ -996,111 +991,6 @@
             
               
                 
-                <a class="post-title-link" href="/2016/07/19/2015-09-08-first/" itemprop="url">
-                  Luminus web项目中让ajax请求和anti-forgery共存
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
-              2016-07-19
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/19/2015-09-08-first/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-09-08-first/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>Luminus web项目默认会启用anti-forgery特性以防止跨站攻击，极大增强了安全性。但是也为一些异步发生（不是来源于服务端的输出页面）的请求（ajax）带来了不便。</p>
-<p>可以如下解决之：</p>
-<p>若你的网页模板是经由selmer layout的，它会自动带上这个anti-forgery token。你便可以在js中添加如下代码</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">var</span> csrfToken = <span class="string">"&#123;&#123;csrf-token&#125;&#125;"</span>;</div><div class="line">$.ajaxPrefilter(<span class="function"><span class="keyword">function</span> (<span class="params">options, originalOptions, request</span>) </span>&#123;</div><div class="line">    <span class="keyword">if</span> (csrfToken) &#123;</div><div class="line">        request.setRequestHeader(<span class="string">'X-CSRF-Token'</span>, csrfToken);</div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-<p>Luminus框架的anti-forgery middleware也可以接受http header中的”X-CSRF-Token”指定的token。<br>这样子就把token给带到服务端了。让ajax请求顺利发出。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
                 <a class="post-title-link" href="/2016/07/19/2015-08-31-first/" itemprop="url">
                   如何评估Android应用程序的帧率
                 </a>
@@ -1228,8 +1118,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/07/19/2015-10-12-first/" itemprop="url">
-                  ndk-gdb时提示应用不可调试的解决方法
+                <a class="post-title-link" href="/2016/07/19/2015-09-08-first/" itemprop="url">
+                  Luminus web项目中让ajax请求和anti-forgery共存
                 </a>
               
             
@@ -1253,8 +1143,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/07/19/2015-10-12-first/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-10-12-first/" itemprop="commentsCount"></span>
+                <a href="/2016/07/19/2015-09-08-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-09-08-first/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -1279,30 +1169,116 @@
       
         
           
-            <p>在开发包含c/c++本地代码的android项目中，通过gdb来调试代码是必不可少的前提。</p>
-<p>android官方为此提供了ndk-gdb，看起来非常之nice。但个人在实践中发现还是有一系列问题需要记载下(ndk版本：r10e)：</p>
-<p>1) ndk-build NDK_DEBUG=1这个选项编译时要加上，一般将之定制在你的c/c++ builder中</p>
-<p>2) 即便你按照1）做了，在项目根目录运行ndk-gdb的时候还是会报以下错误：</p>
-<p>ERROR: Package faywong.github.io.mediakit is not debuggable ! You can fix that in two ways:</p>
-<ul>
-<li><p>Rebuilt with the NDK_DEBUG=1 option when calling ‘ndk-build’.</p>
-</li>
-<li><p>Modify your manifest to set android:debuggable attribute to “true”,</p>
-<p>then rebuild normally.</p>
-</li>
-</ul>
-<p>After one of these, re-install to the device!</p>
-<p>然后我们乖乖地跑到AndroidManifest.xml里边去修改Application标签的debuggable属性，eclipse会提示你不能hardcode，可以通过如下方式设置下：</p>
-<p>QQ20151012-1</p>
-<p>3)  接下来还有可能会遇到如下问题：</p>
-<p>ERROR: Could not find gdb.setup under ./libs/</p>
-<p>这是由于ndk-gdb命令的bug带来的，它没有去参照ABI的不同设置去不同的目录下找gdb.setup文件（是一个脚本文件，帮你做一些繁琐的gdb server的启动，gdb client的启动和设置等任务）。</p>
-<p>简单绕过这个错误的方式是将libs/{your abi, e.g. armeabi-v7a}里的gdb.setup直接拷贝至libs目录下</p>
-<p>4)  在你跋山涉水，翻山越岭走了这么久之后，再次运行ndk-gdb，会出现以下惊喜：</p>
-<p>ERROR: Non-debuggable application installed on the target device.</p>
-<pre><code>Please re-install the debuggable version!
-</code></pre><h4 id="更新"><a href="#更新" class="headerlink" title="更新"></a>更新</h4><p>现在可以结合gradle-experimental插件和ndk中搭载的lldb + android studio 2.0断点native代码了，虽然还不那么完善，bug多多，但是相比过去的ndk-gdb时代还是进步一点了。</p>
+            <p>Luminus web项目默认会启用anti-forgery特性以防止跨站攻击，极大增强了安全性。但是也为一些异步发生（不是来源于服务端的输出页面）的请求（ajax）带来了不便。</p>
+<p>可以如下解决之：</p>
+<p>若你的网页模板是经由selmer layout的，它会自动带上这个anti-forgery token。你便可以在js中添加如下代码</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">var</span> csrfToken = <span class="string">"&#123;&#123;csrf-token&#125;&#125;"</span>;</div><div class="line">$.ajaxPrefilter(<span class="function"><span class="keyword">function</span> (<span class="params">options, originalOptions, request</span>) </span>&#123;</div><div class="line">    <span class="keyword">if</span> (csrfToken) &#123;</div><div class="line">        request.setRequestHeader(<span class="string">'X-CSRF-Token'</span>, csrfToken);</div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>Luminus框架的anti-forgery middleware也可以接受http header中的”X-CSRF-Token”指定的token。<br>这样子就把token给带到服务端了。让ajax请求顺利发出。</p>
 
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/19/2015-09-22-first/" itemprop="url">
+                  Clojure 生产环境中怎么使用environ
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-19T11:05:25+08:00" content="2016-07-19">
+              2016-07-19
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/19/2015-09-22-first/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/19/2015-09-22-first/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><a href="https://github.com/weavejester/environ" target="_blank" rel="external">environ</a>可以很方便帮我们管理项目中的各种配置，但是最近在使用的时候遇到了一个问题，就是我在dev, test profile下配置的database-uri到打出uberjar之后就访问不到了。最后看了下源码，在生产环境下，需要通过进程环境变量或Java系统属性来完成这一目的：</p>
+<p>进程环境变量：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">DATABASE_URL=jdbc:postgres://localhost/prod java -jar standalone.jar</div></pre></td></tr></table></figure>
+<p>Java系统属性：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">java -Ddatabase.url=jdbc:postgres://localhost/prod -jar standalone.jar</div></pre></td></tr></table></figure>
           
         
       
